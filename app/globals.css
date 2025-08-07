@@ -77,7 +77,7 @@ body {
 .employee-grid {
   display: grid;
   grid-template-columns: 
-    3rem     /* 2: Status */
+    5rem     /* 2: Status */
     6rem     /* 3: Emp Number / EE_NO */
     4.5rem   /* 4: Last */
     4.5rem   /* 5: First */
@@ -92,4 +92,47 @@ body {
   gap: 0.5rem; /* Consistent small gap between cells; adjust if needed */
   align-items: center; /* Vertical alignment for cells */
   font-size: small;
+}
+.internal-labor-grid {
+  display: grid;
+  grid-template-columns: 
+    5rem     /* 2: Status */
+    6rem     /* 3: Emp Number / EE_NO */
+    4.5rem   /* 4: Last */
+    4.5rem   /* 5: First */
+    8rem /* 6: Business  */
+    8rem /* 6: Function  */
+    8rem /* 6: Role  */
+    6rem  /* 7: HeadCount */
+    4rem     /* 8: Salary */
+    4rem     /* 9: Bonus */
+    5rem     /* 9: Bonus Pct */
+    4rem     /* 10: EE SRE */
+    6rem     /* 10: Share Admin  */
+    7rem     /* 10: Annual Admin  */
+    8rem     /* 10: Annual Property  */
+    5rem     /* 11: Total */;
+  gap: 0.5rem; /* Consistent small gap between cells; adjust if needed */
+  align-items: center; /* Vertical alignment for cells */
+  font-size: small;
+  text-align: center;
+}
+.external-labor-grid {
+  display: grid;
+  grid-template-columns: 
+    6rem     /* 2: VendorNo */
+    12rem     /* 3: Vendor */
+    12rem   /* 4: Purpose */
+    4.5rem   /* 5: Hours */
+    8rem /* 6: Rate  */
+    8rem /* 6: TotalCost  */
+    8rem /* 6: Admin Share  */
+    6rem  /* 7: Admin Proptery */
+    8rem     /* 8: Annual Admin */
+    8rem     /* 8: StartDate  */
+    8rem     /* 8: FinishDate */;
+  gap: 0.5rem; /* Consistent small gap between cells; adjust if needed */
+  align-items: center; /* Vertical alignment for cells */
+  font-size: small;
+  text-align: center;
 }

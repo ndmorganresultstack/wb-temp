@@ -2,10 +2,14 @@ import React from 'react';
 import { Employees,BusinessTitles } from '@/app/generated/prisma'; '@/prisma/client'; // Adjust the import path as necessary
 
 interface EmployeeRowProps {
-  employee: Employees;
+  employee: EmployeeWithRelations;
   isSelected: boolean;
   onSelect: () => void;
   isAlternate?: boolean;
+}
+
+interface EmployeeWithRelations extends Employees {
+  BusinessTitles?: BusinessTitles;
 }
 
 export default function EmployeeRow({ employee, isSelected, onSelect, isAlternate = false }: EmployeeRowProps) {

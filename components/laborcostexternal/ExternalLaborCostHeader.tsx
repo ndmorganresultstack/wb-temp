@@ -2,19 +2,19 @@ import React from 'react';
 import SearchIcon from '../icons/SearchIcon';
 import FilterIcon from '../icons/FilterIcon';
 import ColumnsIcon from '../icons/ColumnsIcon';
-import { InternalLaborCost } from '@/lib/types';
+import { ExternalLaborCost } from '@/lib/types';
 
-interface InternalLaborCostHeaderProps {
+interface ExternalLaborCostHeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
 }
 
-export default function InternalLaborCostHeader({ searchQuery, onSearchChange }: InternalLaborCostHeaderProps) {
+export default function ExternalLaborCostHeader({ searchQuery, onSearchChange }: ExternalLaborCostHeaderProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm">
       <div className="flex w-full items-stretch gap-5 font-inter flex-wrap justify-between px-4 py-4 lg:px-14 lg:pr-14 lg:pl-4 lg:py-4 max-lg:max-w-full max-lg:pr-5">
         <div className="text-gray-800 text-17 font-bold leading-8 my-auto">
-          Internal Labor Cost
+          External Labor Cost
         </div>
         <div className="flex items-center gap-4 text-sm text-gray-600 justify-start flex-wrap max-lg:max-w-full">
           <div className="self-stretch flex pr-11 items-stretch text-base text-gray-300 w-56 my-auto">

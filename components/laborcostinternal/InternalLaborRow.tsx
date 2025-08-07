@@ -1,22 +1,15 @@
-import React from 'react';
-import { InternalLabor,BusinessTitles } from '@/app/generated/prisma'; '@/prisma/client'; // Adjust the import path as necessary
+import React from 'react'; 
+import { InternalLaborCost } from '@/lib/types';
 
 interface InternalLaborRowProps {
-  internalLabor: InternalLabor;
+  internalLabor: InternalLaborCost;
   isSelected: boolean;
   onSelect: () => void;
   isAlternate?: boolean;
 }
 
-export default function InternalLaborRow({ internalLabor, isSelected, onSelect, isAlternate = false }: InternalLaborRowProps) {
-  const formatDate = (date: Date | null | undefined) => {
-    if (!date) return '';
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    }).replace(/\//g, '-');
-  };
+export default function InternalLaborRow({ internalLabor, onSelect, isAlternate = false }: InternalLaborRowProps) {
+  
 
  const getStatusBadge = (status: string | null | undefined) => {
     switch (status) {
@@ -43,22 +36,31 @@ export default function InternalLaborRow({ internalLabor, isSelected, onSelect, 
   };
 
   const backgroundClass = isAlternate ? "bg-purple-50" : "bg-white";
-
+  
   return (
     <div className="w-full max-w-full max-lg:max-w-full">
       <div
         className={`internal-labor-grid px-2 py-2 ${backgroundClass} z-10 -mb-1 cursor-pointer hover:bg-gray-50`} // Replaced flex classes with internal-labor-grid; kept px-5 py-2 for row padding
         onClick={onSelect}
       > 
-        {getStatusBadge(internalLabor.EmployeeStatus)}
-        <div>{internalLabor.EE_NO}</div>
-        <div className="truncate">{internalLabor.LastName}</div> {/* Added truncate for consistency */}
-        <div>{internalLabor.FirstName}</div>
-        <div className="truncate">{internalLabor.BusinessTitles?.TitleName}</div>
-        <div className="truncate">{formatDate(internalLabor.HireDate)}</div>
-        <div className="truncate">{internalLabor.TOS?.toString() }</div>
-        <div>{formatDate(internalLabor.TermDate)}</div>
+        {getStatusBadge(internalLabor.Employees?.EmployeeStatus)}
+        <div>{internalLabor.Employees?.EE_NO}</div>
+        <div className="truncate">{internalLabor.Employees?.LastName}</div> {/* Added truncate for consistency */}
+        <div>{internalLabor.Employees?.FirstName}</div>
+        <div className="truncate">{internalLabor.Employees?.BusinessTitles?.TitleName}</div>
+        <div className="truncate">{internalLabor.Employees?.FunctionCategories?.CategoryName}</div>
+        <div className="truncate">{internalLabor.Employees?.RoleResponsibilities?.RoleName}</div>
+        <div>{internalLabor.Employees?.Headcount}</div>
+        <div className="text-right pr-4">${Number(internalLabor.BaseAnnualSalary).toLocaleString()}</div>
+        <div className="text-right pr-4">${Number(internalLabor.Bonus).toLocaleString()}</div>
+        <div className="text-right pr-4">{Number(internalLabor.BonusPct) * 100}%</div>
+        <div className="text-right pr-4">${Number(internalLabor.EESRE).toLocaleString()}</div>
+        <div className="text-right pr-6">{Number(internalLabor.ShareAdmin) * 100}%</div>
+        <div className="text-right pr-6">${Number(internalLabor.AnnualAdmin).toLocaleString()}</div>
+        <div className="text-right pr-8">${Number(internalLabor.AnnualProperty).toLocaleString()}</div>
+        <div className="text-right pr-5">${Number(internalLabor.TotalCost).toLocaleString()}</div>
       </div>
+    
     </div>
   );
 }
