@@ -1,11 +1,13 @@
 'use client';
  
 import '../app/globals.css';
-import { UserCircleIcon, CurrencyDollarIcon, ListBulletIcon } from "@heroicons/react/24/outline";
+import { UserCircleIcon, CurrencyDollarIcon } from "@heroicons/react/24/outline";
 import { Roboto_Condensed, Roboto_Mono, Roboto_Serif } from "next/font/google";
 import Link from 'next/link';
 import Image from 'next/image';
 import { UserIcon } from '@heroicons/react/20/solid';
+import { logout } from '@/lib/actions/auth';
+import { useSession } from 'next-auth/react';
 
 const robotoCondensed = Roboto_Condensed({
   variable: "--font-roboto-condensed",
@@ -27,6 +29,9 @@ export default function RootLayoutClient({
 }: Readonly<{
   children: React.ReactNode;
 }>) { 
+
+  const {data:session} = useSession();
+
   const menuItems = [
     {
       name: "Costs",
@@ -47,9 +52,7 @@ export default function RootLayoutClient({
   ];
 
   const handleLogout = () => {
-    // Implement logout logic here (e.g., clear session, redirect to login)
-    console.log("Logout clicked");
-    // Example: window.location.href = '/login';
+    logout();
   };
 
   const handlePreferences = () => {
@@ -110,6 +113,8 @@ export default function RootLayoutClient({
               <UserCircleIcon className="w-6 h-6" />
             </button>
             <div className="absolute bottom-0 left-full w-40 bg-gray-700 mt-2 rounded shadow-lg hidden group-hover:block">
+              
+              <div className="flex items-center justify-center"><span>{session?.user?.name}</span></div>
               <button
                 onClick={handlePreferences}
                 className="block w-full text-left py-2 px-4 hover:bg-gray-600 rounded-t text-sm"

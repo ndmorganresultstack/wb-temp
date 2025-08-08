@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import RootLayoutClient from "@/components/rootLayoutClient";
+import RootLayoutClient from "@/components/rootLayoutClient"; 
+import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: "Willowbridge IT Dashboard",
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <RootLayoutClient>{children}</RootLayoutClient>
+      <SessionProvider>
+        <RootLayoutClient>{children}</RootLayoutClient>
+      </SessionProvider>
     </html>
   );
 }

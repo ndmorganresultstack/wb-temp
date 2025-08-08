@@ -176,3 +176,8 @@ model SoftwareCosts {
   @@index([ServiceAccountId], map: "IDX_SoftwareCosts_ServiceAccountId")
   @@index([Vendor], map: "IDX_SoftwareCosts_Vendor")
 }
+
+model Users {
+  id    Int     @id(map: "PK_Users") @default(autoincrement())
+  email String? @db.VarChar(255)
+}
