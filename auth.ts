@@ -1,4 +1,4 @@
- import NextAuth from "next-auth"; 
+import NextAuth from "next-auth"; 
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id"; 
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
@@ -6,8 +6,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [MicrosoftEntraID],
   secret: process.env.AUTH_SECRET as string,
   callbacks:{
-    authorized: async({auth}) => {
-      
+    authorized: async({auth}) => { 
+      console.log("signing in...")
       if (!auth?.user?.email) {
         return false; // Middleware redirects to /signin
       }
