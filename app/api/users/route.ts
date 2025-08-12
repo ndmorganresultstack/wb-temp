@@ -22,6 +22,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(!!userFound, { status: 200 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Failed to query for user' }, { status: 500 });
+    return NextResponse.json({ error: `Failed to query for user ${error}` }, { status: 500 });
   }
 }
