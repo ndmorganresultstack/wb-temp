@@ -1,0 +1,38 @@
+{
+  "auth": {
+    "identityProviders": {
+      "azureActiveDirectory": {
+        "userDetailsClaim": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+        "registration": {
+          "clientIdSettingName": "AUTH_MICROSOFT_ENTRA_ID_ID",
+          "clientSecretSettingName": "AUTH_MICROSOFT_ENTRA_ID_SECRET",
+          "openIdIssuer": "https://login.microsoftonline.com/be5cc231-0355-4ece-bc68-9fb5f4c9e31b/v2.0/"
+        }
+      }
+    }
+  },
+  "routes": [
+    {
+      "route": "/api/*",
+      "allowedRoles": ["anonymous", "authenticated"]
+    },
+    {
+      "route": "/login",
+      "rewrite": "/.auth/login/aad"
+    },
+    {
+      "route": "/logout",
+      "rewrite": "/.auth/logout"
+    },
+    {
+      "route": "/*",
+      "allowedRoles": ["authenticated"]
+    }
+  ],
+  "responseOverrides": {
+    "401": {
+      "redirect": "/login",
+      "statusCode": 302
+    }
+  }
+}
