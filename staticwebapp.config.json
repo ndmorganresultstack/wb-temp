@@ -13,6 +13,10 @@
   },
   "routes": [
     {
+      "route": "/_next/*",
+      "allowedRoles": ["anonymous", "authenticated"]
+    },
+    {
       "route": "/api/*",
       "allowedRoles": ["anonymous", "authenticated"]
     },
@@ -23,6 +27,26 @@
     {
       "route": "/logout",
       "rewrite": "/.auth/logout"
+    },
+    {
+      "route": "/",
+      "allowedRoles": ["anonymous", "authenticated"]
+    },
+    {
+      "route": "/dashboard",
+      "allowedRoles": ["authenticated"]
+    },
+    {
+      "route": "/internal-labor",
+      "allowedRoles": ["authenticated"]
+    },
+    {
+      "route": "/external-labor",
+      "allowedRoles": ["authenticated"]
+    },
+    {
+      "route": "/employees",
+      "allowedRoles": ["authenticated"]
     },
     {
       "route": "/*",
