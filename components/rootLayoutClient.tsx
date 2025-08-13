@@ -5,8 +5,7 @@ import { UserCircleIcon, CurrencyDollarIcon } from "@heroicons/react/24/outline"
 import { Roboto_Condensed, Roboto_Mono, Roboto_Serif } from "next/font/google";
 import Link from 'next/link';
 import Image from 'next/image';
-import { UserIcon } from '@heroicons/react/20/solid';
-import { logout } from '@/lib/actions/auth';
+import { UserIcon } from '@heroicons/react/20/solid'; 
 import { useSession } from 'next-auth/react';
 
 const robotoCondensed = Roboto_Condensed({
@@ -52,7 +51,7 @@ export default function RootLayoutClient({
   ];
 
   const handleLogout = () => {
-    logout();
+     
   };
 
   const handlePreferences = () => {
