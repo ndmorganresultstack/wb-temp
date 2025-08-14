@@ -20,9 +20,10 @@ export default withAITracking(reactPlugin, function HomePage() {
       headers: {
         Accept: 'application/json',
       },
+    }).then((value:Response)=> {
+      console.log(value);
     });
 
-    console.log(response);
 
   return (
     <div className="flex flex-col items-start justify-center min-h-screen bg-gray-100 p-8 font-roboto-condensed">
