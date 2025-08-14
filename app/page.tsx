@@ -15,6 +15,15 @@ export default withAITracking(reactPlugin, function HomePage() {
     window.location.href = '/.auth/login/aad?post_login_redirect_uri=/dashboard';
   };
 
+  const authUrl = `/.auth/me`;
+    const response = fetch(authUrl, {
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    console.log(response);
+
   return (
     <div className="flex flex-col items-start justify-center min-h-screen bg-gray-100 p-8 font-roboto-condensed">
       {user ? (
