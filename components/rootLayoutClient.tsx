@@ -64,6 +64,8 @@ export default function RootLayoutClient({
     // window.location.href = '/settings';
   };
 
+  console.log(user);
+
   return (
     <UserContext.Provider value={user}>
       <>
