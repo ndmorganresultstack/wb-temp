@@ -1,51 +1,40 @@
 // app/api/users/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { trackTrace, trackException } from '@/lib/appInsights';
+import { ClientPrincipal } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
-    // Log the API request
     trackTrace('Users API endpoint called', {
       url: request.url,
       method: request.method,
     });
 
-    const baseUrl = process.env.SWA_BASE_URL || '';
-    const authUrl = `${baseUrl}/.auth/me`;
-    const response = await fetch(authUrl, {
-      headers: {
-        Accept: 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      trackTrace('Users API: Auth fetch failed', {
-        status: response.status,
-        statusText: response.statusText,
-      });
+    // Get clientPrincipal from x-ms-client-principal header
+    const clientPrincipalHeader = request.headers.get('x-ms-client-principal');
+    if (!clientPrincipalHeader) {
+      trackTrace('Users API: No clientPrincipal header', { url: request.url });
       return NextResponse.json(
-        { error: 'Failed to fetch user info' },
-        { status: response.status }
+        { error: 'No authentication data provided' },
+        { status: 401 }
       );
     }
 
-    const payload = await response.json();
-    const { clientPrincipal } = payload;
+    // Decode the base64-encoded clientPrincipal
+    const decoded = Buffer.from(clientPrincipalHeader, 'base64').toString('utf-8');
+    const clientPrincipal: ClientPrincipal = JSON.parse(decoded);
 
-    // Log successful response
-    trackTrace('Users API: Auth payload received', {
-      userId: clientPrincipal?.userId || 'unknown',
-      identityProvider: clientPrincipal?.identityProvider || 'unknown',
+    trackTrace('Users API: User info retrieved', {
+      userId: clientPrincipal.userId || 'unknown',
+      identityProvider: clientPrincipal.identityProvider || 'unknown',
     });
 
     return NextResponse.json(clientPrincipal);
   } catch (error: any) {
-    // Log any errors
     trackException(error, { endpoint: '/api/users', url: request.url });
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 },
-      
+      { error: 'Internal server error', message: error.message },
+      { status: 500 }
     );
   }
 }

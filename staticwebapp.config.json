@@ -22,7 +22,7 @@
     },
     {
       "route": "/api/*",
-      "allowedRoles": ["anonymous", "authenticated"]
+      "allowedRoles": ["authenticated"]
     },
     {
       "route": "/login",

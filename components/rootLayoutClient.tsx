@@ -7,9 +7,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { UserIcon } from '@heroicons/react/20/solid';
 import { ClientPrincipal } from '@/lib/auth';
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { initializeAppInsights, trackTrace, reactPlugin } from '@/lib/appInsights';
 import { withAITracking } from '@microsoft/applicationinsights-react-js';
+import GetUserClient from './getUserClient';
 
 const robotoCondensed = Roboto_Condensed({
   variable: '--font-roboto-condensed',
@@ -26,7 +27,10 @@ const robotoSerif = Roboto_Serif({
   subsets: ['latin'],
 });
 
-const UserContext = createContext<ClientPrincipal | null>(null);
+const UserContext = createContext<{
+  user: ClientPrincipal | null;
+  setUser: (user: ClientPrincipal | null) => void;
+}>({ user: null, setUser: () => {} });
 
 export function useUser() {
   return useContext(UserContext);
@@ -39,10 +43,13 @@ function RootLayoutClient({
   children: React.ReactNode;
   user: ClientPrincipal | null;
 }>) {
+
   useEffect(() => {
     initializeAppInsights(); // Initialize client-side
     trackTrace('RootLayoutClient rendered', { user: JSON.stringify(user) });
   }, [user]);
+
+  const [userState, setUserState] = useState<ClientPrincipal | null>(user);
 
   const menuItems = [
     {
@@ -69,7 +76,7 @@ function RootLayoutClient({
   };
 
   return (
-    <UserContext.Provider value={user}>
+      <UserContext.Provider value={{ user: userState, setUser: setUserState }}>
       <div
         className={`${robotoCondensed.variable} ${robotoMono.variable} ${robotoSerif.variable} antialiased flex min-h-screen relative`}
       >
@@ -137,6 +144,7 @@ function RootLayoutClient({
           </div>
         </div>
         <main className="flex-1 p-4 overflow-y-auto" style={{ marginLeft: '50px' }}>
+          <GetUserClient />
           {children}
         </main>
       </div>

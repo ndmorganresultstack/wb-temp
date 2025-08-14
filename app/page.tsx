@@ -1,31 +1,19 @@
+// app/page.tsx
 'use client';
 
 import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid';
 import { useUser } from '@/components/rootLayoutClient';
 import { trackTrace } from '@/lib/appInsights';
-import './globals.css';
 import { withAITracking } from '@microsoft/applicationinsights-react-js';
 import { reactPlugin } from '@/lib/appInsights';
 
 export default withAITracking(reactPlugin, function HomePage() {
-  const user = useUser();
+  const { user } = useUser(); // Updated to use context
   trackTrace('HomePage rendered', { user: JSON.stringify(user) });
 
   const handleSignIn = () => {
     window.location.href = '/.auth/login/aad?post_login_redirect_uri=/dashboard';
   };
-
-  async function getUserInfo() {
-    const response = await fetch('/.auth/me');
-    const payload = await response.json();
-    const { clientPrincipal } = payload;
-    return clientPrincipal;
-  }
-
-  getUserInfo().then((value:any) => {
-    console.log(value);
-  })
-
 
   return (
     <div className="flex flex-col items-start justify-center min-h-screen bg-gray-100 p-8 font-roboto-condensed">
