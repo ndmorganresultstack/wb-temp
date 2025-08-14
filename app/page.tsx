@@ -15,15 +15,14 @@ export default withAITracking(reactPlugin, function HomePage() {
     window.location.href = '/.auth/login/aad?post_login_redirect_uri=/dashboard';
   };
 
-
-  async function getUser() {
-    const response = await fetch('/api/user');
+  async function getUserInfo() {
+    const response = await fetch('/.auth/me');
     const payload = await response.json();
     const { clientPrincipal } = payload;
     return clientPrincipal;
   }
 
-  getUser().then((value:any) => {
+  getUserInfo().then((value:any) => {
     console.log(value);
   })
 
