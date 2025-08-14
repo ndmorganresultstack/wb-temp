@@ -1,4 +1,6 @@
 // lib/auth.ts
+'use server';
+
 export interface ClientPrincipal {
   identityProvider: string;
   userId: string;
@@ -13,7 +15,7 @@ export async function getUserInfo(): Promise<ClientPrincipal | null> {
     console.log('Skipping auth fetch during Next.js build');
     return null;
   }
-  
+
   try {
     // Use SWA_BASE_URL for local or production, fallback to relative URL
     const baseUrl = process.env.SWA_BASE_URL || '';
