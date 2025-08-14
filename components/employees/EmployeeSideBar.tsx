@@ -194,7 +194,7 @@ export default function EmployeeSideBar({ selectedEmployee, onClose, onUpdate }:
       case 'TermDate':
         return employeeData.TermDate ? new Date(employeeData.TermDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : ' -- ';
       case 'Birthday':
-        return employeeData.Birthday ? new Date(employeeData.Birthday).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'N/A';
+        return employeeData.Birthday ? new Date(employeeData.Birthday).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) : 'N/A';
       case 'TOS':
         return employeeData.TOS ? employeeData.TOS.toString() : '0';
       case 'BusinessTitleId':
