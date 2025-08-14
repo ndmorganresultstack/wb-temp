@@ -10,7 +10,9 @@ export async function GET(request: NextRequest) {
       method: request.method,
     });
 
-    const response = await fetch('/.auth/me', {
+    const baseUrl = process.env.SWA_BASE_URL || '';
+    const authUrl = `${baseUrl}/.auth/me`;
+    const response = await fetch(authUrl, {
       headers: {
         Accept: 'application/json',
       },
