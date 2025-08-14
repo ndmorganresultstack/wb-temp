@@ -23,7 +23,7 @@ export default function GetUserClient() {
       const payload = await response.json();
       const { clientPrincipal } = payload;
       if (!clientPrincipal) {
-        throw new Error('No clientPrincipal in response');
+        return null;
       }
       trackTrace('Client-side user info retrieved', {
         userId: clientPrincipal.userId || 'unknown',
