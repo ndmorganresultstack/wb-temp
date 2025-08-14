@@ -66,6 +66,6 @@ export async function GET() {
     return NextResponse.json({ laborCostData, totals });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Failed to fetch labor cost data' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch labor cost data'+error }, { status: 500 });
   }
 }
