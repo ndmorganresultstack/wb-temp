@@ -1,4 +1,6 @@
 // lib/auth.ts
+import { trackException, trackTrace } from './appInsights';
+
 export interface ClientPrincipal {
   identityProvider: string;
   userId: string;
@@ -10,30 +12,29 @@ export interface ClientPrincipal {
 export async function getUserInfo(): Promise<ClientPrincipal | null> {
   // Skip fetch during Next.js build
   if (process.env.NEXT_BUILD === 'true') {
-    console.log('Skipping auth fetch during Next.js build');
+    trackTrace('Skipping auth fetch during Next.js build', { environment: process.env.NODE_ENV });
     return null;
   }
 
   try {
-    // Use SWA_BASE_URL for local or production, fallback to relative URL
     const baseUrl = process.env.SWA_BASE_URL || '';
     const authUrl = `${baseUrl}/.auth/me`;
-    console.log('Fetching user info from:', authUrl); // Debug log
+    trackTrace('Fetching user info', { authUrl });
     const response = await fetch(authUrl, {
       headers: {
         'Accept': 'application/json',
       },
     });
     if (!response.ok) {
-      console.log(`Auth fetch failed: ${response.status} ${response.statusText}`);
+      trackTrace('Auth fetch failed', { status: response.status, statusText: response.statusText });
       return null;
     }
     const payload = await response.json();
-    console.log('Auth payload:', payload); // Debug log
+    trackTrace('Auth payload received', { payload: JSON.stringify(payload) });
     const { clientPrincipal } = payload;
     return clientPrincipal || null;
-  } catch (error) {
-    console.error('Error fetching user info:', error);
+  } catch (error: any) {
+    trackException(error, { authUrl: `${process.env.SWA_BASE_URL}/.auth/me` });
     return null;
   }
 }

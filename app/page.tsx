@@ -1,16 +1,18 @@
 'use client';
 
 import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid';
-import { useUser } from '@/components/rootLayoutClient'
+import { useUser } from '@/components/rootLayoutClient';
+import { trackTrace } from '@/lib/appInsights';
 import './globals.css';
+import { withAITracking } from '@microsoft/applicationinsights-react-js';
+import { reactPlugin } from '@/lib/appInsights';
 
-export default function HomePage() {
+export default withAITracking(reactPlugin, function HomePage() {
   const user = useUser();
-  console.log('HomePage user:', user); // Debug log
+  trackTrace('HomePage rendered', { user: JSON.stringify(user) });
 
   const handleSignIn = () => {
-    // Redirect to Azure Static Web Apps login endpoint
-    window.location.href = '/.auth/login/aad?post_login_redirect_uri=/';
+    window.location.href = '/.auth/login/aad?post_login_redirect_uri=/dashboard';
   };
 
   return (
@@ -42,4 +44,4 @@ export default function HomePage() {
       )}
     </div>
   );
-}
+});

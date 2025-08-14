@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
-import RootLayoutClient from "@/components/rootLayoutClient"; 
-import { getUserInfo, ClientPrincipal } from "@/lib/auth";
+import type { Metadata } from 'next';
+import RootLayoutClient from '@/components/rootLayoutClient';
+import { initializeAppInsights } from '@/lib/appInsights';
 
 export const metadata: Metadata = {
-  title: "Willowbridge IT Dashboard",
-  description: "",
+  title: 'Willowbridge IT Dashboard',
+  description: 'Dashboard for managing IT costs',
 };
 
 export default async function RootLayout({
@@ -12,14 +12,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user= await getUserInfo();
-console.log('RootLayout user:', user); // Debug log
+  initializeAppInsights(); // Safe for server-side
   return (
     <html lang="en">
       <body>
-      <RootLayoutClient user={user}>
-        {children}
-      </RootLayoutClient>
+        <RootLayoutClient user={null}>{children}</RootLayoutClient>
       </body>
     </html>
   );

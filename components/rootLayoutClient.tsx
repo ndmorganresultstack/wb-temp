@@ -7,7 +7,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { UserIcon } from '@heroicons/react/20/solid';
 import { ClientPrincipal } from '@/lib/auth';
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useEffect } from 'react';
+import { initializeAppInsights, trackTrace, reactPlugin } from '@/lib/appInsights';
+import { withAITracking } from '@microsoft/applicationinsights-react-js';
 
 const robotoCondensed = Roboto_Condensed({
   variable: '--font-roboto-condensed',
@@ -30,13 +32,18 @@ export function useUser() {
   return useContext(UserContext);
 }
 
-export default function RootLayoutClient({
+function RootLayoutClient({
   children,
   user,
 }: Readonly<{
   children: React.ReactNode;
   user: ClientPrincipal | null;
 }>) {
+  useEffect(() => {
+    initializeAppInsights(); // Initialize client-side
+    trackTrace('RootLayoutClient rendered', { user: JSON.stringify(user) });
+  }, [user]);
+
   const menuItems = [
     {
       name: 'Costs',
@@ -54,23 +61,18 @@ export default function RootLayoutClient({
   ];
 
   const handleLogout = () => {
-    // Redirect to Azure Static Web Apps logout endpoint
     window.location.href = '/.auth/logout?post_logout_redirect_uri=/';
   };
 
   const handlePreferences = () => {
-    console.log('Preferences clicked');
-    console.log(user);
+    trackTrace('User preferences clicked');
   };
-
 
   return (
     <UserContext.Provider value={user}>
-      <>
       <div
         className={`${robotoCondensed.variable} ${robotoMono.variable} ${robotoSerif.variable} antialiased flex min-h-screen relative`}
       >
-        {/* Sidebar */}
         <div className="w-[50px] bg-gray-800 text-white p-2 h-screen fixed top-0 left-0 z-50 flex flex-col items-center">
           <div className="mb-8">
             <Link href="/">
@@ -109,7 +111,6 @@ export default function RootLayoutClient({
               </div>
             ))}
           </nav>
-          {/* Profile Dropdown */}
           <div className="mt-auto">
             <div className="relative group">
               <button className="flex items-center justify-center w-full p-2 rounded hover:bg-gray-700">
@@ -135,13 +136,12 @@ export default function RootLayoutClient({
             </div>
           </div>
         </div>
-
-        {/* Main Content */}
         <main className="flex-1 p-4 overflow-y-auto" style={{ marginLeft: '50px' }}>
           {children}
         </main>
       </div>
-      </>
     </UserContext.Provider>
   );
 }
+
+export default withAITracking(reactPlugin, RootLayoutClient);
