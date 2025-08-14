@@ -6,6 +6,7 @@ import './globals.css';
 
 export default function HomePage() {
   const user = useUser();
+  console.log('HomePage user:', user); // Debug log
 
   const handleSignIn = () => {
     // Redirect to Azure Static Web Apps login endpoint

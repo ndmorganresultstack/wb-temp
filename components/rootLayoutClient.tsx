@@ -60,11 +60,9 @@ export default function RootLayoutClient({
 
   const handlePreferences = () => {
     console.log('Preferences clicked');
-    // Example: Navigate to a settings page
-    // window.location.href = '/settings';
+    console.log(user);
   };
 
-  console.log(user);
 
   return (
     <UserContext.Provider value={user}>

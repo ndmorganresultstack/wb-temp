@@ -13,7 +13,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const user= await getUserInfo();
-
+console.log('RootLayout user:', user); // Debug log
   return (
     <html lang="en">
       <body>
