@@ -1,7 +1,10 @@
 import prisma from '@/lib/prisma';
-import { Prisma } from '@/app/generated/prisma';
+import { Prisma, PrismaClient } from '@/app/generated/prisma'; 
 
-const defaultDisplayFieldMap = {
+// Define the union type for relatedModel based on defaultDisplayFieldMap keys
+export type RelatedModel = keyof typeof defaultDisplayFieldMap;
+
+export const defaultDisplayFieldMap = {
   BusinessTitles: 'TitleName',
   FunctionCategories: 'CategoryName',
   RoleResponsibilities: 'RoleName',
@@ -12,25 +15,40 @@ const defaultDisplayFieldMap = {
   Employees: 'EE_NO',
 };
 
-export async function fetchRelationOptions(relatedModel: string, displayFields: string[] = ['name']) {
-  try {
-    const modelAccessor = relatedModel.charAt(0).toLowerCase() + relatedModel.slice(1);
+// Type definitions
+type PrismaModelNames = typeof Prisma.dmmf.datamodel.models[number]['name'];
+type PrismaModelDelegate = {
+  create: (...args: any[]) => any;
+  findMany: (...args: any[]) => any;
+};
+type PrismaModelKeys = {
+  [K in keyof typeof prisma]: typeof prisma[K] extends { create: (...args: any[]) => any } ? K : never;
+}[keyof typeof prisma];
 
-    if (!prisma[modelAccessor as keyof typeof prisma]) {
+function getPrismaModel<T extends PrismaModelNames>(modelName: T): PrismaModelDelegate {
+  const modelAccessor = modelName.charAt(0).toLowerCase() + modelName.slice(1) as PrismaModelKeys;
+  const model = prisma[modelAccessor];
+
+  if (!model || typeof model.create !== 'function') {
+    throw new Error(`Model ${modelName} not found or does not support create operation in Prisma client`);
+  }
+
+  return model as PrismaModelDelegate;
+}
+
+export async function fetchRelationOptions(relatedModel: RelatedModel, displayFields: string[] = ['name']) {
+  try {
+    const validModels = Prisma.dmmf.datamodel.models.map((m) => m.name) as string[];
+    if (!validModels.includes(relatedModel)) {
       throw new Error(`Model ${relatedModel} not found in Prisma client`);
     }
 
-    // Ensure displayFields is not empty
-    if (displayFields.length === 0) {
-      displayFields = ['name'];
-    }
+    const prismaModel = getPrismaModel(relatedModel as PrismaModelNames);
 
-    // Use the default display field from the map or the first field in displayFields
     const primaryField = defaultDisplayFieldMap[relatedModel] || displayFields[0];
 
-    // Validate all display fields
-    const dmmf = Prisma.dmmf;
     let validDisplayFields = displayFields;
+    const dmmf = Prisma.dmmf;
     if (dmmf) {
       const model = dmmf.datamodel.models.find((m) => m.name === relatedModel);
       if (model) {
@@ -46,15 +64,15 @@ export async function fetchRelationOptions(relatedModel: string, displayFields: 
       }
     } else {
       console.warn(`DMMF not available, using provided display fields for ${relatedModel}`);
+      validDisplayFields = [primaryField];
     }
 
-    // Build the select object for Prisma query
     const selectFields = validDisplayFields.reduce(
       (acc, field) => ({ ...acc, [field]: true }),
       { [primaryField]: true }
     );
 
-    const data = await prisma[modelAccessor as keyof typeof prisma].findMany({
+    const data = await prismaModel.findMany({
       select: selectFields,
     });
 
@@ -68,10 +86,10 @@ export async function fetchRelationOptions(relatedModel: string, displayFields: 
         )
       )
       .map((item: any) => ({
-        value: item[primaryField], // Use primaryField (e.g., EE_NO) as the value
+        value: item[primaryField],
         label: validDisplayFields
           .map((field) => item[field])
-          .join(' '), // Concatenate fields for display, e.g., "EE123 - John Doe"
+          .join(' '),
       }));
 
     console.log(`Fetched options for ${relatedModel}:`, options);
@@ -118,15 +136,17 @@ export async function getModelMetadata(modelName: string) {
 
 export async function fetchModelData(modelName: string) {
   try {
-    console.log('Prisma client keys:', Object.keys(prisma));
-    const modelAccessor = modelName.charAt(0).toLowerCase() + modelName.slice(1);
-    console.log(`Fetching data for ${modelName} using prisma.${modelAccessor}`);
-
-    if (!prisma[modelAccessor as keyof typeof prisma]) {
+    const validModels = Prisma.dmmf.datamodel.models.map((m) => m.name) as string[];
+    if (!validModels.includes(modelName)) {
       throw new Error(`Model ${modelName} not found in Prisma client`);
     }
 
-    const data = await prisma[modelAccessor as keyof typeof prisma].findMany();
+    const prismaModel = getPrismaModel(modelName as PrismaModelNames);
+
+    const data = await prismaModel.findMany({
+      select: undefined,
+    });
+
     return data;
   } catch (error) {
     console.error(`Error fetching data for ${modelName}:`, error);

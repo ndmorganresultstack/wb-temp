@@ -3,6 +3,27 @@ import prisma from '@/lib/prisma';
 import { Prisma } from '@/app/generated/prisma';
 import { fetchModelData, getModelMetadata } from '@/lib/prisma-utils';
 
+// Type definitions
+type PrismaModelNames = typeof Prisma.dmmf.datamodel.models[number]['name'];
+type PrismaModelDelegate = {
+  create: (...args: any[]) => any;
+  update: (...args: any[]) => any;
+};
+type PrismaModelKeys = {
+  [K in keyof typeof prisma]: typeof prisma[K] extends { create: (...args: any[]) => any } ? K : never;
+}[keyof typeof prisma];
+
+function getPrismaModel<T extends PrismaModelNames>(modelName: T): PrismaModelDelegate {
+  const modelAccessor = modelName.charAt(0).toLowerCase() + modelName.slice(1) as PrismaModelKeys;
+  const model = prisma[modelAccessor];
+
+  if (!model || typeof model.create !== 'function') {
+    throw new Error(`Model ${modelName} not found or does not support create operation in Prisma client`);
+  }
+
+  return model as PrismaModelDelegate;
+}
+
 export async function GET(request: NextRequest) {
   const model = request.nextUrl.pathname.split('/').pop() || '';
   if (!model) {
@@ -25,20 +46,39 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Model parameter is missing' }, { status: 400 });
   }
 
+  const validModels = Prisma.dmmf.datamodel.models.map((m) => m.name) as string[];
+  if (!validModels.includes(model)) {
+    return NextResponse.json({ error: `Invalid model name: ${model}` }, { status: 400 });
+  }
+
   const data = await request.json();
   try {
-    const modelAccessor = model.charAt(0).toLowerCase() + model.slice(1);
-    if (!prisma[modelAccessor as keyof typeof prisma]) {
-      throw new Error(`Model ${model} not found in Prisma client`);
+    const prismaModel = getPrismaModel(model as PrismaModelNames);
+
+    // Validate required fields
+    const modelSchema = Prisma.dmmf.datamodel.models.find((m) => m.name === model);
+    const requiredFields = modelSchema?.fields
+      .filter((f) => f.isRequired && !f.isId && f.default === undefined)
+      .map((f) => f.name) || [];
+
+    for (const field of requiredFields) {
+      if (!(field in data)) {
+        return NextResponse.json({ error: `Missing required field: ${field}` }, { status: 400 });
+      }
     }
 
-    const createdRecord = await prisma[modelAccessor as keyof typeof prisma].create({
+    const createdRecord = await prismaModel.create({
       data,
     });
 
     return NextResponse.json(createdRecord);
   } catch (error) {
-    console.error(`Error creating record for ${model}:`, error);
+    console.error(`Error creating record for ${model}:`, {
+      error: (error as Error).message,
+      stack: (error as Error).stack,
+      model,
+      data,
+    });
     return NextResponse.json({ error: (error as Error).message }, { status: 500 });
   }
 }
@@ -49,12 +89,15 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ error: 'Model parameter is missing' }, { status: 400 });
   }
 
+  const validModels = Prisma.dmmf.datamodel.models.map((m) => m.name) as string[];
+  if (!validModels.includes(model)) {
+    return NextResponse.json({ error: `Invalid model name: ${model}` }, { status: 400 });
+  }
+
   const updates = await request.json();
-  try {
-    const modelAccessor = model.charAt(0).toLowerCase() + model.slice(1);
-    if (!prisma[modelAccessor as keyof typeof prisma]) {
-      throw new Error(`Model ${model} not found in Prisma client`);
-    }
+  try { 
+    const prismaModel = getPrismaModel(model as PrismaModelNames); 
+ 
 
     let pkField = model.includes('Employees') ? 'EE_NO' : `${model}Id`;
     try {
@@ -66,16 +109,13 @@ export async function PUT(request: NextRequest) {
       console.error(`Falling back to default pkField for ${model} due to DMMF error:`, error);
     }
 
-    // Handle single field update or full row update
     if (updates.field && updates.value !== undefined) {
-      // Existing single field update
-      await prisma[modelAccessor as keyof typeof prisma].update({
+      await prismaModel.update({
         where: { [pkField]: updates[pkField] },
         data: { [updates.field]: updates.value },
       });
     } else {
-      // Full row update
-      await prisma[modelAccessor as keyof typeof prisma].update({
+      await prismaModel.update({
         where: { [pkField]: updates[pkField] },
         data: updates,
       });

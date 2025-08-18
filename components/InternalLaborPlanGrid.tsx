@@ -4,13 +4,14 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community'; 
 import { roundToTwoDecimals, wbTheme } from '@/lib/helper';
+import { SelectOption } from '@/types/prisma';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const InternalLaborPlanGrid = () => {
-  const [rowData, setRowData] = useState([]);
-  const [employeeOptions, setEmployeeOptions] = useState([]);
-  const [serviceAccountOptions, setServiceAccountOptions] = useState([]);
+  const [rowData, setRowData] = useState<any[]>([]);
+  const [employeeOptions, setEmployeeOptions] = useState<SelectOption[]>([]);
+  const [serviceAccountOptions, setServiceAccountOptions] = useState<SelectOption[]>([]);
   const gridRef = useRef<AgGridReact>(null);
 
   useEffect(() => {

@@ -5,7 +5,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 import { themeBalham } from 'ag-grid-community';
 import useSWR from 'swr';
-import { roundToTwoDecimals, wbTheme, myTheme } from '@/lib/helper';
+import { roundToTwoDecimals, wbTheme } from '@/lib/helper';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -111,9 +111,14 @@ export default function DynamicTable({ model, relationDisplayFields = {} }: Dyna
       });
 
       const results = await Promise.all(promises);
+      // Filter out undefined results and map to [fieldName, options] pairs
       setSelectOptions((prev) => ({
         ...prev,
-        ...Object.fromEntries(results.map(({ fieldName, options }) => [fieldName, options])),
+        ...Object.fromEntries(
+          results
+            .filter((result): result is { fieldName: string; options: { value: string; label: string }[] } => result !== undefined)
+            .map(({ fieldName, options }) => [fieldName, options])
+        ),
       }));
       setIsLoadingSelectOptions(false);
     };
@@ -249,18 +254,33 @@ export default function DynamicTable({ model, relationDisplayFields = {} }: Dyna
       }
 
       if (field.type === 'DateTime') {
-        return {
-          ...base,
-          cellEditor: 'agDateCellEditor',
-          cellEditorParams: {
-            min: '2000-01-01',
-            max: '2099-12-31',
-            dateFormat: 'yyyy-MM-dd',
-            cellEditorPopup: true,
-          },
-          cellRenderer: (params: any) => (params.value ? new Date(params.value).toLocaleDateString() : ''),
-          width:80
-        };
+        if(field.name === 'Birthday'){
+          return {
+            ...base,
+            cellEditor: 'agDateCellEditor',
+            cellEditorParams: {
+              min: '2000-01-01',
+              max: '2099-12-31',
+              dateFormat: 'MM-dd',
+              cellEditorPopup: true,
+            },
+            cellRenderer: (params: any) => (params.value ? new Date(params.value).toLocaleDateString() : ''),
+            width:80
+          };     
+        }else{
+          return {
+            ...base,
+            cellEditor: 'agDateCellEditor',
+            cellEditorParams: {
+              min: '2000-01-01',
+              max: '2099-12-31',
+              dateFormat: 'yyyy-MM-dd',
+              cellEditorPopup: true,
+            },
+            cellRenderer: (params: any) => (params.value ? new Date(params.value).toLocaleDateString() : ''),
+            width:80
+          };          
+        }
       } else if (field.type === 'Int' || field.type === 'Decimal') {
         return {
           ...base,
