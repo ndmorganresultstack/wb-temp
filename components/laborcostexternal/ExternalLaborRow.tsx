@@ -1,5 +1,5 @@
 import React from 'react'; 
-import { ExternalLaborCost } from '@/lib/types';
+import { ExternalLaborCost } from '@/lib/helper';
 
 interface ExternalLaborRowProps {
   ExternalLabor: ExternalLaborCost;

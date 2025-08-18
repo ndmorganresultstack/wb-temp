@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react'; 
-import { ExternalLaborCost, ExternalTotalsRow } from '@/lib/types';
+import { ExternalLaborCost, ExternalTotalsRow } from '@/lib/helper';
 import ExternalLaborCostHeader from '@/components/laborcostexternal/ExternalLaborCostHeader'; 
 import ExternalLaborRow from '@/components/laborcostexternal/ExternalLaborRow';
 import ExternalLaborSideBar from '@/components/laborcostexternal/ExternalLaborSideBar'; 

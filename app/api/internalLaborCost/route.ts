@@ -1,7 +1,7 @@
 
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { InternalLaborCost } from '@/lib/types';
+import { InternalLaborCost } from '@/lib/helper';
 
 // Define a type for the totals row
 interface TotalsRow {

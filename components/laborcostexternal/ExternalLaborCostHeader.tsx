@@ -2,7 +2,7 @@ import React from 'react';
 import SearchIcon from '../icons/SearchIcon';
 import FilterIcon from '../icons/FilterIcon';
 import ColumnsIcon from '../icons/ColumnsIcon';
-import { ExternalLaborCost } from '@/lib/types';
+import { ExternalLaborCost } from '@/lib/helper';
 
 interface ExternalLaborCostHeaderProps {
   searchQuery: string;

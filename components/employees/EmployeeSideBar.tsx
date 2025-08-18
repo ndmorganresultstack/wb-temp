@@ -2,7 +2,7 @@
 import { BusinessTitles, Employees } from "@/app/generated/prisma";
 import { BriefcaseIcon, CalendarIcon, ClockIcon, EnvelopeIcon, MapPinIcon, PhoneIcon, PencilIcon } from '@heroicons/react/24/outline';
 import { useState, useEffect } from 'react';
-import { EmployeeWithRelations } from '@/lib/types';
+import { EmployeeWithRelations } from '@/lib/helper';
 import { Decimal } from "@prisma/client/runtime/index-browser.js";
 
 export async function getBusinessTitles() {

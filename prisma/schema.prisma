@@ -9,50 +9,38 @@ datasource db {
 }
 
 model BusinessTitles {
-  BusinessTitleId Int         @id(map: "PK__Business__D38C0BE3A7D19208") @default(autoincrement())
-  TitleName       String      @unique(map: "UQ__Business__252BE89C86D104CA") @db.NVarChar(100)
-  CreatedAt       DateTime?   @default(now(), map: "DF__BusinessT__Creat__3C69FB99") @db.DateTime
-  UpdatedAt       DateTime?   @default(now(), map: "DF__BusinessT__Updat__3D5E1FD2") @db.DateTime
-  Employees       Employees[]
-
-  @@index([TitleName], map: "IDX_BusinessTitles_TitleName")
+  BusinessTitleId Int       @id(map: "PK__Business__D38C0BE384617C5A") @default(autoincrement())
+  TitleName       String    @unique(map: "UQ__Business__252BE89C43458A6D") @db.NVarChar(100)
+  CreatedAt       DateTime? @default(now(), map: "DF__BusinessT__Creat__71D1E811") @db.DateTime
+  UpdatedAt       DateTime? @default(now(), map: "DF__BusinessT__Updat__72C60C4A") @db.DateTime
 }
 
 model Employees {
-  EE_NO                String               @id(map: "PK__Employee__7038AE3CED5DF36B") @db.VarChar(20)
-  LastName             String               @db.NVarChar(50)
-  FirstName            String               @db.NVarChar(50)
-  Headcount            Int?                 @default(1, map: "DF__Employees__Headc__49C3F6B7")
-  BusinessTitleId      Int
-  FunctionCategoryId   Int
-  RoleResponsibilityId Int
-  HireDate             DateTime?            @db.DateTime
-  TOS                  Decimal?             @db.Decimal(10, 2)
-  TermDate             DateTime?            @db.DateTime
-  Birthday             DateTime?            @db.Date
-  HomeAddress          String?              @db.NVarChar(255)
-  Apt                  String?              @db.NVarChar(50)
-  City                 String?              @db.NVarChar(50)
-  HomeStateAbbrev      String?              @db.Char(2)
-  Zip                  String?              @db.VarChar(10)
-  HomePhone            String?              @db.VarChar(20)
-  PersonalEmail        String?              @db.NVarChar(100)
-  EmployeeStatus       String?              @default("Active", map: "DF__Employees__Emplo__4D94879B") @db.NVarChar(20)
-  CreatedAt            DateTime?            @default(now(), map: "DF__Employees__Creat__4F7CD00D") @db.DateTime
-  UpdatedAt            DateTime?            @default(now(), map: "DF__Employees__Updat__5070F446") @db.DateTime
-  BusinessTitles       BusinessTitles       @relation(fields: [BusinessTitleId], references: [BusinessTitleId], onUpdate: NoAction, map: "FK__Employees__Busin__4AB81AF0")
-  FunctionCategories   FunctionCategories   @relation(fields: [FunctionCategoryId], references: [FunctionCategoryId], onUpdate: NoAction, map: "FK__Employees__Funct__4BAC3F29")
-  RoleResponsibilities RoleResponsibilities @relation(fields: [RoleResponsibilityId], references: [RoleResponsibilityId], onUpdate: NoAction, map: "FK__Employees__RoleR__4CA06362")
-  InternalLabor        InternalLabor[]
-
-  @@index([BusinessTitleId], map: "IDX_Employees_BusinessTitleId")
-  @@index([EmployeeStatus], map: "IDX_Employees_EmployeeStatus")
-  @@index([FunctionCategoryId], map: "IDX_Employees_FunctionCategoryId")
-  @@index([RoleResponsibilityId], map: "IDX_Employees_RoleResponsibilityId")
+  EE_NO              String    @id(map: "PK__Employee__7038AE3CE2CF9795") @db.VarChar(20)
+  LastName           String    @db.NVarChar(50)
+  FirstName          String    @db.NVarChar(50)
+  Headcount          Int?      @default(1, map: "DF__Employees__Headc__73BA3083")
+  HireDate           DateTime? @db.DateTime
+  TOS                Decimal?  @db.Decimal(10, 2)
+  TermDate           DateTime? @db.DateTime
+  Birthday           DateTime? @db.Date
+  HomeAddress        String?   @db.NVarChar(255)
+  Apt                String?   @db.NVarChar(50)
+  City               String?   @db.NVarChar(50)
+  HomeStateAbbrev    String?   @db.Char(2)
+  Zip                String?   @db.VarChar(10)
+  HomePhone          String?   @db.VarChar(20)
+  PersonalEmail      String?   @db.NVarChar(100)
+  EmployeeStatus     String?   @default("Active", map: "DF__Employees__Emplo__74AE54BC") @db.NVarChar(20)
+  CreatedAt          DateTime? @default(now(), map: "DF__Employees__Creat__75A278F5") @db.DateTime
+  UpdatedAt          DateTime? @default(now(), map: "DF__Employees__Updat__76969D2E") @db.DateTime
+  BusinessTitle      String?   @db.NVarChar(255)
+  FunctionCategory   String?   @db.NVarChar(255)
+  RoleResponsibility String?   @db.NVarChar(255)
 }
 
 model ExternalLabor {
-  VendorNO       String    @id(map: "PK__External__FC860088425EDB69") @db.VarChar(20)
+  VendorNO       String    @id(map: "PK__External__FC86008890DDCE61") @db.VarChar(20)
   Vendor         String    @db.NVarChar(100)
   Purpose        String    @db.NVarChar(255)
   StartDate      DateTime? @db.DateTime
@@ -60,89 +48,70 @@ model ExternalLabor {
   Hours          Decimal   @db.Decimal(10, 2)
   Rate           Decimal   @db.Decimal(10, 2)
   TotalCost      Decimal   @db.Decimal(15, 2)
-  ShareAdmin     Decimal?  @default(1.0000, map: "DF__ExternalL__Share__5FB337D6") @db.Decimal(5, 4)
+  ShareAdmin     Decimal?  @default(1.0000, map: "DF__ExternalL__Share__778AC167") @db.Decimal(5, 4)
   AnnualAdmin    Decimal?  @db.Decimal(15, 2)
   AnnualProperty Decimal?  @db.Decimal(15, 2)
-  CreatedAt      DateTime? @default(now(), map: "DF__ExternalL__Creat__60A75C0F") @db.DateTime
-  UpdatedAt      DateTime? @default(now(), map: "DF__ExternalL__Updat__619B8048") @db.DateTime
-
-  @@index([Vendor], map: "IDX_ExternalLabor_Vendor")
-}
-
-model FiscalYearLaborDetails {
-  FYDetailID    Int           @id(map: "PK__FiscalYe__CFE79F99DE1E9D84") @default(autoincrement())
-  LaborID       Int
-  FiscalYear    Int
-  AnnualAmount  Decimal       @db.Decimal(15, 2)
-  IncreasePct   Decimal?      @db.Decimal(5, 4)
-  YoYChange     Decimal?      @db.Decimal(15, 2)
-  CreatedAt     DateTime?     @default(now(), map: "DF__FiscalYea__Creat__5BE2A6F2") @db.DateTime
-  UpdatedAt     DateTime?     @default(now(), map: "DF__FiscalYea__Updat__5CD6CB2B") @db.DateTime
-  InternalLabor InternalLabor @relation(fields: [LaborID], references: [LaborID], onUpdate: NoAction, map: "FK__FiscalYea__Labor__5AEE82B9")
-
-  @@unique([LaborID, FiscalYear], map: "UQ__FiscalYe__AB8BDD22BF5F9509")
-  @@index([FiscalYear], map: "IDX_FiscalYearLaborDetails_FiscalYear")
-  @@index([LaborID], map: "IDX_FiscalYearLaborDetails_LaborID")
+  CreatedAt      DateTime? @default(now(), map: "DF__ExternalL__Creat__787EE5A0") @db.DateTime
+  UpdatedAt      DateTime? @default(now(), map: "DF__ExternalL__Updat__797309D9") @db.DateTime
 }
 
 model FunctionCategories {
-  FunctionCategoryId Int         @id(map: "PK__Function__0AE2458BC908B300") @default(autoincrement())
-  CategoryName       String      @unique(map: "UQ__Function__8517B2E023FA7E34") @db.NVarChar(50)
-  CreatedAt          DateTime?   @default(now(), map: "DF__FunctionC__Creat__412EB0B6") @db.DateTime
-  UpdatedAt          DateTime?   @default(now(), map: "DF__FunctionC__Updat__4222D4EF") @db.DateTime
-  Employees          Employees[]
-
-  @@index([CategoryName], map: "IDX_FunctionCategories_CategoryName")
+  FunctionCategoryId Int       @id(map: "PK__Function__0AE2458B0CFD5860") @default(autoincrement())
+  CategoryName       String    @unique(map: "UQ__Function__8517B2E073D862A2") @db.NVarChar(50)
+  CreatedAt          DateTime? @default(now(), map: "DF__FunctionC__Creat__7C4F7684") @db.DateTime
+  UpdatedAt          DateTime? @default(now(), map: "DF__FunctionC__Updat__7D439ABD") @db.DateTime
 }
 
 model InternalLabor {
-  LaborID                Int                      @id(map: "PK__Internal__A8D21A3A27F37C0D") @default(autoincrement())
-  EE_NO                  String                   @db.VarChar(20)
-  BaseAnnualSalary       Decimal                  @db.Decimal(15, 2)
-  MonthlySalary          Decimal?                 @db.Decimal(19, 6)
-  Bonus                  Decimal                  @db.Decimal(15, 2)
-  BonusPct               Decimal                  @db.Decimal(5, 4)
-  EESRE                  Decimal                  @db.Decimal(15, 2)
-  TotalCost              Decimal                  @db.Decimal(15, 2)
-  ShareAdmin             Decimal?                 @default(1.0000, map: "DF__InternalL__Share__5441852A") @db.Decimal(5, 4)
-  AnnualAdmin            Decimal?                 @db.Decimal(15, 2)
-  AnnualProperty         Decimal?                 @db.Decimal(15, 2)
-  ServiceAccountId       String?                  @db.VarChar(10)
-  MonthlyBreakdowns      String?                  @db.NVarChar(Max)
-  CreatedAt              DateTime?                @default(now(), map: "DF__InternalL__Creat__5629CD9C") @db.DateTime
-  UpdatedAt              DateTime?                @default(now(), map: "DF__InternalL__Updat__571DF1D5") @db.DateTime
-  FiscalYearLaborDetails FiscalYearLaborDetails[]
-  Employees              Employees                @relation(fields: [EE_NO], references: [EE_NO], onUpdate: NoAction, map: "FK__InternalL__EE_NO__534D60F1")
-  ServiceAccounts        ServiceAccounts?         @relation(fields: [ServiceAccountId], references: [ServiceAccountId], onDelete: NoAction, onUpdate: NoAction, map: "FK__InternalL__Servi__5535A963")
-
-  @@index([EE_NO], map: "IDX_InternalLabor_EE_NO")
-  @@index([EE_NO], map: "IDX_InternalLabor_Function")
-  @@index([ServiceAccountId], map: "IDX_InternalLabor_ServiceAccountId")
+  InternalLaborId   Int      @id(map: "PK_InternalLabor")
+  FiscalYear        Int
+  Employee          String?  @db.VarChar(255)
+  ServiceAccount    String   @db.NVarChar(255)
+  BaseAnnualSalary  Decimal? @db.Decimal(15, 2)
+  AprSalaryAnnual   Decimal? @db.Decimal(15, 2)
+  JanSalaryAnnual   Decimal? @db.Decimal(15, 2)
+  SalaryIncreasePct Int?
+  BonusAnnual       Decimal? @db.Decimal(15, 2)
+  BonusPct          Int?
+  FYAnnualSalary    Decimal? @db.Decimal(15, 2)
+  FYBonus           Decimal? @db.Decimal(15, 2)
+  EESRE             Decimal? @db.Decimal(15, 2)
+  EESREPct          Int?
+  FYTotal           Decimal? @db.Decimal(15, 2)
+  AdminSharePct     Int?
+  AdminMgtAnnual    Decimal? @db.Decimal(15, 2)
+  PropMgtAnnual     Decimal? @db.Decimal(15, 2)
+  Jan               Decimal? @db.Decimal(15, 2)
+  Feb               Decimal? @db.Decimal(15, 2)
+  Mar               Decimal? @db.Decimal(15, 2)
+  Apr               Decimal? @db.Decimal(15, 2)
+  May               Decimal? @db.Decimal(15, 2)
+  Jun               Decimal? @db.Decimal(15, 2)
+  Jul               Decimal? @db.Decimal(15, 2)
+  Aug               Decimal? @db.Decimal(15, 2)
+  Sep               Decimal? @db.Decimal(15, 2)
+  Oct               Decimal? @db.Decimal(15, 2)
+  Nov               Decimal? @db.Decimal(15, 2)
+  Dec               Decimal? @db.Decimal(15, 2)
 }
 
 model RoleResponsibilities {
-  RoleResponsibilityId Int         @id(map: "PK__RoleResp__F7E3CD40C1D237E4") @default(autoincrement())
-  RoleName             String      @unique(map: "UQ__RoleResp__8A2B6160E784557B") @db.NVarChar(100)
-  CreatedAt            DateTime?   @default(now(), map: "DF__RoleRespo__Creat__45F365D3") @db.DateTime
-  UpdatedAt            DateTime?   @default(now(), map: "DF__RoleRespo__Updat__46E78A0C") @db.DateTime
-  Employees            Employees[]
-
-  @@index([RoleName], map: "IDX_RoleResponsibilities_RoleName")
+  RoleResponsibilityId Int       @id(map: "PK__RoleResp__F7E3CD40BB06866A") @default(autoincrement())
+  RoleName             String    @unique(map: "UQ__RoleResp__8A2B616050C1DAC3") @db.NVarChar(100)
+  CreatedAt            DateTime? @default(now(), map: "DF__RoleRespo__Creat__01142BA1") @db.DateTime
+  UpdatedAt            DateTime? @default(now(), map: "DF__RoleRespo__Updat__02084FDA") @db.DateTime
 }
 
 model ServiceAccounts {
-  ServiceAccountId   String          @id(map: "PK__ServiceA__200871320EF88AF4") @db.VarChar(10)
+  ServiceAccountId   String          @id(map: "PK__ServiceA__20087132456A95EC") @db.VarChar(10)
   ServiceDescription String          @db.NVarChar(255)
-  CreatedAt          DateTime?       @default(now(), map: "DF__ServiceAc__Creat__37A5467C") @db.DateTime
-  UpdatedAt          DateTime?       @default(now(), map: "DF__ServiceAc__Updat__38996AB5") @db.DateTime
-  InternalLabor      InternalLabor[]
+  CreatedAt          DateTime?       @default(now(), map: "DF__ServiceAc__Creat__02FC7413") @db.DateTime
+  UpdatedAt          DateTime?       @default(now(), map: "DF__ServiceAc__Updat__03F0984C") @db.DateTime
   SoftwareCosts      SoftwareCosts[]
-
-  @@index([ServiceDescription], map: "IDX_ServiceAccounts_ServiceDescription")
 }
 
 model SoftwareCosts {
-  SoftwareID         Int              @id(map: "PK__Software__25EDB8DCAC0EC245") @default(autoincrement())
+  SoftwareID         Int              @id(map: "PK__Software__25EDB8DC8002CD72") @default(autoincrement())
   Vendor             String           @db.NVarChar(100)
   ProductDescription String           @db.NVarChar(255)
   SoldBy             String?          @db.NVarChar(50)
@@ -167,14 +136,9 @@ model SoftwareCosts {
   AnnualProperty     Decimal?         @db.Decimal(15, 2)
   ServiceAccountId   String?          @db.VarChar(10)
   Category           String?          @db.NVarChar(100)
-  CreatedAt          DateTime?        @default(now(), map: "DF__SoftwareC__Creat__6754599E") @db.DateTime
-  UpdatedAt          DateTime?        @default(now(), map: "DF__SoftwareC__Updat__68487DD7") @db.DateTime
+  CreatedAt          DateTime?        @default(now(), map: "DF__SoftwareC__Creat__04E4BC85") @db.DateTime
+  UpdatedAt          DateTime?        @default(now(), map: "DF__SoftwareC__Updat__05D8E0BE") @db.DateTime
   ServiceAccounts    ServiceAccounts? @relation(fields: [ServiceAccountId], references: [ServiceAccountId], onDelete: NoAction, onUpdate: NoAction, map: "FK__SoftwareC__Servi__66603565")
-
-  @@index([Category], map: "IDX_SoftwareCosts_Category")
-  @@index([InUse], map: "IDX_SoftwareCosts_InUse")
-  @@index([ServiceAccountId], map: "IDX_SoftwareCosts_ServiceAccountId")
-  @@index([Vendor], map: "IDX_SoftwareCosts_Vendor")
 }
 
 model Users {

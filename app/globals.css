@@ -23,11 +23,28 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-roboto-condensed), sans-serif;
+  font-family: var(--font-roboto-condensed), sans-serif; 
+}
+.ag-theme-balham {
+  --ag-font-family: var(--font-roboto-condensed), sans-serif;
+  --ag-font-size: 14px;
+  --ag-font-weight: 300;
 }
 
+.ag-theme-balham .ag-cell,
+.ag-theme-balham .ag-header-cell {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
 /* Custom styles for Employee Roster */
 .font-inter {
+  font-family: -var(--font-roboto-condensed), sans-serif;
+}
+
+h1 {
+  font-size: 18pt;
+  font-weight: 700;
   font-family: -var(--font-roboto-condensed), sans-serif;
 }
 
@@ -136,3 +153,4 @@ body {
   font-size: small;
   text-align: center;
 }
+

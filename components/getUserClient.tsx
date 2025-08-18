@@ -44,7 +44,5 @@ export default function GetUserClient() {
     getUserInfo();
   }, []);
 
-  if (loading) return <div>Loading user info...</div>;
-  if (error) return <div>Error: {error}</div>;
   return null; // Or render user info as needed
 }

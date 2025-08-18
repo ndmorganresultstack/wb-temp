@@ -1,5 +1,5 @@
 import React from 'react';
-import { InternalLaborCost } from '@/lib/types';
+import { InternalLaborCost } from '@/lib/helper';
 import { BriefcaseIcon, CogIcon, UsersIcon } from '@heroicons/react/24/outline'; 
 import { useState, useEffect } from 'react';
 

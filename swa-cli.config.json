@@ -7,19 +7,7 @@
       "appBuildCommand": "npm run build",
       "run": "npm run dev",
       "appDevserverUrl": "http://localhost:3000",
-      "swaConfigLocation": ".",     
-      "auth": {
-        "identityProviders": {
-          "azureActiveDirectory": {
-            "userDetailsClaim": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
-            "registration": {
-              "clientIdSettingName": "AUTH_MICROSOFT_ENTRA_ID_ID",
-              "clientSecretSettingName": "AUTH_MICROSOFT_ENTRA_ID_SECRET",
-              "openIdIssuer": "https://login.microsoftonline.com/be5cc231-0355-4ece-bc68-9fb5f4c9e31b/v2.0"
-            }
-          }
-        }
-      }
+      "swaConfigLocation": "."
     }
   }
 }

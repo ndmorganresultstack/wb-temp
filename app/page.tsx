@@ -12,22 +12,13 @@ export default withAITracking(reactPlugin, function HomePage() {
   trackTrace('HomePage rendered', { user: JSON.stringify(user) });
 
   const handleSignIn = () => {
-    window.location.href = '/.auth/login/aad?post_login_redirect_uri=/dashboard';
+    window.location.href = '/.auth/login/aad?post_login_redirect_uri=/';
   };
 
   return (
     <div className="flex flex-col items-start justify-center min-h-screen bg-gray-100 p-8 font-roboto-condensed">
       {user ? (
-        <div>
-          <h1 className="text-3xl font-bold mb-4">Welcome, {user.userDetails || 'User'}!</h1>
-          <p className="text-lg">Access the Willowbridge IT Dashboard to manage:</p>
-          <ul className="list-disc ml-6 mt-2">
-            <li>Internal Labor Costs</li>
-            <li>External Labor Costs</li>
-            <li>Employee Costs</li>
-          </ul>
-          <p className="mt-4">Use the sidebar to navigate to specific sections.</p>
-        </div>
+       <></>
       ) : (
         <div>
           <h1 className="text-3xl font-bold mb-4">Willowbridge IT Dashboard</h1>

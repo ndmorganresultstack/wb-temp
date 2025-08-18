@@ -1,5 +1,5 @@
 import React from 'react';
-import { InternalLaborCost } from '@/lib/types';
+import { InternalLaborCost } from '@/lib/helper';
 
 interface InternalLaborTableHeaderProps {
   sortColumn: keyof InternalLaborCost | 'EmployeeStatus' | 'LastName' | 'FirstName' | 'BusinessTitle' | 'FunctionCategory' | 'RoleName' | '';

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ExternalLaborCost } from '@/lib/types';
+import { ExternalLaborCost } from '@/lib/helper';
 import { BriefcaseIcon, CalendarDateRangeIcon, ClockIcon, CogIcon, CurrencyDollarIcon, EnvelopeIcon, MapIcon, PhoneIcon, UsersIcon } from '@heroicons/react/24/outline';
 
 interface ExternalLaborSideBarProps {

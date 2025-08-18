@@ -1,5 +1,5 @@
 import React from 'react'; 
-import { InternalLaborCost } from '@/lib/types';
+import { InternalLaborCost } from '@/lib/helper';
 
 interface InternalLaborRowProps {
   internalLabor: InternalLaborCost;

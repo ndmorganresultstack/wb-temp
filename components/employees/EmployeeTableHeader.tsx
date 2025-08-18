@@ -1,5 +1,5 @@
 import React from 'react';
-import { EmployeeWithRelations } from '@/lib/types';
+import { EmployeeWithRelations } from '@/lib/helper';
 
 interface EmployeeTableHeaderProps {
   sortColumn: keyof EmployeeWithRelations | 'BusinessTitle' | '';

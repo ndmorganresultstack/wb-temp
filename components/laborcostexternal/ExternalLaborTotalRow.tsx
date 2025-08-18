@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExternalTotalsRow } from '@/lib/types';
+import { ExternalTotalsRow } from '@/lib/helper';
 
 interface ExternalLaborTotalRowProps {
   totals: ExternalTotalsRow;
