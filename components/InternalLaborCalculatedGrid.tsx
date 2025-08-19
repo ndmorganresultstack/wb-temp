@@ -163,7 +163,7 @@ const InternalLaborCalculatedGrid = forwardRef((props,ref) => {
   const colDefs = useMemo(
     () => [
       { field: 'InternalLaborId', headerName: 'ID', editable: false, width: 5, height:1 },
-      { field: 'FiscalYear', headerName: 'FY', editable: true, width: 60, height:1 },
+      { field: 'FiscalYear', headerName: 'FY', editable: true, width: 60, height:1, cellStyle: {color:'blue'} },
       {
         field: 'Employee',
         headerName: 'Employee',
@@ -172,7 +172,9 @@ const InternalLaborCalculatedGrid = forwardRef((props,ref) => {
         cellEditorParams: { 
           values:employeeOptions.map((o:any) => o.label) 
         },
-        width: 150, height:1
+        width: 150, 
+        height:1, 
+        cellStyle: {color:'blue'}
       },
       {
         field: 'ServiceAccount',
@@ -180,20 +182,22 @@ const InternalLaborCalculatedGrid = forwardRef((props,ref) => {
         editable: true,
         cellEditor: 'agSelectCellEditor',
         cellEditorParams: { values: serviceAccountOptions.map((o: any) => o.value) },
-        width: 120, height:1
+        width: 120, 
+        height:1, 
+        cellStyle: {color:'blue'}
       },
-      { field: 'BaseAnnualSalary', headerName: 'Base Annual Salary', editable: true, width: 100, height:1},
+      { field: 'BaseAnnualSalary', headerName: 'Base Annual Salary', editable: true, width: 100, height:1, cellStyle: {color:'blue'}},
       { field: 'AprSalaryAnnual', headerName: 'Apr Annual', editable: false, width: 100, height:1 },
       { field: 'JanSalaryAnnual', headerName: 'Jan Annual', editable: false, width: 100, height:1 },
-      { field: 'SalaryIncreasePct', headerName: 'Salary Increase Pct', editable: true, width: 100, height:1 },
+      { field: 'SalaryIncreasePct', headerName: 'Salary Increase Pct', editable: true, width: 100, height:1, cellStyle: {color:'blue'} },
       { field: 'BonusAnnual', headerName: 'Bonus Annual', editable: false, width: 100, height:1 },
-      { field: 'BonusPct', headerName: 'Bonus Pct', editable: true, width: 100, height:1 },
+      { field: 'BonusPct', headerName: 'Bonus Pct', editable: true, width: 100, height:1, cellStyle: {color:'blue'} },
       { field: 'FYAnnualSalary', headerName: 'FY Annual Salary', editable: false, width: 100, height:1 },
       { field: 'FYBonus', headerName: 'FY Bonus', editable: false, width: 100, height:1 },
       { field: 'EESRE', headerName: 'EESRE', editable: false, width: 100, height:1 },
-      { field: 'EESREPct', headerName: 'EESRE Pct', editable: true, width: 100, height:1 },
+      { field: 'EESREPct', headerName: 'EESRE Pct', editable: true, width: 100, height:1, cellStyle: {color:'blue'} },
       { field: 'FYTotal', headerName: 'FY Total', editable: false, width: 100, height:1 },
-      { field: 'AdminSharePct', headerName: 'Admin Share Pct', editable: true, width: 100, height:1 },
+      { field: 'AdminSharePct', headerName: 'Admin Share Pct', editable: true, width: 100, height:1, cellStyle: {color:'blue'} },
       { field: 'AdminMgtAnnual', headerName: 'Admin Mgt Annual', editable: false, width: 100, height:1 },
       { field: 'PropMgtAnnual', headerName: 'Prop Mgt Annual', editable: false, width: 100, height:1 },
       { field: 'Jan', headerName: 'Jan', editable: false, width: 100, height:1 },

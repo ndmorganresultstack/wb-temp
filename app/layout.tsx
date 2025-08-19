@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import RootLayoutClient from '@/components/rootLayoutClient';
 import { initializeAppInsights } from '@/lib/appInsights'; 
 import './globals.css'; 
-import { Roboto_Condensed, Roboto_Mono, Roboto_Serif } from 'next/font/google';
+import { Roboto_Condensed, Roboto_Mono, Roboto_Serif } from 'next/font/google'; 
 
  
 
@@ -31,12 +31,16 @@ export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) { 
+ 
+
   initializeAppInsights(); // Safe for server-side
   return (
     <html lang="en">
       <body className={`${robotoCondensed.className}`}>
+        
         <RootLayoutClient user={null}>{children}</RootLayoutClient>
+         
       </body>
     </html>
   );

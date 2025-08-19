@@ -1,10 +1,21 @@
+'use client';
+
 import DynamicTable from '@/components/DynamicTable';
 import '../../app/globals.css';
+import { useSidebar } from '../sidebarContext';
 
 export default function EmployeesPage() {
+
+  const {isSidebarOpen} = useSidebar();
+
   return (
     // Component file
-    <div className="grid-page-container">
+    <div 
+        className={`grid-page-container ${
+          isSidebarOpen
+            ? 'w-[calc(100%-300px)]'
+            : 'w-[calc(100%-80px)]'
+        }`} > 
       <div className="grid-page-header">
          EXTERNAL LABOR 
       </div>

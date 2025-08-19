@@ -157,7 +157,7 @@ const InternalLaborPlanGrid = () => {
   const colDefs = useMemo(
     () => [
       { field: 'InternalLaborId', headerName: 'ID', editable: false, width: 5, height:1 },
-      { field: 'FiscalYear', headerName: 'FY', editable: true, width: 60, height:1 },
+      { field: 'FiscalYear', headerName: 'FY', editable: false, width: 60, height:1 },
       {
         field: 'Employee',
         headerName: 'Employee',
@@ -180,7 +180,7 @@ const InternalLaborPlanGrid = () => {
       { field: 'FYBonus', headerName: 'FY Bonus', editable: false, width: 150, height:1 },
       { field: 'EESRE', headerName: 'EESRE', editable: false, width: 150, height:1 }, 
       { field: 'FYTotal', headerName: 'FY Total', editable: false, width: 150, height:1 },
-      { field: 'AdminSharePct', headerName: 'Admin Share Pct', editable: true, width: 150, height:1 },
+      { field: 'AdminSharePct', headerName: 'Admin Share Pct', editable: true, width: 150, height:1 , cellStyle: {color:'blue'}},
       { field: 'AdminMgtAnnual', headerName: 'Admin Mgt Annual', editable: false, width: 150, height:1 },
       { field: 'PropMgtAnnual', headerName: 'Prop Mgt Annual', editable: false, width: 150, height:1 },
     ],

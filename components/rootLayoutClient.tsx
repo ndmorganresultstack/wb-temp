@@ -2,33 +2,33 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { UserIcon } from '@heroicons/react/20/solid';
+import { UserIcon, UserCircleIcon, BellAlertIcon, Cog6ToothIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import { ClientPrincipal } from '@/lib/auth';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { initializeAppInsights, trackTrace, reactPlugin } from '@/lib/appInsights';
 import { withAITracking } from '@microsoft/applicationinsights-react-js';
 import GetUserClient from './getUserClient';
-import { UserCircleIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline'; 
-
-import '../app/globals.css'; 
+import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
+import { SidebarProvider } from '../app/sidebarContext'; // Import only SidebarProvider
+import '../app/globals.css';
 import { Roboto_Condensed, Roboto_Mono, Roboto_Serif } from 'next/font/google';
+import { CogIcon } from '@heroicons/react/24/solid';
+import { BellIcon } from '@heroicons/react/20/solid';
 
- 
-
-  const robotoMono = Roboto_Mono({
+const robotoMono = Roboto_Mono({
   variable: '--font-roboto-mono',
   subsets: ['latin'],
 });
 
-  const robotoSerif = Roboto_Serif({
+const robotoSerif = Roboto_Serif({
   variable: '--font-roboto-serif',
   subsets: ['latin'],
 });
 
-  const robotoCondensed = Roboto_Condensed({
+const robotoCondensed = Roboto_Condensed({
   subsets: ['latin'],
-  weight: ['300', '400', '700'], // Include light, regular, and bold weights
-  variable: '--font-roboto-condensed', // Define CSS variable
+  weight: ['300', '400', '700'],
+  variable: '--font-roboto-condensed',
 });
 
 const UserContext = createContext<{
@@ -40,29 +40,28 @@ export function useUser() {
   return useContext(UserContext);
 }
 
-function RootLayoutClient({
-  children,
-  user,
-}: Readonly<{
-  children: React.ReactNode;
-  user: ClientPrincipal | null;
-}>) {
-  useEffect(() => {
-    initializeAppInsights(); // Initialize client-side
-    trackTrace('RootLayoutClient rendered', { user: JSON.stringify(user) });
-  }, [user]);
+// Define the prop interface for SidebarManager
+interface SidebarManagerProps {
+  isSidebarOpen: boolean;
+  toggleSidebar: () => void;
+  expandedItem: string | null;
+  setExpandedItem: React.Dispatch<React.SetStateAction<string | null>>;
+}
 
-  const [userState, setUserState] = useState<ClientPrincipal | null>(user);
-  const [isSidebarHovered, setIsSidebarHovered] = useState(false);
+// SidebarManager component to handle sidebar logic
+const SidebarManager = ({ isSidebarOpen, toggleSidebar, expandedItem, setExpandedItem }:SidebarManagerProps) => {
+  const toggleAccordion = (itemName: string) => {
+    setExpandedItem(expandedItem === itemName ? null : itemName);
+  };
 
   const menuItems = [
     {
       name: 'Costs',
       icon: CurrencyDollarIcon,
       subItems: [
-        { name: 'Internal Labor', href: '/internal-labor' }, 
-        { name: 'External Labor', href: '/external-labor' }, 
-        { name: 'Software Costs', href: '/software-costs' }, 
+        { name: 'Internal Labor', href: '/internal-labor' },
+        { name: 'External Labor', href: '/external-labor' },
+        { name: 'Software Costs', href: '/software-costs' },
       ],
     },
     {
@@ -71,6 +70,134 @@ function RootLayoutClient({
       subItems: [{ name: 'Employee Roster', href: '/employees' }],
     },
   ];
+
+  return (
+    <div
+      className={`fixed inset-y-0 left-0 z-50 bg-white shadow-lg transition-all duration-300 ease-in-out ${
+        isSidebarOpen ? 'w-64 translate-x-0' : 'w-10 -translate-x-0'
+      } lg:${isSidebarOpen ? 'w-64' : 'w-16'} lg:static`}
+    >
+      <div className="flex h-14 items-center justify-between px-2 bg-[var(--wb-background-color)] border-b border-gray-200">
+        <button
+          onClick={toggleSidebar}
+          className="text-white hover:text-white focus:outline-none"
+        >
+          {isSidebarOpen ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="3"
+              stroke="currentColor"
+              className="size-6 border border-white p-1 rounded"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 19.5 8.25 12l7.5-7.5"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="3"
+              stroke="currentColor"
+              className="size-6 border border-white p-1 rounded"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m8.25 4.5 7.5 7.5-7.5 7.5"
+              />
+            </svg>
+          )}
+        </button>
+        {isSidebarOpen && (
+          <Image
+            src="/header_logo_w.png"
+            alt="Willowbridge Logo"
+            width={100}
+            height={20}
+            className="hover:opacity-80 transition-opacity"
+          />
+        )}
+      </div>
+      <nav className="mt-4">
+        <ul>
+          {menuItems.map((item) => (
+            <li key={item.name} className="relative">
+              <button
+                onClick={() => { if(!isSidebarOpen){ toggleSidebar() } toggleAccordion(item.name)}}
+                className="w-full p-2 rounded hover:bg-gray-100 flex items-center focus:outline-none"
+              >
+                <item.icon className="w-6 h-6 flex-shrink-0 text-gray-600" />
+                {isSidebarOpen && (
+                  <>
+                    <span className="text-sm ml-2 text-gray-700">{item.name}</span>
+                    <svg
+                      className={`w-4 h-4 ml-auto transform transition-transform ${
+                        expandedItem === item.name ? 'rotate-180' : ''
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </>
+                )}
+              </button>
+              {isSidebarOpen && item.subItems.length > 0 && expandedItem === item.name && (
+                <div className="pl-8 mt-1 space-y-1">
+                  {item.subItems.map((subItem) => (
+                    <Link
+                      key={subItem.name}
+                      href={subItem.href}
+                      className="block text-sm text-gray-700 py-1 px-2 hover:bg-gray-100 rounded"
+                    >
+                      {subItem.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  );
+};
+
+function RootLayoutClient({
+  children,
+  user,
+}: Readonly<{
+  children: React.ReactNode;
+  user: ClientPrincipal | null;
+}>) {
+  const [userState, setUserState] = useState<ClientPrincipal | null>(user);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
+
+  useEffect(() => {
+    initializeAppInsights();
+    trackTrace('RootLayoutClient rendered', { user: JSON.stringify(user) });
+  }, [user]);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
+
+  const toggleAccordion = (itemName: string) => {
+    setExpandedItem(expandedItem === itemName ? null : itemName);
+  };
 
   const handleLogout = () => {
     window.location.href = '/.auth/logout?post_logout_redirect_uri=/';
@@ -82,90 +209,60 @@ function RootLayoutClient({
 
   return (
     <UserContext.Provider value={{ user: userState, setUser: setUserState }}>
-      <div
-        className={`${robotoCondensed.variable} ${robotoMono.variable} ${robotoSerif.variable} antialiased flex min-h-screen relative`}
-      >
+      <SidebarProvider value={{ isSidebarOpen, toggleSidebar }}>
         <div
-          className={`w-[50px] bg-[#37474F] text-white p-2 h-screen absolute top-0 left-0 z-50 flex flex-col transition-all duration-300 ${
-            isSidebarHovered ? 'w-[150px]' : 'w-[50px]'
-          }`}
-          onMouseEnter={() => setIsSidebarHovered(true)}
-          onMouseLeave={() => setIsSidebarHovered(false)}
+          className={`${robotoCondensed.variable} ${robotoMono.variable} ${robotoSerif.variable} antialiased flex h-screen`}
         >
-          <div className="mb-8 mt-8 min-h-[60px]">
-            <Link href="/">
-              <Image
-                src={isSidebarHovered ? '/header_logo_w.png' : '/header_logo_s.png'}
-                alt="Willowbridge Logo"
-                width={isSidebarHovered ? 130 : 40}
-                height={40}
-                className="hover:opacity-80 transition-opacity"
-              />
-            </Link>
-          </div>
-          <nav className="space-y-4 flex-1">
-            {menuItems.map((item) => (
-              <div key={item.name} className="relative group/sub">
-                <a
-                  className="block p-2 rounded hover:bg-[#37474F] flex items-center"
-                  title={item.name}
-                >
-                  <item.icon className="w-6 h-6 flex-shrink-0" />
-                  <span className={`text-sm ml-2 ${isSidebarHovered ? 'block' : 'hidden'}`}>
-                    {item.name}
-                  </span>
-                </a>
-                <div
-                  className="absolute left-full top-0 w-48 bg-[#37474F] mt-0 rounded shadow-lg hidden group-hover/sub:block z-50"
-                >
-                  <div className="text-sm font-semibold text-white px-4 py-2 border-b border-gray-600">
-                    {item.name}
-                  </div>
-                  {item.subItems.map((subItem) => (
-                    <a
-                      key={subItem.name}
-                      href={subItem.href}
-                      className="block text-sm text-white py-2 px-4 hover:bg-gray-600"
-                    >
-                      {subItem.name}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </nav>
-          <div className="mt-auto">
-            <div className="relative group/sub">
-              <button className="flex items-center w-full p-2 rounded hover:bg-gray-700">
-                <UserCircleIcon className="w-6 h-6 flex-shrink-0" />
-                <span className={`text-sm ml-2 ${isSidebarHovered ? 'block' : 'hidden'}`}>
-                  {user?.userDetails || 'Guest'}
-                </span>
-              </button>
-              <div
-                className="absolute bottom-0 left-full w-40 bg-gray-700 mt-2 rounded shadow-lg hidden group-hover/sub:block z-50"
-              >
+          <SidebarManager
+            isSidebarOpen={isSidebarOpen}
+            toggleSidebar={toggleSidebar}
+            expandedItem={expandedItem}
+            setExpandedItem={setExpandedItem}
+          />
+          {/* Main Content */}
+          <div className="flex-1 flex flex-col transition-all duration-300 ease-in-out">
+            {/* Header */}
+            <header
+                className={`bg-[var(--wb-background-color)] text-white p-2 flex justify-between items-center transition-all h-14 duration-300 ease-in-out border-b border-gray-200 ${
+                isSidebarOpen ? 'ml-0' : 'ml-16px'
+                }`}
+            >
+              <div className="flex items-center">
                 <button
-                  onClick={handlePreferences}
-                  className="block w-full text-left py-2 px-4 hover:bg-gray-600 rounded-t text-sm"
+                  onClick={toggleSidebar}
+                  className="lg:hidden mr-2 text-white hover:text-gray-300 focus:outline-none"
                 >
-                  User Preferences
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d={isSidebarOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
+                    />
+                  </svg>
                 </button>
-                <button
-                  onClick={handleLogout}
-                  className="block w-full text-left py-2 px-4 hover:bg-gray-600 rounded-b text-sm"
-                >
-                  Logout
-                </button>
+                <h1 className="text-lg   font-[var(--roboto-condensed)]">IT DASHBOARD</h1>
               </div>
-            </div>
+              <div className="flex items-center space-x-4">  
+               
+                  <BellAlertIcon className="w-6 h-6 flex-shrink-0 text-white-600" />
+                  <QuestionMarkCircleIcon className="w-6 h-6 flex-shrink-0 text-white-600" />
+                  <Cog6ToothIcon className="w-6 h-6 flex-shrink-0 text-white-600" />
+                   
+              </div>
+            </header>
+
+            {/* Main Content Area */}
+            <main className="p-4 overflow-y-auto">{children}</main>
           </div>
         </div>
-        <main className="flex-1 overflow-y-auto ml-13 mt-1">
-          <GetUserClient />
-          {children}
-        </main>
-      </div>
+      </SidebarProvider>
     </UserContext.Provider>
   );
 }
