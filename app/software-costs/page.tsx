@@ -16,7 +16,7 @@ const {isSidebarOpen} = useSidebar();
             : 'w-[calc(100%-80px)]'
         }`} >
       <div className="grid-page-header">
-         SOFTWARE COSTS
+        <span> Costs /</span><span className='font-bold'> Software Costs</span> 
       </div>
       <div className="grid-toolbar-row  flex justify-between items-center">
         <div></div>

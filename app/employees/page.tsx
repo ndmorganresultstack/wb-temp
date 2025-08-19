@@ -16,7 +16,7 @@ export default function EmployeesPage() {
             : 'w-[calc(100%-80px)]'
         }`} >
       <div className="grid-page-header">
-         EMPLOYEE ROSTER 
+        <span> Employees /</span><span className='font-bold'> Employee Roster</span> 
       </div>
       <div className="grid-toolbar-row  flex justify-between items-center">
       </div>

@@ -45,11 +45,13 @@ interface SidebarManagerProps {
   isSidebarOpen: boolean;
   toggleSidebar: () => void;
   expandedItem: string | null;
+  menuItem: string | null;
   setExpandedItem: React.Dispatch<React.SetStateAction<string | null>>;
+  setMenuItem: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 // SidebarManager component to handle sidebar logic
-const SidebarManager = ({ isSidebarOpen, toggleSidebar, expandedItem, setExpandedItem }:SidebarManagerProps) => {
+const SidebarManager = ({ isSidebarOpen, toggleSidebar, expandedItem, setExpandedItem, setMenuItem, menuItem }:SidebarManagerProps) => {
   const toggleAccordion = (itemName: string) => {
     setExpandedItem(expandedItem === itemName ? null : itemName);
   };
@@ -160,7 +162,10 @@ const SidebarManager = ({ isSidebarOpen, toggleSidebar, expandedItem, setExpande
                     <Link
                       key={subItem.name}
                       href={subItem.href}
-                      className="block text-sm text-gray-700 py-1 px-2 hover:bg-gray-100 rounded"
+                      className={`block text-sm text-gray-700 py-1 px-2 hover:bg-gray-100 rounded w-[80%] 
+                        ${menuItem === subItem.href ? ' font-bold  bg-gray-200 border-l-4' : ''}
+                        `}
+                      onClick={(e) => {setMenuItem(subItem.href)}}
                     >
                       {subItem.name}
                     </Link>
@@ -185,6 +190,7 @@ function RootLayoutClient({
   const [userState, setUserState] = useState<ClientPrincipal | null>(user);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const [menuItem, setMenuItem] = useState<string | null>(null);
 
   useEffect(() => {
     initializeAppInsights();
@@ -218,6 +224,8 @@ function RootLayoutClient({
             toggleSidebar={toggleSidebar}
             expandedItem={expandedItem}
             setExpandedItem={setExpandedItem}
+            setMenuItem={setMenuItem}
+            menuItem={menuItem}
           />
           {/* Main Content */}
           <div className="flex-1 flex flex-col transition-all duration-300 ease-in-out">

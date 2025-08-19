@@ -34,9 +34,8 @@
   .grid-page-header {
     padding-left:10px;
     padding-top:10px;
-    font-size: 16pt;
-    font-weight: 700;
-    font-family: -var(--font-roboto-condensed), sans-serif;
+    font-size: 12pt; 
+    font-family: -var(--font-roboto-condensed);
   }
 
   .grid-toolbar-row {
@@ -54,7 +53,7 @@
     flex: 1; /* Grow to fill available space */
     min-height: 500px; /* Prevent overflow in flex context */
     width: calc(100%);  
-    height: calc(100% - 100px);  
+    height: calc(100% - 94px);  
   }
    
 }

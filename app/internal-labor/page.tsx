@@ -21,7 +21,7 @@ export default function InternalLaborPage() {
             : 'w-[calc(100%-80px)]'
         }`} >
       <div className="grid-page-header">
-         INTERNAL LABOR - {viewType.toUpperCase()}        
+        <span> Costs /</span><span className='font-bold'> External Labor ({viewType.toUpperCase()})</span>  
       </div>
      <div className="grid-toolbar-row flex justify-between items-center">
         <div className=" flex items-center justify-end">
