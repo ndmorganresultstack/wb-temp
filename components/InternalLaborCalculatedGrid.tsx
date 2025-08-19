@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community'; 
 import { roundToTwoDecimals, wbTheme } from '@/lib/helper';
@@ -8,11 +8,17 @@ import { SelectOption } from '@/types/prisma';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const InternalLaborCalculatedGrid = () => {
+ 
+
+const InternalLaborCalculatedGrid = forwardRef((props,ref) => {
   const [rowData, setRowData] = useState<any[]>([]);
   const [employeeOptions, setEmployeeOptions] = useState<SelectOption[]>([]);
   const [serviceAccountOptions, setServiceAccountOptions] = useState<SelectOption[]>([]);
   const gridRef = useRef<AgGridReact>(null);
+
+  useImperativeHandle(ref,() => ({
+    AddNewRow: () => addNewRow()
+  }));
 
   useEffect(() => {
     // Fetch employee options
@@ -215,15 +221,7 @@ const InternalLaborCalculatedGrid = () => {
   // allows the user to select the page size from a predefined list of page sizes
   const paginationPageSizeSelector = [20, 35, 50, 100];
 
-  return (
-    <div className="p-4">
-      <button
-        onClick={addNewRow}
-        className="mb-4 bg-blue-500 text-white px-1 rounded hover:bg-blue-600" aria-description='add new record'
-      >
-        +
-      </button>
-      <div className={`ag-theme-balham h-[700px] w-[100%] --font-roboto-condensed`}  >
+  return (       
         <AgGridReact
 
           theme={wbTheme}
@@ -235,10 +233,8 @@ const InternalLaborCalculatedGrid = () => {
           pagination={pagination}
           paginationPageSize={paginationPageSize}
           paginationPageSizeSelector={paginationPageSizeSelector}
-        />
-      </div>
-    </div>
+        /> 
   );
-};
+});
 
 export default InternalLaborCalculatedGrid;

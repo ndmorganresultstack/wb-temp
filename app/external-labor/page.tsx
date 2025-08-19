@@ -6,13 +6,13 @@ export default function EmployeesPage() {
     // Component file
     <div className="grid-page-container">
       <div className="grid-page-header">
-         EMPLOYEE ROSTER 
+         EXTERNAL LABOR 
       </div>
       <div className="grid-toolbar-row  flex justify-between items-center">
         <div></div>
       </div>
       <div className="grid-container">
-        <DynamicTable model="Employees" />
+        <DynamicTable model="ExternalLabor" />
       </div>
     </div>   
   );

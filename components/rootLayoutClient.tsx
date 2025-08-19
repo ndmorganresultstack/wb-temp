@@ -61,6 +61,8 @@ function RootLayoutClient({
       icon: CurrencyDollarIcon,
       subItems: [
         { name: 'Internal Labor', href: '/internal-labor' }, 
+        { name: 'External Labor', href: '/external-labor' }, 
+        { name: 'Software Costs', href: '/software-costs' }, 
       ],
     },
     {
@@ -90,7 +92,7 @@ function RootLayoutClient({
           onMouseEnter={() => setIsSidebarHovered(true)}
           onMouseLeave={() => setIsSidebarHovered(false)}
         >
-          <div className="mb-8 mt-8">
+          <div className="mb-8 mt-8 min-h-[60px]">
             <Link href="/">
               <Image
                 src={isSidebarHovered ? '/header_logo_w.png' : '/header_logo_s.png'}

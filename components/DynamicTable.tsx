@@ -254,20 +254,7 @@ export default function DynamicTable({ model, relationDisplayFields = {} }: Dyna
       }
 
       if (field.type === 'DateTime') {
-        if(field.name === 'Birthday'){
-          return {
-            ...base,
-            cellEditor: 'agDateCellEditor',
-            cellEditorParams: {
-              min: '2000-01-01',
-              max: '2099-12-31',
-              dateFormat: 'MM-dd',
-              cellEditorPopup: true,
-            },
-            cellRenderer: (params: any) => (params.value ? new Date(params.value).toLocaleDateString() : ''),
-            width:80
-          };     
-        }else{
+       
           return {
             ...base,
             cellEditor: 'agDateCellEditor',
@@ -280,7 +267,7 @@ export default function DynamicTable({ model, relationDisplayFields = {} }: Dyna
             cellRenderer: (params: any) => (params.value ? new Date(params.value).toLocaleDateString() : ''),
             width:80
           };          
-        }
+        
       } else if (field.type === 'Int' || field.type === 'Decimal') {
         return {
           ...base,
@@ -355,10 +342,8 @@ export default function DynamicTable({ model, relationDisplayFields = {} }: Dyna
   // allows the user to select the page size from a predefined list of page sizes
   const paginationPageSizeSelector = [20, 35, 50, 100];
 
-  return (
-    <div className="p-4">
-
-      <div className={`ag-theme-balham h-[800px] w-[100%] --font-roboto-condensed`}  >
+  return ( 
+     
       <AgGridReact
         rowData={rowData}
         columnDefs={columnDefs}
@@ -376,8 +361,7 @@ export default function DynamicTable({ model, relationDisplayFields = {} }: Dyna
         pagination={pagination}
         paginationPageSize={paginationPageSize}
         paginationPageSizeSelector={paginationPageSizeSelector}
-      />
-    </div>
-    </div>
+      /> 
+     
   );
 }

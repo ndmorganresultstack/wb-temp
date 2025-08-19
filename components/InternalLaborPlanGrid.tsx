@@ -196,9 +196,7 @@ const InternalLaborPlanGrid = () => {
   // allows the user to select the page size from a predefined list of page sizes
   const paginationPageSizeSelector = [20, 35, 50, 100];
 
-  return (
-    <div className="p-4">
-      <div className={`ag-theme-balham h-[700px] w-[100%] --font-roboto-condensed`}  >
+  return ( 
         <AgGridReact
 
           theme={wbTheme}
@@ -210,9 +208,7 @@ const InternalLaborPlanGrid = () => {
           pagination={pagination}
           paginationPageSize={paginationPageSize}
           paginationPageSizeSelector={paginationPageSizeSelector}
-        />
-      </div>
-    </div>
+        /> 
   );
 };
 
