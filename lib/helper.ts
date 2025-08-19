@@ -13,7 +13,7 @@ import { themeQuartz } from 'ag-grid-community';
 export const wbTheme = themeBalham
 	.withParams({ 
         columnBorder: true, 
-        headerBackgroundColor: "#0076CC",
+        headerBackgroundColor: "#362B51",
         headerTextColor: "#FFFFFF",
         spacing: 1,
         fontFamily:{
