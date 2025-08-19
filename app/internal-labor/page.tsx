@@ -7,7 +7,7 @@ import { useRef, useState } from 'react';
 export default function InternalLaborPage() {
 
   const [viewType,setViewType] = useState("CALCULATED");
-  const gridRef = useRef(null)
+  const gridRef = useRef<any>(null)
  
 
   return (
