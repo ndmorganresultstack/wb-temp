@@ -13,16 +13,13 @@ export default function EmployeesPage() {
     <div 
         className={`grid-page-container ${
           isSidebarOpen
-            ? 'w-[calc(100%-300px)]'
-            : 'w-[calc(100%-80px)]'
+            ? 'w-[calc(100%-275px)]'
+            : 'w-[calc(100%-55px)]'
         }`} > 
       <div className="grid-page-header">
         <span> Costs /</span><span className='font-bold'> External Labor</span> 
-      </div>
-      <div className="grid-toolbar-row  flex justify-between items-center">
-        <div></div>
-      </div>
-      <div className="grid-container">
+      </div> 
+      <div className="grid-container" style={{height:'calc(100% - 30px)', width:'calc(100%)' }}>
         <DynamicTable model="ExternalLabor" />
       </div>
     </div>   

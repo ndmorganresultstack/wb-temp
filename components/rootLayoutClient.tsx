@@ -267,7 +267,7 @@ function RootLayoutClient({
             </header>
 
             {/* Main Content Area */}
-            <main className="p-4 overflow-y-auto">{children}</main>
+            <main className="p-2 overflow-y-auto">{children}</main>
           </div>
         </div>
       </SidebarProvider>

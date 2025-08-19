@@ -24,16 +24,11 @@
 .grid-page-container {
   position: absolute;
   top:67px;
-  border-radius: 12px; /* Keep rounded corners */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Keep shadow */ 
-  margin: 8px; /* Keep margin */
   min-height: calc(50%); /* Full viewport height minus margin */
-  height: calc(100% - 100px);  
+  height: calc(100% - 67px);  
   background-color: white;
 
   .grid-page-header {
-    padding-left:10px;
-    padding-top:10px;
     font-size: 12pt; 
     font-family: -var(--font-roboto-condensed);
   }
@@ -52,8 +47,6 @@
   .grid-container {
     flex: 1; /* Grow to fill available space */
     min-height: 500px; /* Prevent overflow in flex context */
-    width: calc(100%);  
-    height: calc(100% - 94px);  
   }
    
 }
@@ -67,10 +60,6 @@
 }
 
 
-.ag-root-wrapper {
-    border-bottom-left-radius: 12px; /* Keep rounded corners */
-    border-bottom-right-radius: 12px; /* Keep rounded corners */
-}
 
 body {
   background: var(--background);

@@ -17,8 +17,8 @@ export default function InternalLaborPage() {
    <div 
         className={`grid-page-container ${
           isSidebarOpen
-            ? 'w-[calc(100%-300px)]'
-            : 'w-[calc(100%-80px)]'
+            ? 'w-[calc(100%-275px)]'
+            : 'w-[calc(100%-55px)]'
         }`} >
       <div className="grid-page-header">
         <span> Costs /</span><span className='font-bold'> External Labor ({viewType.toUpperCase()})</span>  
@@ -58,7 +58,7 @@ export default function InternalLaborPage() {
           </div>
         </div>
       </div>
-      <div className="grid-container">
+      <div className="grid-container" style={{height:'calc(100% - 90px)', width:'calc(100%)' }}>
       {viewType == "CALCULATED" ? (      
         <InternalLaborCalculatedGrid ref={gridRef} />
       ) :
