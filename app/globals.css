@@ -4,6 +4,7 @@
   --background: #f9fafb;
   --foreground: #171717;
   --wb-background-color:#362B51;
+  --edit-cell-color:#2522ceff;
 }
 
 @theme inline {
@@ -21,16 +22,60 @@
   }
 }
 
-.grid-page-container {
-  position: absolute;
-  top:67px;
-  min-height: calc(50%); /* Full viewport height minus margin */
-  height: calc(100% - 67px);  
+.sitePageTitle{
+  font-size:16pt;
+  line-height: 23px;
+}
+
+.button-outline {
   background-color: white;
+  border-radius: 8px;
+  border-color: var(--wb-background-color);
+  border-width: 2px;
+  padding:4px;
+  color:var(--wb-background-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+}
+
+.button-outline:hover{    
+    background-color:var(--wb-background-color);
+    color:white;
+}
+
+.button-solid {
+  background-color:var(--wb-background-color);
+  border-radius: 8px;
+  border-color:  white;
+  border-width: 2px;
+  padding:4px;
+  color:#f9fafb
+}
+
+.button-solid:hover {
+  background-color:white;
+  color:var(--wb-background-color);
+}
+
+.grid-page-container {   
+  background-color: white;
+  width:100%;
+  height:833px;
 
   .grid-page-header {
-    font-size: 12pt; 
+    vertical-align: top;
+    font-size: 10pt; 
     font-family: -var(--font-roboto-condensed);
+
+    .grid-page-header-path {
+      font-weight: normal;
+      padding-left: 8px;
+    }
+
+    .grid-page-header-page {
+      font-weight: bold;
+    }
+
   }
 
   .grid-toolbar-row {
@@ -64,10 +109,10 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-roboto-condensed), sans-serif; 
+  font-family: var(--font-roboto-condensed); 
 }
 .ag-theme-balham {
-  --ag-font-family: var(--font-roboto-condensed), sans-serif;
+  --ag-font-family: var(--font-roboto-condensed);
   --ag-font-size: 14px;
   --ag-font-weight: 300;
 }
@@ -77,6 +122,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  font-family: -var(--font-roboto-condensed);
 }
 /* Custom styles for Employee Roster */
 .font-inter {

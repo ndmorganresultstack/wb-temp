@@ -17,7 +17,10 @@ export const wbTheme = themeBalham
         headerTextColor: "#FFFFFF",
         spacing: 1,
         fontFamily:{
-                googleFont:"Roboto"
+                googleFont:"Roboto Condensed"
+        },
+        headerFontFamily:{
+                googleFont:"Roboto Condensed"
         },
         
     });

@@ -2,14 +2,24 @@
 
 import InternalLaborCalculatedGrid from '@/components/InternalLaborCalculatedGrid';
 import InternalLaborPlanGrid from '@/components/InternalLaborPlanGrid';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSidebar } from '../sidebarContext';
+import '../../app/globals.css';
 
 export default function InternalLaborPage() {
 
   const [viewType,setViewType] = useState("CALCULATED");
-  const gridRef = useRef<any>(null)
-  const {isSidebarOpen} = useSidebar();
+  const gridRef = useRef<any>(null) 
+
+  const {isSidebarOpen,sidebarMaxWidth,sidebarMinWidth, setPageTitle, pageTitle} = useSidebar();
+ 
+  useEffect(()=>{
+    if(pageTitle !== "Internal Labor"){
+        setPageTitle("Internal Labor");
+    }
+    
+
+  },[])
 
   return (
 
@@ -17,21 +27,19 @@ export default function InternalLaborPage() {
    <div 
         className={`grid-page-container ${
           isSidebarOpen
-            ? 'w-[calc(100%-275px)]'
-            : 'w-[calc(100%-55px)]'
+            ? `w-[calc(100%-${sidebarMaxWidth})]`
+            : `w-[calc(100%-${sidebarMinWidth})]`
         }`} >
       <div className="grid-page-header">
-        <span> Costs /</span><span className='font-bold'> External Labor ({viewType.toUpperCase()})</span>  
+        <span className="grid-page-header-path"> Costs /</span><span  className="grid-page-header-page"> Internal Labor ({viewType.toUpperCase()})</span>  
       </div>
      <div className="grid-toolbar-row flex justify-between items-center">
         <div className=" flex items-center justify-end">
 
       {viewType == "CALCULATED" && (     
-          <button
-            className="bg-[#0076CC] text-white px-2 rounded hover:bg-blue-600"
-            aria-description="add new record" onClick={() => gridRef?.current?.AddNewRow()}
+          <button className='button-outline' onClick={() => gridRef?.current?.AddNewRow()}
           >
-            +
+            &nbsp;+&nbsp;
           </button>
       )}
 
@@ -58,7 +66,7 @@ export default function InternalLaborPage() {
           </div>
         </div>
       </div>
-      <div className="grid-container" style={{height:'calc(100% - 90px)', width:'calc(100%)' }}>
+      <div className="grid-container" style={{height:'calc(100% - 60px)', width:'calc(100%)' }}>
       {viewType == "CALCULATED" ? (      
         <InternalLaborCalculatedGrid ref={gridRef} />
       ) :

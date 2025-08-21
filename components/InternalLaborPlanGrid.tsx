@@ -180,7 +180,7 @@ const InternalLaborPlanGrid = () => {
       { field: 'FYBonus', headerName: 'FY Bonus', editable: false, width: 150, height:1 },
       { field: 'EESRE', headerName: 'EESRE', editable: false, width: 150, height:1 }, 
       { field: 'FYTotal', headerName: 'FY Total', editable: false, width: 150, height:1 },
-      { field: 'AdminSharePct', headerName: 'Admin Share Pct', editable: true, width: 150, height:1 , cellStyle: {color:'blue'}},
+      { field: 'AdminSharePct', headerName: 'Admin Share Pct', editable: true, width: 150, height:1 , cellStyle: {color:'var(--edit-cell-color)'}},
       { field: 'AdminMgtAnnual', headerName: 'Admin Mgt Annual', editable: false, width: 150, height:1 },
       { field: 'PropMgtAnnual', headerName: 'Prop Mgt Annual', editable: false, width: 150, height:1 },
     ],

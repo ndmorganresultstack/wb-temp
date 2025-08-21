@@ -3,22 +3,31 @@
 import DynamicTable from '@/components/DynamicTable';
 import '../../app/globals.css';
 import { useSidebar } from '../sidebarContext';
+import { useEffect } from 'react';
 
 export default function EmployeesPage() {
 
-const {isSidebarOpen} = useSidebar();
+  const {isSidebarOpen,sidebarMaxWidth,sidebarMinWidth, setPageTitle, pageTitle} = useSidebar();
+ 
+  useEffect(()=>{
+    if(pageTitle !== "Software Costs"){
+        setPageTitle("Software Costs");
+    }
+    
+
+  },[])
 
   return ( 
   <div 
         className={`grid-page-container ${
           isSidebarOpen
-            ? 'w-[calc(100%-275px)]'
-            : 'w-[calc(100%-55px)]'
+            ? `w-[calc(100%-${sidebarMaxWidth})]`
+            : `w-[calc(100%-${sidebarMinWidth})]`
         }`} >
       <div className="grid-page-header">
-        <span> Costs /</span><span className='font-bold'> Software Costs</span> 
+        <span className="grid-page-header-path"> Costs /</span><span className="grid-page-header-page"> Software Costs</span> 
       </div>
-      <div className="grid-container" style={{height:'calc(100% - 30px)', width:'calc(100%)' }}>
+      <div className="grid-container" style={{height:'calc(100%)', width:'calc(100%)' }}>
         <DynamicTable model="SoftwareCosts" />
       </div>
     </div>   

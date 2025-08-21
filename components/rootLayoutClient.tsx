@@ -2,18 +2,15 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { UserIcon, UserCircleIcon, BellAlertIcon, Cog6ToothIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
+import { BellAlertIcon, Cog6ToothIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
+import { CurrencyDollarIcon,UserIcon } from '@heroicons/react/24/solid';
 import { ClientPrincipal } from '@/lib/auth';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { initializeAppInsights, trackTrace, reactPlugin } from '@/lib/appInsights';
 import { withAITracking } from '@microsoft/applicationinsights-react-js';
-import GetUserClient from './getUserClient';
-import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
-import { SidebarProvider } from '../app/sidebarContext'; // Import only SidebarProvider
+import { SidebarProvider } from '../app/sidebarContext'; 
 import '../app/globals.css';
 import { Roboto_Condensed, Roboto_Mono, Roboto_Serif } from 'next/font/google';
-import { CogIcon } from '@heroicons/react/24/solid';
-import { BellIcon } from '@heroicons/react/20/solid';
 
 const robotoMono = Roboto_Mono({
   variable: '--font-roboto-mono',
@@ -48,10 +45,14 @@ interface SidebarManagerProps {
   menuItem: string | null;
   setExpandedItem: React.Dispatch<React.SetStateAction<string | null>>;
   setMenuItem: React.Dispatch<React.SetStateAction<string | null>>;
+  sidebarMinWidth: string | null;
+  sidebarMaxWidth: string | null;
+  pageTitle: string | null;
+  setPageTitle: React.Dispatch<React.SetStateAction<string>>; 
 }
 
 // SidebarManager component to handle sidebar logic
-const SidebarManager = ({ isSidebarOpen, toggleSidebar, expandedItem, setExpandedItem, setMenuItem, menuItem }:SidebarManagerProps) => {
+const SidebarManager = ({ isSidebarOpen, toggleSidebar, expandedItem, setExpandedItem, setMenuItem, menuItem, sidebarMinWidth, sidebarMaxWidth, setPageTitle, pageTitle }:SidebarManagerProps) => {
   const toggleAccordion = (itemName: string) => {
     setExpandedItem(expandedItem === itemName ? null : itemName);
   };
@@ -76,13 +77,13 @@ const SidebarManager = ({ isSidebarOpen, toggleSidebar, expandedItem, setExpande
   return (
     <div
       className={`fixed inset-y-0 left-0 z-50 bg-white shadow-lg transition-all duration-300 ease-in-out ${
-        isSidebarOpen ? 'w-64 translate-x-0' : 'w-10 -translate-x-0'
-      } lg:${isSidebarOpen ? 'w-64' : 'w-16'} lg:static`}
+        isSidebarOpen ? 'w-[300px] translate-x-0' : 'w-[71px] -translate-x-0'
+      } lg:${isSidebarOpen ? 'w-[300px]' : 'w-[71px]'} lg:static`}
     >
-      <div className="flex h-14 items-center justify-between px-2 bg-[var(--wb-background-color)] border-b border-gray-200">
+      <div className="flex h-14 items-center px-2 bg-[var(--wb-background-color)] border-b border-gray-200">
         <button
           onClick={toggleSidebar}
-          className="text-white hover:text-white focus:outline-none"
+          className={`text-white hover:text-white focus:outline-none ${isSidebarOpen ? 'mx-[15.5px]' : 'mx-auto'}`}
         >
           {isSidebarOpen ? (
             <svg
@@ -91,7 +92,7 @@ const SidebarManager = ({ isSidebarOpen, toggleSidebar, expandedItem, setExpande
               viewBox="0 0 24 24"
               strokeWidth="3"
               stroke="currentColor"
-              className="size-6 border border-white p-1 rounded"
+              className="size-6 border border-white p-1 rounded "
             >
               <path
                 strokeLinecap="round"
@@ -106,7 +107,7 @@ const SidebarManager = ({ isSidebarOpen, toggleSidebar, expandedItem, setExpande
               viewBox="0 0 24 24"
               strokeWidth="3"
               stroke="currentColor"
-              className="size-6 border border-white p-1 rounded"
+              className="size-6 border border-white p-1 rounded "
             >
               <path
                 strokeLinecap="round"
@@ -117,16 +118,20 @@ const SidebarManager = ({ isSidebarOpen, toggleSidebar, expandedItem, setExpande
           )}
         </button>
         {isSidebarOpen && (
-          <Image
-            src="/header_logo_w.png"
-            alt="Willowbridge Logo"
-            width={100}
-            height={20}
-            className="hover:opacity-80 transition-opacity"
-          />
+          <Link
+           href={"/"}
+          >
+            <Image
+              src="/header_logo_w.png"
+              alt="Willowbridge Logo"
+              width={80}
+              height={10}
+              className="hover:opacity-80 transition-opacity mx-[45px]"
+            />
+          </Link>
         )}
       </div>
-      <nav className="mt-4">
+      <nav className="mt-4 mx-[15.5px]">
         <ul>
           {menuItems.map((item) => (
             <li key={item.name} className="relative">
@@ -163,7 +168,7 @@ const SidebarManager = ({ isSidebarOpen, toggleSidebar, expandedItem, setExpande
                       key={subItem.name}
                       href={subItem.href}
                       className={`block text-sm text-gray-700 py-1 px-2 hover:bg-gray-100 rounded w-[80%] 
-                        ${menuItem === subItem.href ? ' font-bold  bg-gray-200 border-l-4' : ''}
+                        ${menuItem === subItem.href ? ' font-bold  bg-gray-100 border-l-4' : ''}
                         `}
                       onClick={(e) => {setMenuItem(subItem.href)}}
                     >
@@ -191,6 +196,11 @@ function RootLayoutClient({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [menuItem, setMenuItem] = useState<string | null>(null);
+  const [pageTitle, setPageTitle] = useState<string>("IT Dashboard");
+
+
+  const sidebarMaxWidth='0px';
+  const sidebarMinWidth='0px';
 
   useEffect(() => {
     initializeAppInsights();
@@ -215,7 +225,7 @@ function RootLayoutClient({
 
   return (
     <UserContext.Provider value={{ user: userState, setUser: setUserState }}>
-      <SidebarProvider value={{ isSidebarOpen, toggleSidebar }}>
+      <SidebarProvider value={{ isSidebarOpen, toggleSidebar, sidebarMinWidth , sidebarMaxWidth, setPageTitle, pageTitle}}>
         <div
           className={`${robotoCondensed.variable} ${robotoMono.variable} ${robotoSerif.variable} antialiased flex h-screen`}
         >
@@ -225,11 +235,13 @@ function RootLayoutClient({
             expandedItem={expandedItem}
             setExpandedItem={setExpandedItem}
             setMenuItem={setMenuItem}
-            menuItem={menuItem}
+            menuItem={menuItem}  
+            sidebarMaxWidth={sidebarMaxWidth}
+            sidebarMinWidth={sidebarMinWidth}
+            pageTitle={pageTitle}
+            setPageTitle={setPageTitle}
           />
-          {/* Main Content */}
           <div className="flex-1 flex flex-col transition-all duration-300 ease-in-out">
-            {/* Header */}
             <header
                 className={`bg-[var(--wb-background-color)] text-white p-2 flex justify-between items-center transition-all h-14 duration-300 ease-in-out border-b border-gray-200 ${
                 isSidebarOpen ? 'ml-0' : 'ml-16px'
@@ -255,19 +267,19 @@ function RootLayoutClient({
                     />
                   </svg>
                 </button>
-                <h1 className="text-lg   font-[var(--roboto-condensed)]">IT DASHBOARD</h1>
+                <span className="sitePageTitle">{pageTitle}</span>
               </div>
               <div className="flex items-center space-x-4">  
                
-                  <BellAlertIcon className="w-6 h-6 flex-shrink-0 text-white-600" />
-                  <QuestionMarkCircleIcon className="w-6 h-6 flex-shrink-0 text-white-600" />
-                  <Cog6ToothIcon className="w-6 h-6 flex-shrink-0 text-white-600" />
+                  <BellAlertIcon className="w-5 h-5 flex-shrink-0 text-white-600" />
+                  <QuestionMarkCircleIcon className="w-5 h-4 flex-shrink-0 text-white-600" />
+                  <Cog6ToothIcon className="w-5 h-5 flex-shrink-0 text-white-600" />
                    
               </div>
             </header>
 
             {/* Main Content Area */}
-            <main className="p-2 overflow-y-auto">{children}</main>
+            <main>{children}</main>
           </div>
         </div>
       </SidebarProvider>
