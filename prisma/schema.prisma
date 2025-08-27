@@ -8,6 +8,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Address {
+  addressName                                        String?           @db.NVarChar(255)
+  addressType                                        String?           @db.NVarChar(255)
+  addressId                                          Int               @id(map: "PK__Address__26A111ADEF0ADF56")
+  addressLine1                                       String?           @db.NVarChar(255)
+  addressLine2                                       String?           @db.NVarChar(255)
+  city                                               String?           @db.NVarChar(255)
+  state                                              String?           @db.NVarChar(255)
+  zip                                                String?           @db.NVarChar(255)
+  clientAddresses_clientAddresses_addressIdToAddress clientAddresses[] @relation("clientAddresses_addressIdToAddress")
+  clientAddresses_clientAddresses_clientIdToAddress  clientAddresses[] @relation("clientAddresses_clientIdToAddress")
+  Contact                                            Contact[]
+  Property                                           Property[]
+}
+
 model BusinessTitles {
   BusinessTitleId Int       @id(map: "PK__Business__D38C0BE384617C5A") @default(autoincrement())
   TitleName       String    @unique(map: "UQ__Business__252BE89C43458A6D") @db.NVarChar(100)
@@ -15,28 +30,84 @@ model BusinessTitles {
   UpdatedAt       DateTime? @default(now(), map: "DF__BusinessT__Updat__72C60C4A") @db.DateTime
 }
 
+model Client {
+  clientId       Int       @id(map: "PK__Client__81A2CBE1BC2C29C3")
+  clientName     String?   @db.NVarChar(255)
+  industry       String?   @db.NVarChar(255)
+  website        String?   @db.NVarChar(255)
+  existingClient Boolean?
+  createdAt      DateTime? @db.DateTime
+  updatedAt      DateTime? @db.DateTime
+  deleted        Boolean?
+  Contact        Contact[]
+}
+
+model clientAddresses {
+  id                                         Int      @id(map: "PK__clientAd__3213E83F2C7808BA")
+  addressId                                  Int?
+  clientId                                   Int?
+  Address_clientAddresses_addressIdToAddress Address? @relation("clientAddresses_addressIdToAddress", fields: [addressId], references: [addressId], onDelete: NoAction, onUpdate: NoAction, map: "FK__clientAdd__addre__42ACE4D4")
+  Address_clientAddresses_clientIdToAddress  Address? @relation("clientAddresses_clientIdToAddress", fields: [clientId], references: [addressId], onDelete: NoAction, onUpdate: NoAction, map: "FK__clientAdd__clien__43A1090D")
+}
+
+model Contact {
+  contactId           Int                   @id(map: "PK__Contact__7121FD35C60FC799")
+  addressId           Int?
+  contactType         String?               @db.NVarChar(255)
+  firstName           String?               @db.NVarChar(255)
+  lastName            String?               @db.NVarChar(255)
+  email               String?               @db.NVarChar(255)
+  phone               String?               @db.NVarChar(255)
+  jobTitle            String?               @db.NVarChar(255)
+  clientId            Int?
+  status              String?               @db.NVarChar(255)
+  leadSource          String?               @db.NVarChar(255)
+  createdAt           DateTime?             @db.DateTime
+  updatedAt           DateTime?             @db.DateTime
+  deleted             Boolean?
+  Address             Address?              @relation(fields: [addressId], references: [addressId], onDelete: NoAction, onUpdate: NoAction, map: "FK__Contact__address__477199F1")
+  Client              Client?               @relation(fields: [clientId], references: [clientId], onDelete: NoAction, onUpdate: NoAction, map: "FK__Contact__clientI__4865BE2A")
+  opportunityContacts opportunityContacts[]
+  propertyContacts    propertyContacts[]
+}
+
+model Contract {
+  contractId            Int          @id(map: "PK__Contract__13820941C9911A73")
+  contractOpportunityId Int?
+  startDate             DateTime?    @db.Date
+  endDate               DateTime?    @db.Date
+  refrenceNumber        String?      @db.NVarChar(255)
+  totalValue            Decimal?     @db.Decimal(18, 0)
+  annualValue           Decimal?     @db.Decimal(18, 0)
+  totalDays             Int?
+  Opportunity           Opportunity? @relation(fields: [contractOpportunityId], references: [opportunityId], onDelete: NoAction, onUpdate: NoAction, map: "FK__Contract__contra__5006DFF2")
+}
+
 model Employees {
-  EE_NO              String    @id(map: "PK__Employee__7038AE3CE2CF9795") @db.VarChar(20)
-  LastName           String    @db.NVarChar(50)
-  FirstName          String    @db.NVarChar(50)
-  Headcount          Int?      @default(1, map: "DF__Employees__Headc__73BA3083")
-  HireDate           DateTime? @db.DateTime
-  TOS                Decimal?  @db.Decimal(10, 2)
-  TermDate           DateTime? @db.DateTime
-  Birthday           DateTime? @db.Date
-  HomeAddress        String?   @db.NVarChar(255)
-  Apt                String?   @db.NVarChar(50)
-  City               String?   @db.NVarChar(50)
-  HomeStateAbbrev    String?   @db.Char(2)
-  Zip                String?   @db.VarChar(10)
-  HomePhone          String?   @db.VarChar(20)
-  PersonalEmail      String?   @db.NVarChar(100)
-  EmployeeStatus     String?   @default("Active", map: "DF__Employees__Emplo__74AE54BC") @db.NVarChar(20)
-  CreatedAt          DateTime? @default(now(), map: "DF__Employees__Creat__75A278F5") @db.DateTime
-  UpdatedAt          DateTime? @default(now(), map: "DF__Employees__Updat__76969D2E") @db.DateTime
-  BusinessTitle      String?   @db.NVarChar(255)
-  FunctionCategory   String?   @db.NVarChar(255)
-  RoleResponsibility String?   @db.NVarChar(255)
+  EE_NO                                                           String        @id(map: "PK__Employee__7038AE3CE2CF9795") @db.VarChar(20)
+  LastName                                                        String        @db.NVarChar(50)
+  FirstName                                                       String        @db.NVarChar(50)
+  Headcount                                                       Int?          @default(1, map: "DF__Employees__Headc__73BA3083")
+  HireDate                                                        DateTime?     @db.DateTime
+  TOS                                                             Decimal?      @db.Decimal(10, 2)
+  TermDate                                                        DateTime?     @db.DateTime
+  Birthday                                                        DateTime?     @db.Date
+  HomeAddress                                                     String?       @db.NVarChar(255)
+  Apt                                                             String?       @db.NVarChar(50)
+  City                                                            String?       @db.NVarChar(50)
+  HomeStateAbbrev                                                 String?       @db.Char(2)
+  Zip                                                             String?       @db.VarChar(10)
+  HomePhone                                                       String?       @db.VarChar(20)
+  PersonalEmail                                                   String?       @db.NVarChar(100)
+  EmployeeStatus                                                  String?       @default("Active", map: "DF__Employees__Emplo__74AE54BC") @db.NVarChar(20)
+  CreatedAt                                                       DateTime?     @default(now(), map: "DF__Employees__Creat__75A278F5") @db.DateTime
+  UpdatedAt                                                       DateTime?     @default(now(), map: "DF__Employees__Updat__76969D2E") @db.DateTime
+  BusinessTitle                                                   String?       @db.NVarChar(255)
+  FunctionCategory                                                String?       @db.NVarChar(255)
+  RoleResponsibility                                              String?       @db.NVarChar(255)
+  Opportunity_Opportunity_clientServicesLeadEmployeeIdToEmployees Opportunity[] @relation("Opportunity_clientServicesLeadEmployeeIdToEmployees")
+  Opportunity_Opportunity_operationsVPEmployeeIdToEmployees       Opportunity[] @relation("Opportunity_operationsVPEmployeeIdToEmployees")
+  Opportunity_Opportunity_opportunityOwnerEmployeeIdToEmployees   Opportunity[] @relation("Opportunity_opportunityOwnerEmployeeIdToEmployees")
 }
 
 model ExternalLabor {
@@ -95,6 +166,92 @@ model InternalLabor {
   Dec               Decimal? @db.Decimal(15, 2)
 }
 
+model Opportunity {
+  opportunityId                                                 Int                   @id(map: "PK__Opportun__7368FB845EF513AC")
+  pitchStatus                                                   String?               @db.NVarChar(255)
+  description                                                   String?               @db.NVarChar(255)
+  probability                                                   Int?
+  opportunityYear                                               Int?
+  allocation                                                    Int?
+  durationDays                                                  Int?
+  propertyId                                                    Int?
+  salesStage                                                    String?               @db.NVarChar(255)
+  expectedCloseDate                                             DateTime?             @db.Date
+  expectedTakeoverDate                                          DateTime?             @db.Date
+  opportunityType                                               String?               @db.NVarChar(255)
+  clientKeyObjective                                            String?               @db.NVarChar(255)
+  underwritingStage                                             String?               @db.NVarChar(255)
+  opportunityOwnerEmployeeId                                    String?               @db.VarChar(20)
+  clientServicesLeadEmployeeId                                  String?               @db.VarChar(20)
+  operationsVPEmployeeId                                        String?               @db.VarChar(20)
+  newAddition                                                   Boolean?
+  annualFeeAmount                                               Decimal?              @db.Decimal(18, 0)
+  perUnitFee                                                    Decimal?              @db.Decimal(18, 0)
+  managementFee                                                 Int?
+  weightedForecast                                              String?               @db.NVarChar(255)
+  createdAt                                                     DateTime?             @db.DateTime
+  updatedAt                                                     DateTime?             @db.DateTime
+  deleted                                                       Boolean?
+  Contract                                                      Contract[]
+  Employees_Opportunity_clientServicesLeadEmployeeIdToEmployees Employees?            @relation("Opportunity_clientServicesLeadEmployeeIdToEmployees", fields: [clientServicesLeadEmployeeId], references: [EE_NO], onDelete: NoAction, onUpdate: NoAction, map: "FK__Opportuni__clien__4B422AD5")
+  Employees_Opportunity_operationsVPEmployeeIdToEmployees       Employees?            @relation("Opportunity_operationsVPEmployeeIdToEmployees", fields: [operationsVPEmployeeId], references: [EE_NO], onDelete: NoAction, onUpdate: NoAction, map: "FK__Opportuni__opera__4C364F0E")
+  Employees_Opportunity_opportunityOwnerEmployeeIdToEmployees   Employees?            @relation("Opportunity_opportunityOwnerEmployeeIdToEmployees", fields: [opportunityOwnerEmployeeId], references: [EE_NO], onDelete: NoAction, onUpdate: NoAction, map: "FK__Opportuni__oppor__4A4E069C")
+  Property                                                      Property?             @relation(fields: [propertyId], references: [propertyId], onDelete: NoAction, onUpdate: NoAction, map: "FK__Opportuni__prope__4959E263")
+  opportunityActions                                            opportunityActions[]
+  opportunityContacts                                           opportunityContacts[]
+}
+
+model opportunityActions {
+  id                  Int          @id(map: "PK__opportun__3213E83F813EF7BE")
+  opportunityId       Int?
+  actionName          String?      @db.NVarChar(255)
+  actionDueDate       DateTime?    @db.Date
+  actionCompletedDate DateTime?    @db.Date
+  actionNotes         String?      @db.NVarChar(255)
+  createdAt           DateTime?    @db.DateTime
+  updatedAt           DateTime?    @db.DateTime
+  deleted             Boolean?
+  Opportunity         Opportunity? @relation(fields: [opportunityId], references: [opportunityId], onDelete: NoAction, onUpdate: NoAction, map: "FK__opportuni__oppor__4F12BBB9")
+}
+
+model opportunityContacts {
+  id            Int          @id(map: "PK__opportun__3213E83F84F0F8A1")
+  contactId     Int?
+  opportunityId Int?
+  Contact       Contact?     @relation(fields: [contactId], references: [contactId], onDelete: NoAction, onUpdate: NoAction, map: "FK__opportuni__conta__4D2A7347")
+  Opportunity   Opportunity? @relation(fields: [opportunityId], references: [opportunityId], onDelete: NoAction, onUpdate: NoAction, map: "FK__opportuni__oppor__4E1E9780")
+}
+
+model Property {
+  propertyId               Int                @id(map: "PK__Property__9C0B8C7DE36DACC9")
+  propertyName             String?            @db.NVarChar(255)
+  currentManagementCompany String?            @db.NVarChar(255)
+  addressId                Int?
+  unitCount                Int?
+  yearOfConstruction       Int?
+  productType              String?            @db.NVarChar(255)
+  assetType                String?            @db.NVarChar(255)
+  assetStatus              String?            @db.NVarChar(255)
+  region                   String?            @db.NVarChar(255)
+  metroArea                String?            @db.NVarChar(255)
+  retailIncluded           Boolean?
+  equityPartner            String?            @db.NVarChar(255)
+  createdAt                DateTime?          @db.DateTime
+  updatedAt                DateTime?          @db.DateTime
+  deleted                  Boolean?
+  Opportunity              Opportunity[]
+  Address                  Address?           @relation(fields: [addressId], references: [addressId], onDelete: NoAction, onUpdate: NoAction, map: "FK__Property__addres__44952D46")
+  propertyContacts         propertyContacts[]
+}
+
+model propertyContacts {
+  id         Int       @id(map: "PK__property__3213E83F4424584F")
+  propertyId Int?
+  contactId  Int?
+  Contact    Contact?  @relation(fields: [contactId], references: [contactId], onDelete: NoAction, onUpdate: NoAction, map: "FK__propertyC__conta__467D75B8")
+  Property   Property? @relation(fields: [propertyId], references: [propertyId], onDelete: NoAction, onUpdate: NoAction, map: "FK__propertyC__prope__4589517F")
+}
+
 model RoleResponsibilities {
   RoleResponsibilityId Int       @id(map: "PK__RoleResp__F7E3CD40BB06866A") @default(autoincrement())
   RoleName             String    @unique(map: "UQ__RoleResp__8A2B616050C1DAC3") @db.NVarChar(100)
@@ -138,7 +295,7 @@ model SoftwareCosts {
   Category           String?          @db.NVarChar(100)
   CreatedAt          DateTime?        @default(now(), map: "DF__SoftwareC__Creat__04E4BC85") @db.DateTime
   UpdatedAt          DateTime?        @default(now(), map: "DF__SoftwareC__Updat__05D8E0BE") @db.DateTime
-  ServiceAccounts    ServiceAccounts? @relation(fields: [ServiceAccountId], references: [ServiceAccountId], onDelete: NoAction, onUpdate: NoAction, map: "FK__SoftwareC__Servi__66603565")
+  ServiceAccounts    ServiceAccounts? @relation(fields: [ServiceAccountId], references: [ServiceAccountId], onDelete: NoAction, onUpdate: NoAction, map: "FK__SoftwareC__Servi__0C85DE4D")
 }
 
 model Users {

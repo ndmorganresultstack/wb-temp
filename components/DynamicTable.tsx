@@ -34,9 +34,10 @@ const selectFieldMapping: Record<string, { sourceModel: string; displayField: st
 interface DynamicTableProps {
   model: string;
   relationDisplayFields?: Record<string, string>;
+  readOnly:boolean;
 }
 
-export default function DynamicTable({ model, relationDisplayFields = {} }: DynamicTableProps) {
+export default function DynamicTable({ model, relationDisplayFields = {}, readOnly = false }: DynamicTableProps) {
   const { data, error, isLoading } = useSWR(`/api/${model}`, fetcher, {
     fallbackData: { data: [], metadata: { model: { fields: [] }, fields: [] } },
     revalidateOnFocus: false,
@@ -149,7 +150,7 @@ export default function DynamicTable({ model, relationDisplayFields = {} }: Dyna
         return {
           headerName: field.relatedModel,
           field: fkField,
-          editable: !isLoadingSelectOptions && options.length > 0 && values.length > 0 && values.every((v: any) => typeof v === 'string' && v.trim() !== ''),
+          editable: readOnly ? false : !isLoadingSelectOptions && options.length > 0 && values.length > 0 && values.every((v: any) => typeof v === 'string' && v.trim() !== ''),
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: {
             values,
@@ -162,6 +163,7 @@ export default function DynamicTable({ model, relationDisplayFields = {} }: Dyna
             return opt ? opt.label : value;
           },
           valueSetter: (params: any) => {
+            if (readOnly) return false; 
             const newValue = params.newValue;
             if (!newValue || newValue === '') {
               console.error(`Invalid value for ${field.relatedModel}: ${newValue}`);
@@ -191,8 +193,9 @@ export default function DynamicTable({ model, relationDisplayFields = {} }: Dyna
       const base = {
         headerName: field.name,
         field: field.name,
-        editable: true,
+        editable: readOnly ? false : true,
         valueSetter: (params: any) => {
+          if (readOnly) return false; 
           const newValue = params.newValue;
           if (newValue === undefined) {
             console.error(`Invalid value for ${field.name}: ${newValue}`);
@@ -215,7 +218,7 @@ export default function DynamicTable({ model, relationDisplayFields = {} }: Dyna
           : []; 
         return {
           ...base,
-          editable: !isLoadingSelectOptions && options.length > 0 && values.length > 0 && values.every((v: any) => typeof v === 'string' && v.trim() !== ''),
+          editable: readOnly ? false : !isLoadingSelectOptions && options.length > 0 && values.length > 0 && values.every((v: any) => typeof v === 'string' && v.trim() !== ''),
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: {
             values,
@@ -228,6 +231,7 @@ export default function DynamicTable({ model, relationDisplayFields = {} }: Dyna
             return opt ? opt.label : value;
           },
           valueSetter: (params: any) => {
+            if (readOnly) return false; 
             const newValue = params.newValue;
             if (!newValue || newValue === '') {
               console.error(`Invalid value for ${field.name}: ${newValue}`);
@@ -283,11 +287,12 @@ export default function DynamicTable({ model, relationDisplayFields = {} }: Dyna
     });
 
     return [...nonRelationColumns, ...relationColumns];
-  }, [stableMetadata, selectOptions, isLoadingSelectOptions, model]);
+  }, [stableMetadata, selectOptions, isLoadingSelectOptions, model,readOnly]);
 
   // Handle updates via API
   const onCellValueChanged = useMemo(
     () => async (params: any) => {
+      if (readOnly) return; 
       console.log('Cell value changed:', {
         field: params.colDef.field,
         oldValue: params.oldValue,
@@ -322,7 +327,7 @@ export default function DynamicTable({ model, relationDisplayFields = {} }: Dyna
         params.api.refreshCells({ rowNodes: [params.node], columns: [params.colDef.field] });
       }
     },
-    [model, stableMetadata]
+    [model, stableMetadata, readOnly]
   );
 
   if (isLoading || isLoadingSelectOptions) {

@@ -15,8 +15,8 @@ export default withAITracking(reactPlugin, function HomePage() {
   const {isSidebarOpen,sidebarMaxWidth,sidebarMinWidth, setPageTitle, pageTitle} = useSidebar();
 
   useEffect(()=>{
-    if(pageTitle !== "IT Dashboard"){
-      setPageTitle("IT Dashboard")
+    if(pageTitle !== " "){
+      setPageTitle(" ")
     }
 
   },[])

@@ -23,8 +23,8 @@ const robotoCondensed = Roboto_Condensed({
 });
 
 export const metadata: Metadata = {
-  title: 'Willowbridge IT Dashboard',
-  description: 'Dashboard for managing IT costs',
+  title: 'Willowbridge',
+  description: '',
 };
 
 export default async function RootLayout({

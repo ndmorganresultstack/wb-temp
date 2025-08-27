@@ -29,13 +29,13 @@
 
 .button-outline {
   background-color: white;
-  border-radius: 8px;
+  border-radius: 4px;
   border-color: var(--wb-background-color);
   border-width: 2px;
   padding:4px;
   color:var(--wb-background-color);
   transition: background-color 0.3s ease, color 0.3s ease;
-
+ cursor: pointer;
 }
 
 .button-outline:hover{    
@@ -45,17 +45,21 @@
 
 .button-solid {
   background-color:var(--wb-background-color);
-  border-radius: 8px;
+  border-radius: 4px;
   border-color:  white;
   border-width: 2px;
   padding:4px;
-  color:#f9fafb
+  color:#f9fafb;
+ cursor: pointer;
 }
 
 .button-solid:hover {
   background-color:white;
   color:var(--wb-background-color);
+  border-color:var(--wb-background-color);
 }
+
+
 
 .grid-page-container {   
   background-color: white;

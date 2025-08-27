@@ -36,13 +36,12 @@ export default function InternalLaborPage() {
      <div className="grid-toolbar-row flex justify-between items-center">
         <div className=" flex items-center justify-end">
 
-      {viewType == "CALCULATED" && (     
-          <button className='button-outline' onClick={() => gridRef?.current?.AddNewRow()}
-          >
-            &nbsp;+&nbsp;
-          </button>
-      )}
-
+        {viewType == "CALCULATED" && (     
+            <button className='button-outline' onClick={() => gridRef?.current?.AddNewRow()}
+            >
+              &nbsp;+&nbsp;
+            </button>
+        )}
 
         </div>
         <div className="flex items-center justify-end">

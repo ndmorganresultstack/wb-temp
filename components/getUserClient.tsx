@@ -12,6 +12,7 @@ export default function GetUserClient() {
   const [error, setError] = useState<string | null>(null);
 
   async function getUserInfo() {
+    console.log('getUserInfo called');
     try {
       trackTrace('Client-side getUserInfo called', { component: 'GetUserClient' });
       const response = await fetch('/.auth/me', {

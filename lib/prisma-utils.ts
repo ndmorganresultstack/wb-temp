@@ -91,8 +91,7 @@ export async function fetchRelationOptions(relatedModel: RelatedModel, displayFi
           .map((field) => item[field])
           .join(' '),
       }));
-
-    console.log(`Fetched options for ${relatedModel}:`, options);
+ 
     return options;
   } catch (error) {
     console.error(`Error fetching options for ${relatedModel} with displayFields ${displayFields.join(', ')}:`, error);

@@ -2,15 +2,16 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { BellAlertIcon, Cog6ToothIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
-import { CurrencyDollarIcon,UserIcon } from '@heroicons/react/24/solid';
+import { BellAlertIcon, Cog6ToothIcon, QuestionMarkCircleIcon, DocumentIcon, UsersIcon  } from '@heroicons/react/24/outline';
+import { CircleStackIcon, ClipboardDocumentIcon, Cog8ToothIcon, ComputerDesktopIcon, CurrencyDollarIcon,DocumentTextIcon,HomeIcon,HomeModernIcon,ListBulletIcon,MagnifyingGlassCircleIcon,MagnifyingGlassIcon,UserIcon } from '@heroicons/react/24/solid';
 import { ClientPrincipal } from '@/lib/auth';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { ComponentType, createContext, SetStateAction, SVGProps, useContext, useEffect, useState } from 'react';
 import { initializeAppInsights, trackTrace, reactPlugin } from '@/lib/appInsights';
 import { withAITracking } from '@microsoft/applicationinsights-react-js';
 import { SidebarProvider } from '../app/sidebarContext'; 
 import '../app/globals.css';
 import { Roboto_Condensed, Roboto_Mono, Roboto_Serif } from 'next/font/google';
+import { SidebarManager } from './sideBarManager';
 
 const robotoMono = Roboto_Mono({
   variable: '--font-roboto-mono',
@@ -37,153 +38,8 @@ export function useUser() {
   return useContext(UserContext);
 }
 
-// Define the prop interface for SidebarManager
-interface SidebarManagerProps {
-  isSidebarOpen: boolean;
-  toggleSidebar: () => void;
-  expandedItem: string | null;
-  menuItem: string | null;
-  setExpandedItem: React.Dispatch<React.SetStateAction<string | null>>;
-  setMenuItem: React.Dispatch<React.SetStateAction<string | null>>;
-  sidebarMinWidth: string | null;
-  sidebarMaxWidth: string | null;
-  pageTitle: string | null;
-  setPageTitle: React.Dispatch<React.SetStateAction<string>>; 
-}
+ 
 
-// SidebarManager component to handle sidebar logic
-const SidebarManager = ({ isSidebarOpen, toggleSidebar, expandedItem, setExpandedItem, setMenuItem, menuItem, sidebarMinWidth, sidebarMaxWidth, setPageTitle, pageTitle }:SidebarManagerProps) => {
-  const toggleAccordion = (itemName: string) => {
-    setExpandedItem(expandedItem === itemName ? null : itemName);
-  };
-
-  const menuItems = [
-    {
-      name: 'Costs',
-      icon: CurrencyDollarIcon,
-      subItems: [
-        { name: 'Internal Labor', href: '/internal-labor' },
-        { name: 'External Labor', href: '/external-labor' },
-        { name: 'Software Costs', href: '/software-costs' },
-      ],
-    },
-    {
-      name: 'Employees',
-      icon: UserIcon,
-      subItems: [{ name: 'Employee Roster', href: '/employees' }],
-    },
-  ];
-
-  return (
-    <div
-      className={`fixed inset-y-0 left-0 z-50 bg-white shadow-lg transition-all duration-300 ease-in-out ${
-        isSidebarOpen ? 'w-[300px] translate-x-0' : 'w-[71px] -translate-x-0'
-      } lg:${isSidebarOpen ? 'w-[300px]' : 'w-[71px]'} lg:static`}
-    >
-      <div className="flex h-14 items-center px-2 bg-[var(--wb-background-color)] border-b border-gray-200">
-        <button
-          onClick={toggleSidebar}
-          className={`text-white hover:text-white focus:outline-none ${isSidebarOpen ? 'mx-[15.5px]' : 'mx-auto'}`}
-        >
-          {isSidebarOpen ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="3"
-              stroke="currentColor"
-              className="size-6 border border-white p-1 rounded "
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 19.5 8.25 12l7.5-7.5"
-              />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="3"
-              stroke="currentColor"
-              className="size-6 border border-white p-1 rounded "
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m8.25 4.5 7.5 7.5-7.5 7.5"
-              />
-            </svg>
-          )}
-        </button>
-        {isSidebarOpen && (
-          <Link
-           href={"/"}
-          >
-            <Image
-              src="/header_logo_w.png"
-              alt="Willowbridge Logo"
-              width={80}
-              height={10}
-              className="hover:opacity-80 transition-opacity mx-[45px]"
-            />
-          </Link>
-        )}
-      </div>
-      <nav className="mt-4 mx-[15.5px]">
-        <ul>
-          {menuItems.map((item) => (
-            <li key={item.name} className="relative">
-              <button
-                onClick={() => { if(!isSidebarOpen){ toggleSidebar() } toggleAccordion(item.name)}}
-                className="w-full p-2 rounded hover:bg-gray-100 flex items-center focus:outline-none"
-              >
-                <item.icon className="w-6 h-6 flex-shrink-0 text-gray-600" />
-                {isSidebarOpen && (
-                  <>
-                    <span className="text-sm ml-2 text-gray-700">{item.name}</span>
-                    <svg
-                      className={`w-4 h-4 ml-auto transform transition-transform ${
-                        expandedItem === item.name ? 'rotate-180' : ''
-                      }`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </>
-                )}
-              </button>
-              {isSidebarOpen && item.subItems.length > 0 && expandedItem === item.name && (
-                <div className="pl-8 mt-1 space-y-1">
-                  {item.subItems.map((subItem) => (
-                    <Link
-                      key={subItem.name}
-                      href={subItem.href}
-                      className={`block text-sm text-gray-700 py-1 px-2 hover:bg-gray-100 rounded w-[80%] 
-                        ${menuItem === subItem.href ? ' font-bold  bg-gray-100 border-l-4' : ''}
-                        `}
-                      onClick={(e) => {setMenuItem(subItem.href)}}
-                    >
-                      {subItem.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </div>
-  );
-};
 
 function RootLayoutClient({
   children,
@@ -195,8 +51,10 @@ function RootLayoutClient({
   const [userState, setUserState] = useState<ClientPrincipal | null>(user);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const [expandedSubItem, setExpandedSubItem] = useState<string | null>(null);
   const [menuItem, setMenuItem] = useState<string | null>(null);
-  const [pageTitle, setPageTitle] = useState<string>("IT Dashboard");
+  const [pageTitle, setPageTitle] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string | null>(null);
 
 
   const sidebarMaxWidth='0px';
@@ -235,12 +93,17 @@ function RootLayoutClient({
             expandedItem={expandedItem}
             setExpandedItem={setExpandedItem}
             setMenuItem={setMenuItem}
-            menuItem={menuItem}  
+            menuItem={menuItem}
             sidebarMaxWidth={sidebarMaxWidth}
             sidebarMinWidth={sidebarMinWidth}
             pageTitle={pageTitle}
             setPageTitle={setPageTitle}
-          />
+            expandedSubItem={expandedSubItem}
+            setExpandedSubItem={setExpandedSubItem} 
+            searchQuery={searchQuery} 
+            setSearchQuery={setSearchQuery}
+            userState={user}
+            />
           <div className="flex-1 flex flex-col transition-all duration-300 ease-in-out">
             <header
                 className={`bg-[var(--wb-background-color)] text-white p-2 flex justify-between items-center transition-all h-14 duration-300 ease-in-out border-b border-gray-200 ${

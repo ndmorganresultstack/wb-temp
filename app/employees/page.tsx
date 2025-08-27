@@ -28,7 +28,7 @@ export default function EmployeesPage() {
         <span className='grid-page-header-path'> Employees /</span><span className='grid-page-header-page'> Employee Roster</span> 
       </div> 
       <div className="grid-container" style={{height:'calc(100%)', width:'calc(100%)' }}>
-        <DynamicTable model="Employees" />
+        <DynamicTable model="Employees" readOnly={false} />
       </div>
     </div>   
   );
