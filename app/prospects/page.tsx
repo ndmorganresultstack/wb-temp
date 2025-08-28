@@ -51,8 +51,8 @@ interface OpportunityData {
 	Employees_Opportunity_operationsVPEmployeeIdToEmployees: Employees | null;
 	Employees_Opportunity_opportunityOwnerEmployeeIdToEmployees: Employees | null;
 	Property: Property | null;
-	opportunityActions: opportunityActionsData[];
-	opportunityContacts: opportunityContactsData[];
+	opportunityActions: any;
+	opportunityContacts: any;
 }
 
 export default function ProspectsPage() {
