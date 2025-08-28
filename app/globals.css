@@ -59,13 +59,11 @@
   border-color:var(--wb-background-color);
 }
 
-
-
 .grid-page-container {   
   background-color: white;
   width:100%;
-  height:833px;
-
+  min-height: 30vh;
+  
   .grid-page-header {
     vertical-align: top;
     font-size: 10pt; 
@@ -93,21 +91,19 @@
     padding-right: 10px;
   }
 
-  .grid-container {
-    flex: 1; /* Grow to fill available space */
-    min-height: 500px; /* Prevent overflow in flex context */
+  .grid-container-toolbar {
+    flex: 1; 
+    height: calc(100vh - 136px); 
+    min-height: 30vh;
+  }
+
+  .grid-container-no-toolbar {
+    flex: 1; 
+    height: calc(100vh - 76px); 
+    min-height: 30vh;
   }
    
-}
-
-.top-nav-header {
-  position: absolute;
-  top:0px;
-  background-color:var(--wb-background-color);
-  width:100%;
-  height:67px;
-}
-
+} 
 
 
 body {
