@@ -375,7 +375,7 @@ export const SideNavManager = () => {
 						/>
 					)}
 				</div>
-				<div>{session?.userDetails}</div>
+				<div></div>
 			</nav>
 		</div>
 	);
