@@ -1,0 +1,15 @@
+
+model OpportunityWithFirstContact {
+      opportunityId Int @id
+      description String?
+      contactType String?
+      lastName String?
+      firstName String?
+      email String?
+      phone String?
+      jobTitle String?
+      status String?
+      leadSource String?
+      createdAt DateTime?
+      updatedAt DateTime?
+}
