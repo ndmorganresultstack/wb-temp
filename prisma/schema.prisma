@@ -302,3 +302,19 @@ model Users {
   id    Int     @id(map: "PK_Users") @default(autoincrement())
   email String? @db.VarChar(255)
 }
+
+
+model OpportunityWithFirstContact {
+      opportunityId Int @id
+      description String?
+      contactType String?
+      lastName String?
+      firstName String?
+      email String?
+      phone String?
+      jobTitle String?
+      status String?
+      leadSource String?
+      createdAt DateTime?
+      updatedAt DateTime?
+}
