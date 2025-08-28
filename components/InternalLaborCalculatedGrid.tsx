@@ -21,13 +21,13 @@ const InternalLaborCalculatedGrid = forwardRef((props, ref) => {
 
 	useEffect(() => {
 		// Fetch employee options
-		fetch("/api/relations/Employees?displayFields=EE_NO,FirstName,LastName")
+		fetch("/api/relations/Employee?displayFields=employeeId,firstName,lastName")
 			.then((res) => res.json())
 			.then(setEmployeeOptions)
 			.catch((error) => console.error("Error fetching employee options:", error));
 
 		// Fetch service account options
-		fetch("/api/relations/ServiceAccounts?displayFields=ServiceDescription")
+		fetch("/api/relations/ServiceAccount?displayFields=serviceDescription")
 			.then((res) => res.json())
 			.then(setServiceAccountOptions)
 			.catch((error) => console.error("Error fetching service account options:", error));
@@ -175,9 +175,9 @@ const InternalLaborCalculatedGrid = forwardRef((props, ref) => {
 
 	const colDefs = useMemo(
 		() => [
-			{ field: "InternalLaborId", headerName: "ID", editable: false, width: 5, height: 1 },
+			{ field: "internalLaborId", headerName: "ID", editable: false, width: 5, height: 1 },
 			{
-				field: "FiscalYear",
+				field: "fiscalYear",
 				headerName: "FY",
 				editable: true,
 				width: 60,
@@ -185,7 +185,7 @@ const InternalLaborCalculatedGrid = forwardRef((props, ref) => {
 				cellStyle: { color: "var(--edit-cell-color)" },
 			},
 			{
-				field: "Employee",
+				field: "employee",
 				headerName: "Employee",
 				editable: true,
 				cellEditor: "agSelectCellEditor",
@@ -197,7 +197,7 @@ const InternalLaborCalculatedGrid = forwardRef((props, ref) => {
 				cellStyle: { color: "var(--edit-cell-color)" },
 			},
 			{
-				field: "ServiceAccount",
+				field: "serviceAccount",
 				headerName: "Service Account",
 				editable: true,
 				cellEditor: "agSelectCellEditor",
@@ -207,7 +207,7 @@ const InternalLaborCalculatedGrid = forwardRef((props, ref) => {
 				cellStyle: { color: "var(--edit-cell-color)" },
 			},
 			{
-				field: "BaseAnnualSalary",
+				field: "baseAnnualSalary",
 				headerName: "Base Annual Salary",
 				editable: true,
 				width: 100,
@@ -215,21 +215,21 @@ const InternalLaborCalculatedGrid = forwardRef((props, ref) => {
 				cellStyle: { color: "var(--edit-cell-color)" },
 			},
 			{
-				field: "AprSalaryAnnual",
+				field: "aprSalaryAnnual",
 				headerName: "Apr Annual",
 				editable: false,
 				width: 100,
 				height: 1,
 			},
 			{
-				field: "JanSalaryAnnual",
+				field: "janSalaryAnnual",
 				headerName: "Jan Annual",
 				editable: false,
 				width: 100,
 				height: 1,
 			},
 			{
-				field: "SalaryIncreasePct",
+				field: "salaryIncreasePct",
 				headerName: "Salary Increase Pct",
 				editable: true,
 				width: 100,
@@ -237,14 +237,14 @@ const InternalLaborCalculatedGrid = forwardRef((props, ref) => {
 				cellStyle: { color: "var(--edit-cell-color)" },
 			},
 			{
-				field: "BonusAnnual",
+				field: "bonusAnnual",
 				headerName: "Bonus Annual",
 				editable: false,
 				width: 100,
 				height: 1,
 			},
 			{
-				field: "BonusPct",
+				field: "bonusPct",
 				headerName: "Bonus Pct",
 				editable: true,
 				width: 100,
@@ -278,31 +278,31 @@ const InternalLaborCalculatedGrid = forwardRef((props, ref) => {
 				cellStyle: { color: "var(--edit-cell-color)" },
 			},
 			{
-				field: "AdminMgtAnnual",
+				field: "adminMgtAnnual",
 				headerName: "Admin Mgt Annual",
 				editable: false,
 				width: 100,
 				height: 1,
 			},
 			{
-				field: "PropMgtAnnual",
+				field: "propMgtAnnual",
 				headerName: "Prop Mgt Annual",
 				editable: false,
 				width: 100,
 				height: 1,
 			},
-			{ field: "Jan", headerName: "Jan", editable: false, width: 100, height: 1 },
-			{ field: "Feb", headerName: "Feb", editable: false, width: 100, height: 1 },
-			{ field: "Mar", headerName: "Mar", editable: false, width: 100, height: 1 },
-			{ field: "Apr", headerName: "Apr", editable: false, width: 100, height: 1 },
-			{ field: "May", headerName: "May", editable: false, width: 100, height: 1 },
-			{ field: "Jun", headerName: "Jun", editable: false, width: 100, height: 1 },
-			{ field: "Jul", headerName: "Jul", editable: false, width: 100, height: 1 },
-			{ field: "Aug", headerName: "Aug", editable: false, width: 100, height: 1 },
-			{ field: "Sep", headerName: "Sep", editable: false, width: 100, height: 1 },
-			{ field: "Oct", headerName: "Oct", editable: false, width: 100, height: 1 },
-			{ field: "Nov", headerName: "Nov", editable: false, width: 100, height: 1 },
-			{ field: "Dec", headerName: "Dec", editable: false, width: 100, height: 1 },
+			{ field: "jan", headerName: "Jan", editable: false, width: 100, height: 1 },
+			{ field: "feb", headerName: "Feb", editable: false, width: 100, height: 1 },
+			{ field: "mar", headerName: "Mar", editable: false, width: 100, height: 1 },
+			{ field: "apr", headerName: "Apr", editable: false, width: 100, height: 1 },
+			{ field: "may", headerName: "May", editable: false, width: 100, height: 1 },
+			{ field: "jun", headerName: "Jun", editable: false, width: 100, height: 1 },
+			{ field: "jul", headerName: "Jul", editable: false, width: 100, height: 1 },
+			{ field: "aug", headerName: "Aug", editable: false, width: 100, height: 1 },
+			{ field: "sep", headerName: "Sep", editable: false, width: 100, height: 1 },
+			{ field: "oct", headerName: "Oct", editable: false, width: 100, height: 1 },
+			{ field: "nov", headerName: "Nov", editable: false, width: 100, height: 1 },
+			{ field: "dec", headerName: "Dec", editable: false, width: 100, height: 1 },
 		],
 		[employeeOptions, serviceAccountOptions]
 	);

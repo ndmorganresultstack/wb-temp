@@ -119,7 +119,7 @@ export async function PUT(request: NextRequest) {
 	try {
 		const prismaModel = getPrismaModel(model as PrismaModelNames);
 
-		let pkField = model.includes("Employees") ? "EE_NO" : `${model}Id`;
+		let pkField = `${model}Id`;
 		try {
 			const modelSchema = Prisma.dmmf.datamodel.models.find((m) => m.name === model);
 			if (modelSchema) {

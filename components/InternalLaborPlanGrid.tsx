@@ -16,13 +16,13 @@ const InternalLaborPlanGrid = () => {
 
 	useEffect(() => {
 		// Fetch employee options
-		fetch("/api/relations/Employees?displayFields=EE_NO,FirstName,LastName")
+		fetch("/api/relations/Employee?displayFields=employeeId,firstName,lastName")
 			.then((res) => res.json())
 			.then(setEmployeeOptions)
 			.catch((error) => console.error("Error fetching employee options:", error));
 
 		// Fetch service account options
-		fetch("/api/relations/ServiceAccounts?displayFields=ServiceDescription")
+		fetch("/api/relations/ServiceAccount?displayFields=serviceDescription")
 			.then((res) => res.json())
 			.then(setServiceAccountOptions)
 			.catch((error) => console.error("Error fetching service account options:", error));
@@ -128,14 +128,14 @@ const InternalLaborPlanGrid = () => {
 	const handleCellValueChanged = async (params: any) => {
 		const field = params.colDef.field;
 		const editableFields = [
-			"BaseAnnualSalary",
-			"SalaryIncreasePct",
-			"BonusPct",
+			"baseAnnualSalary",
+			"salaryIncreasePct",
+			"bonusPct",
 			"EESREPct",
-			"AdminSharePct",
-			"FiscalYear",
-			"Employee",
-			"ServiceAccount",
+			"adminSharePct",
+			"fiscalYear",
+			"employee",
+			"serviceAccount",
 		];
 
 		if (editableFields.includes(field)) {
@@ -168,10 +168,10 @@ const InternalLaborPlanGrid = () => {
 
 	const colDefs = useMemo(
 		() => [
-			{ field: "InternalLaborId", headerName: "ID", editable: false, width: 5, height: 1 },
-			{ field: "FiscalYear", headerName: "FY", editable: false, width: 60, height: 1 },
+			{ field: "internalLaborId", headerName: "ID", editable: false, width: 5, height: 1 },
+			{ field: "fiscalYear", headerName: "FY", editable: false, width: 60, height: 1 },
 			{
-				field: "Employee",
+				field: "employee",
 				headerName: "Employee",
 				editable: false,
 				cellEditor: "agSelectCellEditor",
@@ -182,7 +182,7 @@ const InternalLaborPlanGrid = () => {
 				height: 1,
 			},
 			{
-				field: "ServiceAccount",
+				field: "serviceAccount",
 				headerName: "Service Account",
 				editable: false,
 				cellEditor: "agSelectCellEditor",
@@ -201,7 +201,7 @@ const InternalLaborPlanGrid = () => {
 			{ field: "EESRE", headerName: "EESRE", editable: false, width: 150, height: 1 },
 			{ field: "FYTotal", headerName: "FY Total", editable: false, width: 150, height: 1 },
 			{
-				field: "AdminSharePct",
+				field: "adminSharePct",
 				headerName: "Admin Share Pct",
 				editable: true,
 				width: 150,
@@ -209,14 +209,14 @@ const InternalLaborPlanGrid = () => {
 				cellStyle: { color: "var(--edit-cell-color)" },
 			},
 			{
-				field: "AdminMgtAnnual",
+				field: "adminMgtAnnual",
 				headerName: "Admin Mgt Annual",
 				editable: false,
 				width: 150,
 				height: 1,
 			},
 			{
-				field: "PropMgtAnnual",
+				field: "propMgtAnnual",
 				headerName: "Prop Mgt Annual",
 				editable: false,
 				width: 150,
@@ -226,13 +226,8 @@ const InternalLaborPlanGrid = () => {
 		[employeeOptions, serviceAccountOptions]
 	);
 
-	// enables pagination in the grid
 	const pagination = true;
-
-	// sets 10 rows per page (default is 100)
 	const paginationPageSize = 35;
-
-	// allows the user to select the page size from a predefined list of page sizes
 	const paginationPageSizeSelector = [20, 35, 50, 100];
 
 	return (

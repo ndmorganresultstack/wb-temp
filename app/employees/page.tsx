@@ -26,7 +26,7 @@ export default function EmployeesPage() {
 					<span className="grid-page-header-page"> Employee Roster</span>
 				</div>
 				<div className="grid-container-no-toolbar">
-					<DynamicTable model="Employees" readOnly={false} />
+					<DynamicTable model="Employee" readOnly={false} />
 				</div>
 			</main>
 		</>

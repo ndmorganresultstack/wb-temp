@@ -12,12 +12,12 @@ export async function GET(request: NextRequest) {
 		where: { opportunityId: id },
 		include: {
 			Contract: true,
-			Employees_Opportunity_clientServicesLeadEmployeeIdToEmployees: true,
-			Employees_Opportunity_operationsVPEmployeeIdToEmployees: true,
-			Employees_Opportunity_opportunityOwnerEmployeeIdToEmployees: true,
-			opportunityActions: true,
+			clientServicesLeadEmployeeIdToEmployee: true,
+			operationsVPEmployeeIdToEmployee: true,
+			opportunityOwnerEmployeeIdToEmployee: true,
+			OpportunityAction: true,
 			Property: true,
-			opportunityContacts: {
+			OpportunityContact: {
 				include: {
 					Contact: true,
 				},
