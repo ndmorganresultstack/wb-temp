@@ -95,12 +95,14 @@
     flex: 1; 
     height: calc(100vh - 136px); 
     min-height: 30vh;
+    width:100%;
   }
 
   .grid-container-no-toolbar {
     flex: 1; 
     height: calc(100vh - 76px); 
     min-height: 30vh;
+    width:100%;
   }
    
 } 

@@ -33,7 +33,7 @@ const InternalLaborCalculatedGrid = forwardRef((props, ref) => {
 			.catch((error) => console.error("Error fetching service account options:", error));
 
 		// Fetch InternalLabor data
-		fetch("/api/InternalLabor")
+		fetch("/api/db/InternalLabor")
 			.then((res) => res.json())
 			.then((response) => setRowData(response.data))
 			.catch((error) => console.error("Error fetching InternalLabor data:", error));
@@ -112,7 +112,7 @@ const InternalLaborCalculatedGrid = forwardRef((props, ref) => {
 		const calculatedRow = calculateRow({ ...newRow });
 
 		try {
-			const response = await fetch("/api/InternalLabor", {
+			const response = await fetch("/api/db/InternalLabor", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(calculatedRow),
@@ -154,7 +154,7 @@ const InternalLaborCalculatedGrid = forwardRef((props, ref) => {
 			setRowData(newRowData);
 
 			try {
-				const response = await fetch("/api/InternalLabor", {
+				const response = await fetch("/api/db/InternalLabor", {
 					method: "PUT",
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify(updatedRow),

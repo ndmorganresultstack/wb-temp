@@ -6,6 +6,7 @@ import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 import { themeBalham } from "ag-grid-community";
 import useSWR from "swr";
 import { roundToTwoDecimals, wbTheme } from "@/lib/helper";
+import { usePage } from "@/hooks/usePage";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -41,7 +42,9 @@ export default function DynamicTable({
 	relationDisplayFields = {},
 	readOnly = false,
 }: DynamicTableProps) {
-	const { data, error, isLoading } = useSWR(`/api/${model}`, fetcher, {
+	const setRecord = usePage.getState().setRecord;
+
+	const { data, error, isLoading } = useSWR(`/api/db/${model}`, fetcher, {
 		fallbackData: { data: [], metadata: { model: { fields: [] }, fields: [] } },
 		revalidateOnFocus: false,
 		revalidateOnReconnect: false,
@@ -343,7 +346,7 @@ export default function DynamicTable({
 			};
 
 			try {
-				const response = await fetch(`/api/${model}`, {
+				const response = await fetch(`/api/db/${model}`, {
 					method: "PUT",
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify(payload),
@@ -374,6 +377,10 @@ export default function DynamicTable({
 		[model, stableMetadata, readOnly]
 	);
 
+	const onRowSelection = (params: any) => {
+		setRecord(params.data);
+	};
+
 	if (isLoading || isLoadingSelectOptions) {
 		return <div className="p-4">Loading...</div>;
 	}
@@ -382,13 +389,8 @@ export default function DynamicTable({
 		return <div className="p-4 text-red-600">Error loading data: {error.message}</div>;
 	}
 
-	// enables pagination in the grid
 	const pagination = true;
-
-	// sets 10 rows per page (default is 100)
 	const paginationPageSize = 35;
-
-	// allows the user to select the page size from a predefined list of page sizes
 	const paginationPageSizeSelector = [20, 35, 50, 100];
 
 	return (
@@ -406,6 +408,8 @@ export default function DynamicTable({
 			singleClickEdit={false}
 			stopEditingWhenCellsLoseFocus={true}
 			onCellValueChanged={onCellValueChanged}
+			onRowClicked={onRowSelection}
+			rowSelection={"single"}
 			pagination={pagination}
 			paginationPageSize={paginationPageSize}
 			paginationPageSizeSelector={paginationPageSizeSelector}
