@@ -5,8 +5,8 @@ export interface TablePanelProps {
 
 export function TablePanel({ children }: TablePanelProps) {
 	return (
-		<div className="flex-1 bg-gray-100 rounded-lg p-4 h-full overflow-y-auto">
-			{children ? children : <div className="text-gray-500 text-sm">Nothing Here</div>}
+		<div className="fixed top-40 right-0 w-1/2 h-[calc(100vh-200px)] bg-white rounded-l-lg p-4 overflow-y-auto z-10 shadow-lg">
+			{children ? children : <div className="text-gray-500 text-sm"></div>}
 		</div>
 	);
 }

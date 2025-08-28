@@ -25,10 +25,7 @@ export default function EmployeesPage() {
 					<span className="grid-page-header-path"> Costs /</span>
 					<span className="grid-page-header-page"> External Labor</span>
 				</div>
-				<div
-					className="grid-container"
-					style={{ height: "calc(100%)", width: "calc(100%)" }}
-				>
+				<div className="grid-container-no-toolbar">
 					<DynamicTable model="ExternalLabor" readOnly={false} />
 				</div>
 			</main>

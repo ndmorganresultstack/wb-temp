@@ -11,7 +11,6 @@ export default function EmployeesPage() {
 	const sidebarMaxWidth = useNav((state) => state.sidebarMaxWidth);
 	const sidebarMinWidth = useNav((state) => state.sidebarMinWidth);
 
-	console.log(sidebarMaxWidth, sidebarMinWidth);
 	return (
 		<>
 			<SiteHeader pageTitle="Software Costs" />
@@ -26,10 +25,7 @@ export default function EmployeesPage() {
 					<span className="grid-page-header-path"> Employees /</span>
 					<span className="grid-page-header-page"> Employee Roster</span>
 				</div>
-				<div
-					className="grid-container"
-					style={{ height: "calc(100%)", width: "calc(100%)" }}
-				>
+				<div className="grid-container-no-toolbar">
 					<DynamicTable model="Employees" readOnly={false} />
 				</div>
 			</main>
