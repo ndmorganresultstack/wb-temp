@@ -3,7 +3,7 @@ import { initializeAppInsights } from "@/lib/appInsights";
 import "./globals.css";
 import { Roboto_Condensed, Roboto_Mono, Roboto_Serif } from "next/font/google";
 import { SetSession } from "@/hooks/useSession";
-import { SidebarManager } from "@/components/SideBarManager";
+import { SideNavManager } from "@/components/SideNavManager";
 
 const robotoMono = Roboto_Mono({
 	variable: "--font-roboto-mono",
@@ -39,7 +39,7 @@ export default async function RootLayout({
 				<div
 					className={`${robotoCondensed.variable} ${robotoMono.variable} ${robotoSerif.variable} antialiased flex h-screen`}
 				>
-					<SidebarManager />
+					<SideNavManager />
 					<div className={"flex flex-col w-full"}>{children}</div>
 				</div>
 			</body>

@@ -40,7 +40,7 @@ export interface MenuItem {
 }
 
 // Define the prop interface for SidebarManager
-export interface SidebarManagerProps {
+export interface SideNavManagerProps {
 	isSidebarOpen: boolean;
 	toggleSidebar: () => void;
 	expandedItem: string | null;
@@ -57,7 +57,7 @@ export interface SidebarManagerProps {
 	setSearchQuery: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export const SidebarManager = () => {
+export const SideNavManager = () => {
 	const session = useSession((state) => state.session);
 	const isSidebarOpen = useNav((state) => state.isSidebarOpen);
 	const toggleSidebar = useNav.getState().toggleSidebar;
