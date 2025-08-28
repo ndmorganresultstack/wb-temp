@@ -24,11 +24,11 @@ const fetcher = (url: string) =>
 const selectOptionsCache: Record<string, { value: string; label: string }[]> = {};
 
 const selectFieldMapping: Record<string, { sourceModel: string; displayField: string }> = {
-	BusinessTitle: { sourceModel: "BusinessTitles", displayField: "TitleName" },
-	RoleResponsibility: { sourceModel: "RoleResponsibilities", displayField: "RoleName" },
-	FunctionCategory: { sourceModel: "FunctionCategories", displayField: "CategoryName" },
-	ServiceAccount: { sourceModel: "ServiceAccounts", displayField: "ServiceDescription" },
-	Employee: { sourceModel: "Employees", displayField: "EE_NO" },
+	BusinessTitle: { sourceModel: "BusinessTitle", displayField: "TitleName" },
+	RoleResponsibility: { sourceModel: "RoleResponsibility", displayField: "RoleName" },
+	FunctionCategory: { sourceModel: "FunctionCategory", displayField: "CategoryName" },
+	ServiceAccount: { sourceModel: "ServiceAccount", displayField: "ServiceDescription" },
+	Employee: { sourceModel: "Employee", displayField: "employeeId" },
 };
 
 interface DynamicTableProps {

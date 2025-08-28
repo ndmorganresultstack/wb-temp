@@ -1,5 +1,5 @@
 
-model OpportunityWithFirstContact {
+model ProspectView {
       opportunityId Int @id
       description String?
       contactType String?
