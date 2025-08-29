@@ -70,9 +70,9 @@ export default function InternalLaborPage() {
 				</div>
 				<div className="grid-container-toolbar">
 					{viewType == "CALCULATED" ? (
-						<InternalLaborCalculatedGrid ref={gridRef} />
+						<InternalLaborCalculatedGrid ref={gridRef} includeTotalRow={true} />
 					) : (
-						<InternalLaborPlanGrid />
+						<InternalLaborPlanGrid includeTotalRow={true} />
 					)}
 				</div>
 			</main>

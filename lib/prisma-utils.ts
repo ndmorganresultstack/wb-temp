@@ -4,14 +4,14 @@ import { Prisma, PrismaClient } from "@/app/generated/prisma";
 export type RelatedModel = keyof typeof defaultDisplayFieldMap;
 
 export const defaultDisplayFieldMap = {
-	BusinessTitles: "TitleName",
-	FunctionCategories: "CategoryName",
-	RoleResponsibilities: "RoleName",
-	ServiceAccounts: "ServiceDescription",
-	ExternalLabor: "Vendor",
-	SoftwareCosts: "ProductDescription",
-	Users: "email",
-	Employees: "EE_NO",
+	BusinessTitle: "titleName",
+	FunctionCategory: "categoryName",
+	RoleResponsibility: "roleName",
+	ServiceAccount: "serviceDescription",
+	ExternalLabor: "vendor",
+	SoftwareCost: "productDescription",
+	User: "email",
+	Employee: "employeeId",
 };
 
 type PrismaModelNames = (typeof Prisma.dmmf.datamodel.models)[number]["name"];

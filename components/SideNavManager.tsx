@@ -92,8 +92,8 @@ export const SideNavManager = () => {
 			href: "/master-data",
 			subItems: [
 				{ name: "Locations", href: "/locations" },
-				{ name: "Chart of Accounts", href: "/pipeline" },
-				{ name: "Employee Directory", href: "/portfolio" },
+				{ name: "Chart of Accounts", href: "/chartofaccounts" },
+				{ name: "Employee Directory", href: "/employeedirectory" },
 			],
 		},
 		{

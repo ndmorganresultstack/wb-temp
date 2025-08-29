@@ -13,7 +13,7 @@ export default function HomePage() {
 
 	return (
 		<>
-			<SiteHeader pageTitle="Willowbridge" />
+			<SiteHeader pageTitle="Willow Bridge Enterprise Management System" />
 			<main
 				className={`grid-page-container ${
 					isSidebarOpen

@@ -14,7 +14,7 @@ export default function EmployeesPage() {
 
 	return (
 		<>
-			<SiteHeader pageTitle="Employee Roster" />
+			<SiteHeader pageTitle="Locations" />
 			<main
 				className={`grid-page-container ${
 					isSidebarOpen
@@ -23,12 +23,12 @@ export default function EmployeesPage() {
 				}`}
 			>
 				<div className="grid-page-header">
-					<span className="grid-page-header-path"> Employees /</span>
-					<span className="grid-page-header-page"> Employee Roster</span>
+					<span className="grid-page-header-path"> Master Data /</span>
+					<span className="grid-page-header-page"> Locations</span>
 				</div>
 				<div className="grid-toolbar-row flex justify-between items-center"></div>
 				<div className="grid-container-toolbar">
-					<DynamicTable model="Employee" readOnly={false} includeTotalRow={false} />
+					<DynamicTable model="LocationsView" readOnly={true} includeTotalRow={false} />
 				</div>
 			</main>
 		</>

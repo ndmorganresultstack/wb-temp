@@ -1,6 +1,5 @@
 "use client";
 
-import ProspectGrid from "@/components/ProspectGrid";
 import "../../app/globals.css";
 import { useEffect, useMemo, useState } from "react";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
@@ -11,11 +10,11 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { usePage } from "@/hooks/usePage";
 import {
 	Contract,
-	Employees,
+	Employee,
 	Opportunity,
-	opportunityActions,
-	opportunityContacts,
-	OpportunityWithFirstContact,
+	OpportunityAction,
+	OpportunityContact,
+	ProspectView,
 	Property,
 } from "../generated/prisma";
 
@@ -45,11 +44,10 @@ interface OpportunityData {
 	createdAt: string | null; // ISO date string
 	updatedAt: string | null; // ISO date string
 	deleted: boolean | null;
-
 	Contract: Contract;
-	Employees_Opportunity_clientServicesLeadEmployeeIdToEmployees: Employees | null;
-	Employees_Opportunity_operationsVPEmployeeIdToEmployees: Employees | null;
-	Employees_Opportunity_opportunityOwnerEmployeeIdToEmployees: Employees | null;
+	clientServicesLeadEmployeeIdToEmployees: Employee | null;
+	operationsVPEmployeeIdToEmployees: Employee | null;
+	opportunityOwnerEmployeeIdToEmployees: Employee | null;
 	Property: Property | null;
 	opportunityActions: any;
 	opportunityContacts: any;
@@ -59,7 +57,7 @@ export default function ProspectsPage() {
 	const isSidebarOpen = useNav((state) => state.isSidebarOpen);
 	const sidebarMaxWidth = useNav((state) => state.sidebarMaxWidth);
 	const sidebarMinWidth = useNav((state) => state.sidebarMinWidth);
-	const selectedRecord = usePage((state) => state.record) as OpportunityWithFirstContact | null;
+	const selectedRecord = usePage((state) => state.record) as ProspectView | null;
 	const [rightPanelShowing, setRightPanelShowing] = useState<boolean>(false);
 	const [opportunity, setOpportunity] = useState<OpportunityData>();
 
@@ -102,7 +100,7 @@ export default function ProspectsPage() {
 					</div>
 				</div>
 				<div className={`grid-container-toolbar`}>
-					<DynamicTable model="OpportunityWithFirstContact" readOnly={true} />
+					<DynamicTable model="ProspectView" readOnly={true} includeTotalRow={false} />
 					{rightPanelShowing && opportunity && (
 						<TablePanel>
 							{/* Header */}
@@ -139,13 +137,13 @@ export default function ProspectsPage() {
 											<span className="font-medium">
 												{
 													opportunity
-														.Employees_Opportunity_opportunityOwnerEmployeeIdToEmployees
-														?.FirstName
+														.opportunityOwnerEmployeeIdToEmployees
+														?.firstName
 												}{" "}
 												{
 													opportunity
-														.Employees_Opportunity_opportunityOwnerEmployeeIdToEmployees
-														?.LastName
+														.opportunityOwnerEmployeeIdToEmployees
+														?.lastName
 												}
 											</span>
 											<div className="flex items-center gap-1">
@@ -186,13 +184,13 @@ export default function ProspectsPage() {
 												<span className="font-medium">
 													{
 														opportunity
-															.Employees_Opportunity_opportunityOwnerEmployeeIdToEmployees
-															?.FirstName
+															.opportunityOwnerEmployeeIdToEmployees
+															?.firstName
 													}{" "}
 													{
 														opportunity
-															.Employees_Opportunity_opportunityOwnerEmployeeIdToEmployees
-															?.LastName
+															.opportunityOwnerEmployeeIdToEmployees
+															?.lastName
 													}
 												</span>{" "}
 												• {new Date(action.createdAt).toLocaleString()}

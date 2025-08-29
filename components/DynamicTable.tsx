@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 import { themeBalham } from "ag-grid-community";
@@ -24,25 +24,28 @@ const fetcher = (url: string) =>
 const selectOptionsCache: Record<string, { value: string; label: string }[]> = {};
 
 const selectFieldMapping: Record<string, { sourceModel: string; displayField: string }> = {
-	BusinessTitle: { sourceModel: "BusinessTitles", displayField: "TitleName" },
-	RoleResponsibility: { sourceModel: "RoleResponsibilities", displayField: "RoleName" },
-	FunctionCategory: { sourceModel: "FunctionCategories", displayField: "CategoryName" },
-	ServiceAccount: { sourceModel: "ServiceAccounts", displayField: "ServiceDescription" },
-	Employee: { sourceModel: "Employees", displayField: "EE_NO" },
+	BusinessTitle: { sourceModel: "BusinessTitle", displayField: "titleName" },
+	RoleResponsibility: { sourceModel: "RoleResponsibility", displayField: "roleName" },
+	FunctionCategory: { sourceModel: "FunctionCategory", displayField: "categoryName" },
+	ServiceAccount: { sourceModel: "ServiceAccount", displayField: "serviceDescription" },
+	Employee: { sourceModel: "Employee", displayField: "employeeId" },
 };
 
 interface DynamicTableProps {
 	model: string;
 	relationDisplayFields?: Record<string, string>;
 	readOnly: boolean;
+	includeTotalRow: boolean;
 }
 
 export default function DynamicTable({
 	model,
 	relationDisplayFields = {},
 	readOnly = false,
+	includeTotalRow = false,
 }: DynamicTableProps) {
 	const setRecord = usePage.getState().setRecord;
+	const gridRef = useRef<AgGridReact>(null);
 
 	const { data, error, isLoading } = useSWR(`/api/db/${model}`, fetcher, {
 		fallbackData: { data: [], metadata: { model: { fields: [] }, fields: [] } },
@@ -62,6 +65,27 @@ export default function DynamicTable({
 		() => relationDisplayFields,
 		[JSON.stringify(relationDisplayFields)]
 	);
+
+	const pinnedTotalRow = useMemo(() => {
+		if (!includeTotalRow || !rowData?.length || !stableMetadata?.fields?.length) {
+			return [];
+		}
+
+		const totals: Record<string, any> = { id: "Totals" };
+		const numbericFields = stableMetadata.fields.filter(
+			(f: any) => f.type == "Int" || f.type == "Decimal"
+		);
+
+		numbericFields.forEach((f: any) => {
+			const sum = rowData.reduce((acc: number, row: any) => {
+				const fv = parseFloat(row[f.name]);
+				return isNaN(fv) ? acc : acc + fv;
+			}, 0);
+			totals[f.name] = f.type === "Decimal" ? roundToTwoDecimals(sum) : sum;
+		});
+
+		return [totals];
+	}, [rowData, stableMetadata, includeTotalRow]);
 
 	useEffect(() => {
 		if (!stableMetadata?.fields?.length) return;
@@ -405,6 +429,7 @@ export default function DynamicTable({
 			}}
 			className={`--font-roboto-condensed`}
 			theme={wbTheme}
+			ref={gridRef}
 			singleClickEdit={false}
 			stopEditingWhenCellsLoseFocus={true}
 			onCellValueChanged={onCellValueChanged}
@@ -413,6 +438,7 @@ export default function DynamicTable({
 			pagination={pagination}
 			paginationPageSize={paginationPageSize}
 			paginationPageSizeSelector={paginationPageSizeSelector}
+			pinnedBottomRowData={pinnedTotalRow}
 		/>
 	);
 }

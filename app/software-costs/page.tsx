@@ -26,7 +26,7 @@ export default function EmployeesPage() {
 					<span className="grid-page-header-page"> Software Costs</span>
 				</div>
 				<div className="grid-container-no-toolbar">
-					<DynamicTable model="SoftwareCosts" readOnly={false} />
+					<DynamicTable model="SoftwareCosts" readOnly={false} includeTotalRow={true} />
 				</div>
 			</main>
 		</>

@@ -1,5 +1,5 @@
 
-model OpportunityWithFirstContact {
+model ProspectView {
       opportunityId Int @id
       description String?
       contactType String?
@@ -12,4 +12,112 @@ model OpportunityWithFirstContact {
       leadSource String?
       createdAt DateTime?
       updatedAt DateTime?
+}
+
+model ChartOfAccountsView {
+      accounts_sk Int @id
+      tree_hmy String?
+      tree_code String?
+      acct_no String?
+      acct_name String?
+      acct_type String?
+      expand_type String?
+      acct_description String?
+      reverse String?
+      acct_group String?
+      acct_sub_group String?
+      drcr_balance Int 
+}
+
+model EmployeeDirectoryView {
+      EmployeeSK Int @id
+      EmployeeNumber String? 
+      LastName String? 
+      FirstName String? 
+      JobTitle String? 
+      OpcoType String? 
+      Department String? 
+      Function String? 
+      Supervisor String? 
+      HireDate  String? 
+      Site String? 
+      Email String? 
+      BusinessPhone String? 
+      IsActive Boolean
+}
+
+model LocationsView {
+      LocationsSK Int @id
+      Property_HMY String? 
+      BU String? 
+      AdminBU String? 
+      Property String? 
+      Region String? 
+      Address String? 
+      City String? 
+      State String? 
+      ZipCode String? 
+      Market String? 
+      RVP String? 
+      VP String? 
+      RPM String? 
+      RegionalMarketingDirector String? 
+      PricingManager String? 
+      MaintenanceDirector String? 
+      PrimaryOwner String? 
+      SecondaryOwner String? 
+      Accountant String? 
+      Partner String? 
+      Training String? 
+      Systems String? 
+      Marketing String? 
+      BeginningOfOperations String? 
+      EndOfOperations String? 
+      GoLive String? 
+      PropertyStatus String? 
+      Age String? 
+      Class String? 
+      AssetType String? 
+      UnitCount Int?
+      Period String? 
+      ContactTitle String? 
+      ContactCode String? 
+      ContactDesc String? 
+      CompanyName String? 
+      FirstName String? 
+      LastName String? 
+      ContactEmail String? 
+      ContactAddress String? 
+      ContactPhone String? 
+      ReasonForGainOfManagement String? 
+      OldManagementCompany String? 
+      ReasonForLossOfManagement String? 
+      NewManagementCompany String? 
+      InactiveLiveDate String? 
+      SystemGoLiveDate String? 
+      SystemInactiveDate String? 
+      NewOwner String? 
+      OwnedFee String? 
+      PctManagementFee String? 
+      Country String? 
+      CostCenter String? 
+      SquareFootage String? 
+      TypeOfCostCenter String? 
+      PropertyType String? 
+      RegionMarket String? 
+      PetsAllowed String?  
+      WBManagementCompany String?  
+      MonthlyPosting String? 
+      PMSSystem String? 
+      PMSHostedBy String? 
+      CRMSystem String? 
+      OtherAP String? 
+      CensusSubmarket String? 
+      CensusMarket String? 
+      GooglePlaceID String? 
+      GoogleAddress String? 
+      GoogleName String? 
+      Latitude String? 
+      Longitude String? 
+      Status String? 
 }

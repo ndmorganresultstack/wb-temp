@@ -8,21 +8,46 @@ import { SelectOption } from "@/types/prisma";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const InternalLaborPlanGrid = () => {
+interface InternalLaborPlanGridProps {
+	includeTotalRow: boolean;
+}
+
+const InternalLaborPlanGrid = ({ includeTotalRow = false }: InternalLaborPlanGridProps) => {
 	const [rowData, setRowData] = useState<any[]>([]);
+	const [stableMetadata, setStableMetadata] = useState<any>();
 	const [employeeOptions, setEmployeeOptions] = useState<SelectOption[]>([]);
 	const [serviceAccountOptions, setServiceAccountOptions] = useState<SelectOption[]>([]);
 	const gridRef = useRef<AgGridReact>(null);
 
+	const pinnedTotalRow = useMemo(() => {
+		if (!includeTotalRow || !rowData?.length || !stableMetadata) {
+			return [];
+		}
+
+		const totals: Record<string, any> = { id: "Totals" };
+		const numbericFields = stableMetadata.fields.filter(
+			(f: any) => f.type == "Int" || f.type == "Decimal"
+		);
+
+		numbericFields.forEach((f: any) => {
+			const sum = rowData.reduce((acc: number, row: any) => {
+				const fv = parseFloat(row[f.name]);
+				return isNaN(fv) ? acc : acc + fv;
+			}, 0);
+			totals[f.name] = f.type === "Decimal" ? roundToTwoDecimals(sum) : sum;
+		});
+		return [totals];
+	}, [rowData, stableMetadata, includeTotalRow]);
+
 	useEffect(() => {
 		// Fetch employee options
-		fetch("/api/relations/Employees?displayFields=EE_NO,FirstName,LastName")
+		fetch("/api/relations/Employee?displayFields=employeeId,firstName,lastName")
 			.then((res) => res.json())
 			.then(setEmployeeOptions)
 			.catch((error) => console.error("Error fetching employee options:", error));
 
 		// Fetch service account options
-		fetch("/api/relations/ServiceAccounts?displayFields=ServiceDescription")
+		fetch("/api/relations/ServiceAccount?displayFields=serviceDescription")
 			.then((res) => res.json())
 			.then(setServiceAccountOptions)
 			.catch((error) => console.error("Error fetching service account options:", error));
@@ -30,78 +55,81 @@ const InternalLaborPlanGrid = () => {
 		// Fetch InternalLabor data
 		fetch("/api/db/InternalLabor")
 			.then((res) => res.json())
-			.then((response) => setRowData(response.data))
+			.then((response) => {
+				setRowData(response.data);
+				setStableMetadata(response.metadata);
+			})
 			.catch((error) => console.error("Error fetching InternalLabor data:", error));
 	}, []);
 
 	const calculateRow = (row: any) => {
-		const base = parseFloat(row.BaseAnnualSalary) || 0;
-		const incPct = parseFloat(row.SalaryIncreasePct) || 0;
-		const bonusPct = parseFloat(row.BonusPct) || 0;
+		const base = parseFloat(row.baseAnnualSalary) || 0;
+		const incPct = parseFloat(row.salaryIncreasePct) || 0;
+		const bonusPct = parseFloat(row.bonusPct) || 0;
 		const eesrePct = parseFloat(row.EESREPct) || 0;
-		const adminPct = parseFloat(row.AdminSharePct) || 0;
+		const adminPct = parseFloat(row.adminSharePct) || 0;
 
-		row.JanSalaryAnnual = base;
-		row.AprSalaryAnnual = base + roundToTwoDecimals(base * (incPct / 100));
+		row.janSalaryAnnual = base;
+		row.aprSalaryAnnual = base + roundToTwoDecimals(base * (incPct / 100));
 
 		const monthlyPre = roundToTwoDecimals(base / 12);
-		const monthlyPost = roundToTwoDecimals(row.AprSalaryAnnual / 12);
+		const monthlyPost = roundToTwoDecimals(row.aprSalaryAnnual / 12);
 
-		row.Jan = monthlyPre;
-		row.Feb = monthlyPre; // Treating Feb as number despite schema type
-		row.Mar = monthlyPre;
-		row.Apr = monthlyPost;
-		row.May = monthlyPost;
-		row.Jun = monthlyPost;
-		row.Jul = monthlyPost;
-		row.Aug = monthlyPost;
-		row.Sep = monthlyPost;
-		row.Oct = monthlyPost;
-		row.Nov = monthlyPost;
-		row.Dec = monthlyPost;
+		row.jan = monthlyPre;
+		row.feb = monthlyPre; // Treating Feb as number despite schema type
+		row.mar = monthlyPre;
+		row.apr = monthlyPost;
+		row.may = monthlyPost;
+		row.jun = monthlyPost;
+		row.jul = monthlyPost;
+		row.aug = monthlyPost;
+		row.sep = monthlyPost;
+		row.oct = monthlyPost;
+		row.nov = monthlyPost;
+		row.dec = monthlyPost;
 
 		const months = [
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
-			"May",
-			"Jun",
-			"Jul",
-			"Aug",
-			"Sep",
-			"Oct",
-			"Nov",
-			"Dec",
+			"jan",
+			"feb",
+			"mar",
+			"apr",
+			"may",
+			"jun",
+			"jul",
+			"aug",
+			"sep",
+			"oct",
+			"nov",
+			"dec",
 		];
 		row.FYAnnualSalary = roundToTwoDecimals(
 			months.reduce((sum, m) => sum + (parseFloat(row[m]) || 0), 0)
 		);
 
-		row.BonusAnnual = roundToTwoDecimals(row.BaseAnnualSalary * (bonusPct / 100));
-		row.FYBonus = row.BonusAnnual;
+		row.bonusAnnual = roundToTwoDecimals(row.baseAnnualSalary * (bonusPct / 100));
+		row.FYBonus = row.bonusAnnual;
 
 		row.EESRE = roundToTwoDecimals(row.FYAnnualSalary * (eesrePct / 100));
 
 		row.FYTotal = roundToTwoDecimals(row.FYAnnualSalary + row.FYBonus + row.EESRE);
 
-		row.AdminMgtAnnual = roundToTwoDecimals(row.FYTotal * (adminPct / 100));
-		row.PropMgtAnnual = roundToTwoDecimals(row.FYTotal - row.AdminMgtAnnual);
+		row.adminMgtAnnual = roundToTwoDecimals(row.FYTotal * (adminPct / 100));
+		row.propMgtAnnual = roundToTwoDecimals(row.FYTotal - row.adminMgtAnnual);
 
 		return row;
 	};
 
 	const addNewRow = async () => {
 		const newRow = {
-			InternalLaborId: Math.max(...rowData.map((r: any) => r.InternalLaborId), 0) + 1, // Temporary ID
-			FiscalYear: new Date().getFullYear(),
-			Employee: employeeOptions[0]?.value || "",
-			ServiceAccount: serviceAccountOptions[0]?.value || "",
-			BaseAnnualSalary: 100000,
-			SalaryIncreasePct: 3,
-			BonusPct: 25,
+			internalLaborId: Math.max(...rowData.map((r: any) => r.internalLaborId), 0) + 1, // Temporary ID
+			fiscalYear: new Date().getFullYear(),
+			employee: employeeOptions[0]?.value || "",
+			serviceAccount: serviceAccountOptions[0]?.value || "",
+			baseAnnualSalary: 100000,
+			salaryIncreasePct: 3,
+			bonusPct: 25,
 			EESREPct: 26,
-			AdminSharePct: 25,
+			adminSharePct: 25,
 		};
 
 		const calculatedRow = calculateRow({ ...newRow });
@@ -128,14 +156,14 @@ const InternalLaborPlanGrid = () => {
 	const handleCellValueChanged = async (params: any) => {
 		const field = params.colDef.field;
 		const editableFields = [
-			"BaseAnnualSalary",
-			"SalaryIncreasePct",
-			"BonusPct",
+			"baseAnnualSalary",
+			"salaryIncreasePct",
+			"bonusPct",
 			"EESREPct",
-			"AdminSharePct",
-			"FiscalYear",
-			"Employee",
-			"ServiceAccount",
+			"adminSharePct",
+			"fiscalYear",
+			"employee",
+			"serviceAccount",
 		];
 
 		if (editableFields.includes(field)) {
@@ -144,7 +172,7 @@ const InternalLaborPlanGrid = () => {
 
 			// Update the local row data
 			const newRowData = rowData.map((row: any) =>
-				row.InternalLaborId === updatedRow.InternalLaborId ? updatedRow : row
+				row.internalLaborId === updatedRow.internalLaborId ? updatedRow : row
 			);
 			setRowData(newRowData);
 
@@ -168,10 +196,10 @@ const InternalLaborPlanGrid = () => {
 
 	const colDefs = useMemo(
 		() => [
-			{ field: "InternalLaborId", headerName: "ID", editable: false, width: 5, height: 1 },
-			{ field: "FiscalYear", headerName: "FY", editable: false, width: 60, height: 1 },
+			{ field: "internalLaborId", headerName: "ID", editable: false, width: 5, height: 1 },
+			{ field: "fiscalYear", headerName: "FY", editable: false, width: 60, height: 1 },
 			{
-				field: "Employee",
+				field: "employee",
 				headerName: "Employee",
 				editable: false,
 				cellEditor: "agSelectCellEditor",
@@ -182,7 +210,7 @@ const InternalLaborPlanGrid = () => {
 				height: 1,
 			},
 			{
-				field: "ServiceAccount",
+				field: "serviceAccount",
 				headerName: "Service Account",
 				editable: false,
 				cellEditor: "agSelectCellEditor",
@@ -201,7 +229,7 @@ const InternalLaborPlanGrid = () => {
 			{ field: "EESRE", headerName: "EESRE", editable: false, width: 150, height: 1 },
 			{ field: "FYTotal", headerName: "FY Total", editable: false, width: 150, height: 1 },
 			{
-				field: "AdminSharePct",
+				field: "adminSharePct",
 				headerName: "Admin Share Pct",
 				editable: true,
 				width: 150,
@@ -209,14 +237,14 @@ const InternalLaborPlanGrid = () => {
 				cellStyle: { color: "var(--edit-cell-color)" },
 			},
 			{
-				field: "AdminMgtAnnual",
+				field: "adminMgtAnnual",
 				headerName: "Admin Mgt Annual",
 				editable: false,
 				width: 150,
 				height: 1,
 			},
 			{
-				field: "PropMgtAnnual",
+				field: "propMgtAnnual",
 				headerName: "Prop Mgt Annual",
 				editable: false,
 				width: 150,
@@ -226,13 +254,8 @@ const InternalLaborPlanGrid = () => {
 		[employeeOptions, serviceAccountOptions]
 	);
 
-	// enables pagination in the grid
 	const pagination = true;
-
-	// sets 10 rows per page (default is 100)
 	const paginationPageSize = 35;
-
-	// allows the user to select the page size from a predefined list of page sizes
 	const paginationPageSizeSelector = [20, 35, 50, 100];
 
 	return (
@@ -246,6 +269,7 @@ const InternalLaborPlanGrid = () => {
 			pagination={pagination}
 			paginationPageSize={paginationPageSize}
 			paginationPageSizeSelector={paginationPageSizeSelector}
+			pinnedBottomRowData={pinnedTotalRow}
 		/>
 	);
 };
