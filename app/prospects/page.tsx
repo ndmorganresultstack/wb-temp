@@ -1,70 +1,27 @@
 "use client";
 
-import ProspectGrid from "@/components/ProspectGrid";
-import "../../app/globals.css";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import DynamicTable from "@/components/DynamicTable";
 import { TablePanel } from "@/components/TablePanel";
 import { useNav } from "@/hooks/useNav";
 import { SiteHeader } from "@/components/SiteHeader";
-import { usePage } from "@/hooks/usePage";
-import {
-	Contract,
-	Employee,
-	Opportunity,
-	OpportunityAction,
-	OpportunityContact,
-	ProspectView,
-	Property,
-} from "../generated/prisma";
-
-interface OpportunityData {
-	opportunityId: number;
-	pitchStatus: string | null;
-	description: string | null;
-	probability: number | null;
-	opportunityYear: number | null;
-	allocation: number | null;
-	durationDays: number | null;
-	propertyId: number | null;
-	salesStage: string | null;
-	expectedCloseDate: string | null; // ISO date string
-	expectedTakeoverDate: string | null; // ISO date string
-	opportunityType: string | null;
-	clientKeyObjective: string | null;
-	underwritingStage: string | null;
-	opportunityOwnerEmployeeId: string | null;
-	clientServicesLeadEmployeeId: string | null;
-	operationsVPEmployeeId: string | null;
-	newAddition: boolean | null;
-	annualFeeAmount: string | null; // Could be parsed to number if needed
-	perUnitFee: string | null; // Could be parsed to number if needed
-	managementFee: number | null;
-	weightedForecast: string | null;
-	createdAt: string | null; // ISO date string
-	updatedAt: string | null; // ISO date string
-	deleted: boolean | null;
-	Contract: Contract;
-	clientServicesLeadEmployeeIdToEmployees: Employee | null;
-	operationsVPEmployeeIdToEmployees: Employee | null;
-	opportunityOwnerEmployeeIdToEmployees: Employee | null;
-	Property: Property | null;
-	opportunityActions: any;
-	opportunityContacts: any;
-}
+import { useTableRecord } from "@/hooks/useTableRecord";
+import type { ProspectOpportunityData } from "@/app/api/prospects/route";
 
 export default function ProspectsPage() {
 	const isSidebarOpen = useNav((state) => state.isSidebarOpen);
 	const sidebarMaxWidth = useNav((state) => state.sidebarMaxWidth);
 	const sidebarMinWidth = useNav((state) => state.sidebarMinWidth);
-	const selectedRecord = usePage((state) => state.record) as ProspectView | null;
+	const selectedRecord = useTableRecord(
+		(state) => state.tableRecord?.prospectOpportunity
+	) as ProspectOpportunityData | null;
 	const [rightPanelShowing, setRightPanelShowing] = useState<boolean>(false);
-	const [opportunity, setOpportunity] = useState<OpportunityData>();
+	const [opportunity, setOpportunity] = useState<ProspectOpportunityData>();
 
 	useEffect(() => {
 		if (selectedRecord?.opportunityId) {
-			fetch(`/api/opportunities?key=opportunityId&id=${selectedRecord.opportunityId}`).then(
+			fetch(`/api/prospects?key=opportunityId&id=${selectedRecord.opportunityId}`).then(
 				(value) => {
 					value.json().then((j) => {
 						console.log(j);
@@ -79,6 +36,7 @@ export default function ProspectsPage() {
 	return (
 		<>
 			<SiteHeader pageTitle="Prospects" />
+
 			<main className={`grid-page-container`}>
 				<div className="grid-page-header">
 					<span className="grid-page-header-path"> Client Services /</span>
@@ -101,8 +59,8 @@ export default function ProspectsPage() {
 					</div>
 				</div>
 				<div className={`grid-container-toolbar`}>
-					<DynamicTable model="ProspectView" readOnly={true} />
-					{rightPanelShowing && opportunity && (
+					<DynamicTable model="ProspectView" readOnly={true} page="prospectOpportunity" />
+					{rightPanelShowing && !!opportunity && (
 						<TablePanel>
 							{/* Header */}
 							<div className="flex justify-between items-center border-b pb-2 mb-4">
@@ -113,7 +71,7 @@ export default function ProspectsPage() {
 									onClick={() => setRightPanelShowing(false)}
 									className="text-gray-500 hover:text-gray-700 font-bold text-xl"
 								>
-									×
+									x
 								</button>
 							</div>
 
@@ -122,7 +80,12 @@ export default function ProspectsPage() {
 								<div className="flex flex-wrap gap-4 text-sm text-gray-600">
 									<div>
 										<span className="font-medium">Company</span>
-										<div>{opportunity.opportunityContacts}</div>
+										<div>
+											{
+												opportunity.OpportunityContact[0].Contact?.Client
+													?.clientName
+											}
+										</div>
 									</div>
 									<div>
 										<span className="font-medium">Property Count</span>
@@ -137,19 +100,17 @@ export default function ProspectsPage() {
 										<div>
 											<span className="font-medium">
 												{
-													opportunity
-														.opportunityOwnerEmployeeIdToEmployees
+													opportunity.opportunityOwnerEmployeeIdToEmployee
 														?.firstName
 												}{" "}
 												{
-													opportunity
-														.opportunityOwnerEmployeeIdToEmployees
+													opportunity.opportunityOwnerEmployeeIdToEmployee
 														?.lastName
 												}
 											</span>
 											<div className="flex items-center gap-1">
 												<span>
-													{opportunity.opportunityContacts?.[0]?.Contact
+													{opportunity.OpportunityContact[0].Contact
 														?.phone || "N/A"}
 												</span>
 												<span className="text-blue-500">📞</span>
@@ -172,25 +133,25 @@ export default function ProspectsPage() {
 							<div className="mb-4">
 								<div className="flex justify-between items-center mb-2">
 									<h3 className="text-sm font-medium text-gray-700">
-										Notes ({opportunity.opportunityActions?.length || 0})
+										Notes ({opportunity.OpportunityAction?.length || 0})
 									</h3>
 									<button className="text-sm text-blue-500 hover:text-blue-700">
 										+ Add Note
 									</button>
 								</div>
 								<div className="space-y-2">
-									{opportunity.opportunityActions?.map(
+									{opportunity.OpportunityAction?.map(
 										(action: any, index: number) => (
 											<div key={index} className="text-sm text-gray-600">
 												<span className="font-medium">
 													{
 														opportunity
-															.opportunityOwnerEmployeeIdToEmployees
+															.opportunityOwnerEmployeeIdToEmployee
 															?.firstName
 													}{" "}
 													{
 														opportunity
-															.opportunityOwnerEmployeeIdToEmployees
+															.opportunityOwnerEmployeeIdToEmployee
 															?.lastName
 													}
 												</span>{" "}
@@ -209,7 +170,7 @@ export default function ProspectsPage() {
 								<div className="flex justify-between items-center mb-2">
 									<h3 className="text-sm font-medium text-gray-700">
 										Additional Contacts (
-										{opportunity.opportunityContacts?.length || 0})
+										{opportunity.OpportunityContact?.length || 0})
 									</h3>
 									<button className="text-sm text-blue-500 hover:text-blue-700">
 										+ Add Contact
@@ -227,7 +188,7 @@ export default function ProspectsPage() {
 											</tr>
 										</thead>
 										<tbody>
-											{opportunity.opportunityContacts?.map(
+											{opportunity.OpportunityContact?.map(
 												(contact: any, index: number) => (
 													<tr key={index}>
 														<td className="p-2">

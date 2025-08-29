@@ -1,6 +1,6 @@
+import "./globals.css";
 import type { Metadata } from "next";
 import { initializeAppInsights } from "@/lib/appInsights";
-import "./globals.css";
 import { Roboto_Condensed, Roboto_Mono, Roboto_Serif } from "next/font/google";
 import { SetSession } from "@/hooks/useSession";
 import { SideNavManager } from "@/components/SideNavManager";

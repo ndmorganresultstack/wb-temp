@@ -1,16 +1,16 @@
-// hooks/useUserInfo.ts
 "use client";
-import { useState, useEffect } from "react";
+
+import { useEffect } from "react";
 import { ClientPrincipal } from "@/lib/auth";
 import { trackException, trackTrace } from "@/lib/appInsights";
 import { create } from "zustand";
 
-export interface sessionState {
+export interface SessionState {
 	session: ClientPrincipal | null;
 	setSession: (session: ClientPrincipal) => void;
 }
 
-export const useSession = create<sessionState>((set) => ({
+export const useSession = create<SessionState>((set) => ({
 	session: null,
 	setSession: (session: ClientPrincipal) => set((state) => ({ ...state, session })),
 }));

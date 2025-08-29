@@ -3,10 +3,9 @@
 import { useState, useMemo, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
-import { themeBalham } from "ag-grid-community";
 import useSWR from "swr";
-import { roundToTwoDecimals, wbTheme } from "@/lib/helper";
-import { usePage } from "@/hooks/usePage";
+import { wbTheme } from "@/lib/helper";
+import { useTableRecord } from "@/hooks/useTableRecord";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -35,14 +34,17 @@ interface DynamicTableProps {
 	model: string;
 	relationDisplayFields?: Record<string, string>;
 	readOnly: boolean;
+	page?: "pipelineOpportunity" | "prospectOpportunity";
 }
 
 export default function DynamicTable({
 	model,
 	relationDisplayFields = {},
 	readOnly = false,
+	page,
 }: DynamicTableProps) {
-	const setRecord = usePage.getState().setRecord;
+	const tableRecord = useTableRecord((state) => state.tableRecord);
+	const setTableRecord = useTableRecord.getState().setTableRecord;
 
 	const { data, error, isLoading } = useSWR(`/api/db/${model}`, fetcher, {
 		fallbackData: { data: [], metadata: { model: { fields: [] }, fields: [] } },
@@ -378,7 +380,10 @@ export default function DynamicTable({
 	);
 
 	const onRowSelection = (params: any) => {
-		setRecord(params.data);
+		if (page === "pipelineOpportunity")
+			setTableRecord({ ...tableRecord, pipelineOpportunity: params.data });
+		else if (page === "prospectOpportunity")
+			setTableRecord({ ...tableRecord, prospectOpportunity: params.data });
 	};
 
 	if (isLoading || isLoadingSelectOptions) {
