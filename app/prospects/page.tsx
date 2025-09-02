@@ -1,22 +1,13 @@
 "use client";
 
-import "../../app/globals.css";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import DynamicTable from "@/components/DynamicTable";
 import { TablePanel } from "@/components/TablePanel";
 import { useNav } from "@/hooks/useNav";
 import { SiteHeader } from "@/components/SiteHeader";
 import { usePage } from "@/hooks/usePage";
-import {
-	Contract,
-	Employee,
-	Opportunity,
-	OpportunityAction,
-	OpportunityContact,
-	ProspectView,
-	Property,
-} from "../generated/prisma";
+import { Contract, Employee, ProspectView, Property } from "../generated/prisma";
 
 interface OpportunityData {
 	opportunityId: number;

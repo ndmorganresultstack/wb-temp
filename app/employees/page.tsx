@@ -1,8 +1,7 @@
 "use client";
 
 import DynamicTable from "@/components/DynamicTable";
-import "../../app/globals.css";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useNav } from "@/hooks/useNav";
 import { SiteHeader } from "@/components/SiteHeader";
 

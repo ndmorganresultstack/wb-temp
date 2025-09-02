@@ -1,9 +1,11 @@
+import "./globals.css";
+
 import type { Metadata } from "next";
 import { initializeAppInsights } from "@/lib/appInsights";
-import "./globals.css";
 import { Roboto_Condensed, Roboto_Mono, Roboto_Serif } from "next/font/google";
 import { SetSession } from "@/hooks/useSession";
 import { SideNavManager } from "@/components/SideNavManager";
+import { auth } from "@/lib/next-auth";
 
 const robotoMono = Roboto_Mono({
 	variable: "--font-roboto-mono",
@@ -31,11 +33,12 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const session = await auth();
 	initializeAppInsights(); // Safe for server-side
 	return (
 		<html lang="en">
 			<body className={`${robotoCondensed.className}`}>
-				<SetSession />
+				<SetSession session={session} />
 				<div
 					className={`${robotoCondensed.variable} ${robotoMono.variable} ${robotoSerif.variable} antialiased flex h-screen`}
 				>

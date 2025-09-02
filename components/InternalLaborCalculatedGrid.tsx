@@ -5,7 +5,6 @@ import { AgGridReact } from "ag-grid-react";
 import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 import { roundToTwoDecimals, wbTheme } from "@/lib/helper";
 import { SelectOption } from "@/types/prisma";
-import "../app/globals.css";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

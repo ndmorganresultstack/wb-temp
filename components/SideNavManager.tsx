@@ -3,13 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
-	BellAlertIcon,
-	Cog6ToothIcon,
-	QuestionMarkCircleIcon,
-	DocumentIcon,
-	UsersIcon,
-} from "@heroicons/react/24/outline";
-import {
 	CircleStackIcon,
 	ClipboardDocumentIcon,
 	Cog8ToothIcon,
@@ -17,18 +10,11 @@ import {
 	CurrencyDollarIcon,
 	DocumentTextIcon,
 	HomeIcon,
-	HomeModernIcon,
 	ListBulletIcon,
-	MagnifyingGlassCircleIcon,
 	MagnifyingGlassIcon,
 	UserIcon,
 } from "@heroicons/react/24/solid";
-import { ClientPrincipal } from "@/lib/auth";
-import { ComponentType, createContext, SVGProps, useContext, useEffect, useState } from "react";
-import { initializeAppInsights, trackTrace, reactPlugin } from "@/lib/appInsights";
-import { withAITracking } from "@microsoft/applicationinsights-react-js";
-import "../app/globals.css";
-import { Roboto_Condensed, Roboto_Mono, Roboto_Serif } from "next/font/google";
+import { ComponentType, SVGProps, useState } from "react";
 import { useSession } from "@/hooks/useSession";
 import { useNav } from "@/hooks/useNav";
 

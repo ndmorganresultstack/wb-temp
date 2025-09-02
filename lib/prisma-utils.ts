@@ -1,5 +1,5 @@
-import prisma from "@/lib/prisma";
-import { Prisma, PrismaClient } from "@/app/generated/prisma";
+import { db } from "@/lib/prisma";
+import { Prisma } from "@/app/generated/prisma";
 
 export type RelatedModel = keyof typeof defaultDisplayFieldMap;
 
@@ -23,10 +23,8 @@ type PrismaModelDelegate = {
 };
 
 type PrismaModelKeys = {
-	[K in keyof typeof prisma]: (typeof prisma)[K] extends { create: (...args: any[]) => any }
-		? K
-		: never;
-}[keyof typeof prisma];
+	[K in keyof typeof db]: (typeof db)[K] extends { create: (...args: any[]) => any } ? K : never;
+}[keyof typeof db];
 
 export interface KeyValuePair {
 	key: string;
@@ -36,7 +34,7 @@ export interface KeyValuePair {
 function getPrismaModel<T extends PrismaModelNames>(modelName: T): PrismaModelDelegate {
 	const modelAccessor = (modelName.charAt(0).toLowerCase() +
 		modelName.slice(1)) as PrismaModelKeys;
-	const model = prisma[modelAccessor];
+	const model = db[modelAccessor];
 
 	if (!model || typeof model.create !== "function") {
 		throw new Error(

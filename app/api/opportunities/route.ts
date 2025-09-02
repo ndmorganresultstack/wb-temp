@@ -1,14 +1,12 @@
 import { NextResponse, NextRequest } from "next/server";
-import prisma from "@/lib/prisma";
-import { Prisma } from "@/app/generated/prisma";
-import { fetchModelData, getModelMetadata } from "@/lib/prisma-utils";
+import { db } from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
 	const { pathname, searchParams } = request.nextUrl;
 	const key = searchParams.get("key");
 	const id = parseInt(searchParams.get("id") || "");
 
-	const results = await prisma["opportunity"].findUnique({
+	const results = await db["opportunity"].findUnique({
 		where: { opportunityId: id },
 		include: {
 			Contract: true,

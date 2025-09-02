@@ -2,8 +2,7 @@
 
 import InternalLaborCalculatedGrid from "@/components/InternalLaborCalculatedGrid";
 import InternalLaborPlanGrid from "@/components/InternalLaborPlanGrid";
-import { useEffect, useRef, useState } from "react";
-import "../../app/globals.css";
+import { useRef, useState } from "react";
 import { useNav } from "@/hooks/useNav";
 import { SiteHeader } from "@/components/SiteHeader";
 
