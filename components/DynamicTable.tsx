@@ -404,6 +404,10 @@ export default function DynamicTable({
 		setRecord(params.data);
 	};
 
+	const onPageChanged = (params: any) => {
+		console.log(params);
+	};
+
 	if (isLoading || isLoadingSelectOptions) {
 		return <div className="p-4">Loading...</div>;
 	}
@@ -415,6 +419,13 @@ export default function DynamicTable({
 	const pagination = true;
 	const paginationPageSize = 35;
 	const paginationPageSizeSelector = [20, 35, 50, 100];
+
+	const getRowClass = (params: any) => {
+		if (params.data["id"] === "Totals") {
+			return "totalsRow";
+		}
+		return undefined;
+	};
 
 	return (
 		<AgGridReact
@@ -438,6 +449,8 @@ export default function DynamicTable({
 			paginationPageSize={paginationPageSize}
 			paginationPageSizeSelector={paginationPageSizeSelector}
 			pinnedBottomRowData={pinnedTotalRow}
+			onPaginationChanged={onPageChanged}
+			getRowClass={getRowClass}
 		/>
 	);
 }

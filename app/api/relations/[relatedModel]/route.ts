@@ -6,7 +6,7 @@ import { RelatedModel } from "@/lib/prisma-utils";
 
 // Type guard to check if relatedModel is a valid RelatedModel
 function isValidRelatedModel(model: string): model is RelatedModel {
-	const validModels = new Set<keyof typeof import("lib/prisma-utils").defaultDisplayFieldMap>([
+	const validModels = new Set<keyof typeof import("@/lib/prisma-utils").defaultDisplayFieldMap>([
 		"BusinessTitle",
 		"FunctionCategory",
 		"RoleResponsibility",
@@ -16,7 +16,9 @@ function isValidRelatedModel(model: string): model is RelatedModel {
 		"User",
 		"Employee",
 	]);
-	return validModels.has(model as keyof typeof import("lib/prisma-utils").defaultDisplayFieldMap);
+	return validModels.has(
+		model as keyof typeof import("@/lib/prisma-utils").defaultDisplayFieldMap
+	);
 }
 
 export async function GET(request: NextRequest) {

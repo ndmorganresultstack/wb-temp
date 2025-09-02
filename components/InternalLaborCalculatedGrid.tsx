@@ -73,25 +73,25 @@ const InternalLaborCalculatedGrid = forwardRef((props: InternalLaborCalculatedGr
 		row.dec = monthlyPost;
 
 		const months = [
-			"jan",
-			"feb",
-			"mar",
-			"apr",
-			"may",
-			"jun",
-			"jul",
-			"aug",
-			"sep",
-			"oct",
-			"nov",
-			"dec",
+			"Jan",
+			"Feb",
+			"Mar",
+			"Apr",
+			"May",
+			"Jun",
+			"Jul",
+			"Aug",
+			"Sep",
+			"Oct",
+			"Nov",
+			"Dec",
 		];
 		row.FYAnnualSalary = roundToTwoDecimals(
 			months.reduce((sum, m) => sum + (parseFloat(row[m]) || 0), 0)
 		);
 
 		row.bonusAnnual = roundToTwoDecimals(row.baseAnnualSalary * (bonusPct / 100));
-		row.FYBonus = row.bonusAnnual;
+		row.FYBonus = row.BonusAnnual;
 
 		row.EESRE = roundToTwoDecimals(row.FYAnnualSalary * (eesrePct / 100));
 
@@ -105,15 +105,15 @@ const InternalLaborCalculatedGrid = forwardRef((props: InternalLaborCalculatedGr
 
 	const addNewRow = async () => {
 		const newRow = {
-			internalLaborId: Math.max(...rowData.map((r: any) => r.internalLaborId), 0) + 1, // Temporary ID
-			fiscalYear: new Date().getFullYear(),
-			employee: employeeOptions[0]?.value || "",
-			serviceAccount: serviceAccountOptions[0]?.value || "",
-			baseAnnualSalary: 100000,
-			salaryIncreasePct: 3,
-			bonusPct: 25,
+			InternalLaborId: Math.max(...rowData.map((r: any) => r.InternalLaborId), 0) + 1, // Temporary ID
+			FiscalYear: new Date().getFullYear(),
+			Employee: employeeOptions[0]?.value || "",
+			ServiceAccount: serviceAccountOptions[0]?.value || "",
+			BaseAnnualSalary: 100000,
+			SalaryIncreasePct: 3,
+			BonusPct: 25,
 			EESREPct: 26,
-			adminSharePct: 25,
+			AdminSharePct: 25,
 		};
 
 		const calculatedRow = calculateRow({ ...newRow });
@@ -156,7 +156,7 @@ const InternalLaborCalculatedGrid = forwardRef((props: InternalLaborCalculatedGr
 
 			// Update the local row data
 			const newRowData = rowData.map((row: any) =>
-				row.internalLaborId === updatedRow.internalLaborId ? updatedRow : row
+				row.InternalLaborId === updatedRow.InternalLaborId ? updatedRow : row
 			);
 			setRowData(newRowData);
 
@@ -182,7 +182,7 @@ const InternalLaborCalculatedGrid = forwardRef((props: InternalLaborCalculatedGr
 
 	const colDefs = useMemo(
 		() => [
-			{ field: "internalLaborId", headerName: "ID", editable: false, width: 5, height: 1 },
+			{ field: "internalLaborId", headerName: "ID", editable: false, width: 50, height: 1 },
 			{
 				field: "fiscalYear",
 				headerName: "FY",
@@ -323,7 +323,7 @@ const InternalLaborCalculatedGrid = forwardRef((props: InternalLaborCalculatedGr
 			return [];
 		}
 
-		const totals: Record<string, any> = { id: "Totals" };
+		const totals: Record<string, any> = {};
 		const numbericFields = stableMetadata.fields.filter(
 			(f: any) => f.type == "Int" || f.type == "Decimal"
 		);
@@ -335,9 +335,16 @@ const InternalLaborCalculatedGrid = forwardRef((props: InternalLaborCalculatedGr
 			}, 0);
 			totals[f.name] = f.type === "Decimal" ? roundToTwoDecimals(sum) : sum;
 		});
-
-		return [totals];
+		const returnTotals = [{ ...totals, id: "Totals" }];
+		return returnTotals;
 	}, [rowData, stableMetadata, props.includeTotalRow]);
+
+	const getRowClass = (params: any) => {
+		if (params.data["id"] === "Totals") {
+			return "totalsRow";
+		}
+		return undefined;
+	};
 
 	return (
 		<AgGridReact
@@ -351,6 +358,7 @@ const InternalLaborCalculatedGrid = forwardRef((props: InternalLaborCalculatedGr
 			paginationPageSize={paginationPageSize}
 			paginationPageSizeSelector={paginationPageSizeSelector}
 			pinnedBottomRowData={pinnedTotalRow}
+			getRowClass={getRowClass}
 		/>
 	);
 });

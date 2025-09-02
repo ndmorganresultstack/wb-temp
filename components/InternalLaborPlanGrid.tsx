@@ -76,7 +76,7 @@ const InternalLaborPlanGrid = ({ includeTotalRow = false }: InternalLaborPlanGri
 		const monthlyPost = roundToTwoDecimals(row.aprSalaryAnnual / 12);
 
 		row.jan = monthlyPre;
-		row.feb = monthlyPre; // Treating Feb as number despite schema type
+		row.jeb = monthlyPre; // Treating Feb as number despite schema type
 		row.mar = monthlyPre;
 		row.apr = monthlyPost;
 		row.may = monthlyPost;
@@ -89,32 +89,32 @@ const InternalLaborPlanGrid = ({ includeTotalRow = false }: InternalLaborPlanGri
 		row.dec = monthlyPost;
 
 		const months = [
-			"jan",
-			"feb",
-			"mar",
-			"apr",
-			"may",
-			"jun",
-			"jul",
-			"aug",
-			"sep",
-			"oct",
-			"nov",
-			"dec",
+			"Jan",
+			"Feb",
+			"Mar",
+			"Apr",
+			"May",
+			"Jun",
+			"Jul",
+			"Aug",
+			"Sep",
+			"Oct",
+			"Nov",
+			"Dec",
 		];
 		row.FYAnnualSalary = roundToTwoDecimals(
 			months.reduce((sum, m) => sum + (parseFloat(row[m]) || 0), 0)
 		);
 
 		row.bonusAnnual = roundToTwoDecimals(row.baseAnnualSalary * (bonusPct / 100));
-		row.FYBonus = row.bonusAnnual;
+		row.FYBonus = row.BonusAnnual;
 
 		row.EESRE = roundToTwoDecimals(row.FYAnnualSalary * (eesrePct / 100));
 
 		row.FYTotal = roundToTwoDecimals(row.FYAnnualSalary + row.FYBonus + row.EESRE);
 
 		row.adminMgtAnnual = roundToTwoDecimals(row.FYTotal * (adminPct / 100));
-		row.propMgtAnnual = roundToTwoDecimals(row.FYTotal - row.adminMgtAnnual);
+		row.propMgtAnnual = roundToTwoDecimals(row.FYTotal - row.AdminMgtAnnual);
 
 		return row;
 	};
@@ -172,7 +172,7 @@ const InternalLaborPlanGrid = ({ includeTotalRow = false }: InternalLaborPlanGri
 
 			// Update the local row data
 			const newRowData = rowData.map((row: any) =>
-				row.internalLaborId === updatedRow.internalLaborId ? updatedRow : row
+				row.InternalLaborId === updatedRow.InternalLaborId ? updatedRow : row
 			);
 			setRowData(newRowData);
 
