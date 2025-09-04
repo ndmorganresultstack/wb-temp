@@ -79,11 +79,11 @@ export const Sidebar = () => {
 			name: "Client Services",
 			icon: Cog8ToothIcon,
 			subItems: [
-				{ name: "Prospects", href: "/prospects" },
-				{ name: "Opportunity Pipeline", href: "/pipeline" },
-				{ name: "Client Portfolio", href: "/client-portfolio" },
-				{ name: "Gifting", href: "/gifting" },
-				{ name: "Events", href: "/events" },
+				{ name: "Prospects", href: "/client-services/prospects" },
+				{ name: "Opportunity Pipeline", href: "/client-services/pipeline" },
+				{ name: "Client Portfolio", href: "/client-services/clients" },
+				{ name: "Gifting", href: "/client-services/gifting" },
+				{ name: "Events", href: "/client-services/events" },
 			],
 		},
 		{
