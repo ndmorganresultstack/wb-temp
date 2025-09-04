@@ -1,255 +1,148 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { UserPlusIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
+import { PlusIcon } from "@heroicons/react/24/solid";
+import SearchIcon from "@/components/icons/SearchIcon";
+import { Edit3 } from "lucide-react";
+import Link from "next/link";
 import DynamicTable from "@/components/DynamicTable";
-import { TablePanel } from "@/components/TablePanel";
-import { usePage } from "@/hooks/usePage";
-import { Contract, Employee, ProspectView, Property } from "../generated/prisma";
-
-interface OpportunityData {
-	opportunityId: number;
-	pitchStatus: string | null;
-	description: string | null;
-	probability: number | null;
-	opportunityYear: number | null;
-	allocation: number | null;
-	durationDays: number | null;
-	propertyId: number | null;
-	salesStage: string | null;
-	expectedCloseDate: string | null; // ISO date string
-	expectedTakeoverDate: string | null; // ISO date string
-	opportunityType: string | null;
-	clientKeyObjective: string | null;
-	underwritingStage: string | null;
-	opportunityOwnerEmployeeId: string | null;
-	clientServicesLeadEmployeeId: string | null;
-	operationsVPEmployeeId: string | null;
-	newAddition: boolean | null;
-	annualFeeAmount: string | null; // Could be parsed to number if needed
-	perUnitFee: string | null; // Could be parsed to number if needed
-	managementFee: number | null;
-	weightedForecast: string | null;
-	createdAt: string | null; // ISO date string
-	updatedAt: string | null; // ISO date string
-	deleted: boolean | null;
-	Contract: Contract;
-	clientServicesLeadEmployeeIdToEmployees: Employee | null;
-	operationsVPEmployeeIdToEmployees: Employee | null;
-	opportunityOwnerEmployeeIdToEmployees: Employee | null;
-	Property: Property | null;
-	opportunityActions: any;
-	opportunityContacts: any;
-}
+import { AttachmentsTab, CallNotesTab, PropertyListTab } from "@/components/PipelineTabs";
+import { Overlay, Tab } from "@/components/Overlay";
+import { OpportunityDetailCards } from "@/components/OpportunityDetailCards";
+import { OverlayToggleButtons } from "@/components/OverlayToggleButtons";
+import { DealStage } from "@/components/DealStage";
+import { useProspects } from "@/hooks/useProspects";
 
 export default function ProspectsPage() {
-	const selectedRecord = usePage((state) => state.record) as ProspectView | null;
-	const [rightPanelShowing, setRightPanelShowing] = useState<boolean>(false);
-	const [opportunity, setOpportunity] = useState<OpportunityData>();
+	const showOverlay = useProspects((state) => state.showOverlay);
+	const setShowOverlay = useProspects.getState().setShowOverlay;
 
-	useEffect(() => {
-		if (selectedRecord?.opportunityId) {
-			fetch(`/api/opportunities?key=opportunityId&id=${selectedRecord.opportunityId}`).then(
-				(value) => {
-					value.json().then((j) => {
-						console.log(j);
-						setOpportunity(j);
-						setRightPanelShowing(true);
-					});
-				},
-			);
-		}
-	}, [selectedRecord]);
+	const setRow = useProspects.getState().setRow;
 
 	return (
-		<main className={`grid-page-container`}>
+		<main className="grid-page-container relative">
+			<DetailsOverlay />
+
 			<div className="grid-page-header">
 				<span className="grid-page-header-path"> Client Services /</span>
-				<span className="grid-page-header-page"> Prospects</span>
+				<span className="grid-page-header-page"> Prospect List </span>
 			</div>
-			<div className="grid-toolbar-row flex justify-between items-center">
-				<div className=" flex items-center justify-end"></div>
-				<div className="flex items-center justify-end">
-					<div className="rounded-lg p-1 flex gap-1">
-						{!rightPanelShowing && (
-							<button
-								className="button-solid items-center flex"
-								onClick={() => setRightPanelShowing(!rightPanelShowing)}
-							>
-								<UserPlusIcon className={"w-8 h-6 p-1"} />
-								<span className="p-1 text-sm">Add New Prospect</span>
-							</button>
-						)}
-					</div>
+
+			<div className="flex gap-x-10 py-2 items-center px-4 w-full justify-between">
+				<div className="flex gap-x-4">
+					<label className="relative flex items-center">
+						<SearchIcon className="absolute left-2 size-4" />
+						<input
+							placeholder="Search"
+							className="border  border-gray-200 rounded-xs py-1 pl-7 pr-2"
+						/>
+					</label>
+
+					<select className="border border-gray-200 text-gray-400 rounded-xs min-w-[150px] py-1 text-sm px-2">
+						<option>Sort By:</option>
+					</select>
+				</div>
+
+				<div className="flex gap-x-6 items-center">
+					<OverlayToggleButtons
+						showOverlay={showOverlay}
+						setShowOverlay={setShowOverlay}
+					/>
+
+					<button className="button button-solid text-sm flex items-center gap-x-1">
+						<PlusIcon className="size-3" />
+						Add Prospect
+					</button>
 				</div>
 			</div>
-			<div className={`grid-container-toolbar`}>
-				<DynamicTable model="ProspectView" readOnly={true} includeTotalRow={false} />
-				{rightPanelShowing && opportunity && (
-					<TablePanel>
-						{/* Header */}
-						<div className="flex justify-between items-center border-b pb-2 mb-4">
-							<h2 className="text-lg font-semibold text-gray-800">
-								Prospect Details
-							</h2>
-							<button
-								onClick={() => setRightPanelShowing(false)}
-								className="text-gray-500 hover:text-gray-700 font-bold text-xl"
-							>
-								×
-							</button>
-						</div>
 
-						{/* Property Details */}
-						<div className="mb-4">
-							<div className="flex flex-wrap gap-4 text-sm text-gray-600">
-								<div>
-									<span className="font-medium">Company</span>
-									<div>{opportunity.opportunityContacts}</div>
-								</div>
-								<div>
-									<span className="font-medium">Property Count</span>
-									<div>{opportunity.Property?.unitCount || "N/A"}</div>
-								</div>
-								<div>
-									<span className="font-medium">Unit Count</span>
-									<div>{opportunity.Property?.unitCount || "N/A"}</div>
-								</div>
-								<div>
-									<span className="font-medium">Owner Investors</span>
-									<div>
-										<span className="font-medium">
-											{
-												opportunity.opportunityOwnerEmployeeIdToEmployees
-													?.firstName
-											}{" "}
-											{
-												opportunity.opportunityOwnerEmployeeIdToEmployees
-													?.lastName
-											}
-										</span>
-										<div className="flex items-center gap-1">
-											<span>
-												{opportunity.opportunityContacts?.[0]?.Contact
-													?.phone || "N/A"}
-											</span>
-											<span className="text-blue-500">📞</span>
-											<span className="text-blue-500">✉️</span>
-										</div>
-									</div>
-								</div>
-								<div>
-									<span className="font-medium">Deal Stage</span>
-									<div>{opportunity.salesStage || "N/A"}</div>
-								</div>
-								<div>
-									<span className="font-medium">Probability</span>
-									<div>{opportunity.probability}%</div>
-								</div>
-							</div>
-						</div>
-
-						{/* Notes Section */}
-						<div className="mb-4">
-							<div className="flex justify-between items-center mb-2">
-								<h3 className="text-sm font-medium text-gray-700">
-									Notes ({opportunity.opportunityActions?.length || 0})
-								</h3>
-								<button className="text-sm text-blue-500 hover:text-blue-700">
-									+ Add Note
-								</button>
-							</div>
-							<div className="space-y-2">
-								{opportunity.opportunityActions?.map(
-									(action: any, index: number) => (
-										<div key={index} className="text-sm text-gray-600">
-											<span className="font-medium">
-												{
-													opportunity
-														.opportunityOwnerEmployeeIdToEmployees
-														?.firstName
-												}{" "}
-												{
-													opportunity
-														.opportunityOwnerEmployeeIdToEmployees
-														?.lastName
-												}
-											</span>{" "}
-											• {new Date(action.createdAt).toLocaleString()}
-											<p className="mt-1">
-												{action.actionNotes || "No notes"}
-											</p>
-										</div>
-									),
-								)}
-							</div>
-						</div>
-
-						{/* Additional Contacts Section */}
-						<div className="mb-4">
-							<div className="flex justify-between items-center mb-2">
-								<h3 className="text-sm font-medium text-gray-700">
-									Additional Contacts (
-									{opportunity.opportunityContacts?.length || 0})
-								</h3>
-								<button className="text-sm text-blue-500 hover:text-blue-700">
-									+ Add Contact
-								</button>
-							</div>
-							<div className="overflow-x-auto">
-								<table className="w-full text-sm text-gray-600">
-									<thead>
-										<tr className="bg-gray-100">
-											<th className="p-2 text-left">Name</th>
-											<th className="p-2 text-left">Role</th>
-											<th className="p-2 text-left">Email</th>
-											<th className="p-2 text-left">Phone</th>
-											<th className="p-2 text-left">Location</th>
-										</tr>
-									</thead>
-									<tbody>
-										{opportunity.opportunityContacts?.map(
-											(contact: any, index: number) => (
-												<tr key={index}>
-													<td className="p-2">
-														{contact.Contact?.firstName}{" "}
-														{contact.Contact?.lastName}
-													</td>
-													<td className="p-2">
-														{contact.Contact?.jobTitle || "N/A"}
-													</td>
-													<td className="p-2">
-														{contact.Contact?.email || "N/A"}
-													</td>
-													<td className="p-2">
-														{contact.Contact?.phone || "N/A"}
-													</td>
-													<td className="p-2">
-														{contact.Contact?.Address?.state || "N/A"}
-													</td>
-												</tr>
-											),
-										)}
-									</tbody>
-								</table>
-							</div>
-						</div>
-
-						{/* Action Buttons */}
-						<div className="flex justify-between mt-4">
-							<button className="text-red-500 hover:text-red-700 text-sm">
-								Delete Prospect
-							</button>
-							<button
-								onClick={() => setRightPanelShowing(false)}
-								className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
-							>
-								Close
-							</button>
-						</div>
-					</TablePanel>
-				)}
+			<div className="grid-container-toolbar">
+				<DynamicTable
+					model="ProspectView"
+					readOnly
+					includeTotalRow={false}
+					onRowClick={setRow as (row: unknown) => void}
+				/>
 			</div>
 		</main>
 	);
+}
+
+function DetailsOverlay() {
+	const showOverlay = useProspects((state) => state.showOverlay);
+	const setShowOverlay = useProspects.getState().setShowOverlay;
+	const row = useProspects((state) => state.row);
+	const rowAdditionalDetails = useProspects((state) => state.rowAdditionalDetails);
+	const [tab, setTab] = useState(1);
+
+	if (showOverlay && !!row && !!rowAdditionalDetails)
+		return (
+			<Overlay>
+				<div className="flex flex-col gap-y-6 h-full w-full">
+					<OverlayToggleButtons
+						showOverlay={showOverlay}
+						setShowOverlay={setShowOverlay}
+					/>
+
+					<div className="flex justify-between gap-x-10">
+						<div className="flex gap-x-4 items-center">
+							<h3 className="text-xl font-semibold">{row.description} Details</h3>
+							<Edit3 className="size-5 bg-gray-200 px-1 rounded-xs" />
+							{/* // ! Not sure what edit button does/looks like */}
+						</div>
+
+						<div className="flex gap-x-5 text-sm items-center">
+							<div className="flex gap-x-2 items-center">
+								<span>Opportunity Number</span>
+								<span className="bg-[#4E357D66] rounded-sm min-w-[70px] py-1 px-2">
+									{row.opportunityId}
+								</span>
+							</div>
+
+							<div className="flex gap-x-2 items-center">
+								<span>Deal Stage</span>
+								<DealStage label={rowAdditionalDetails.salesStage || "None"} />
+								{/* // ! Not sure what dropdown options are --> Enum in DB */}
+							</div>
+						</div>
+					</div>
+
+					<OpportunityDetailCards
+						company={row.description || "None"}
+						owner="Jones Investor"
+						dealStage={rowAdditionalDetails.salesStage || "None"}
+						dealValue={`$${Number(
+							rowAdditionalDetails?.Contract[0]?.totalValue,
+						).toLocaleString("en-US")}`}
+						ContactInfo={
+							<div className="flex flex-col">
+								<span>Emma Johnson</span>
+								<Link
+									className="text-blue-500"
+									href={`mailto:${"EJohnson@mail.com"}`}
+								>
+									EJohnson@mail.com
+								</Link>
+								<Link className="text-blue-500" href={`tel:${"(555) 555-5555"}`}>
+									(555) 555-5555
+								</Link>
+							</div>
+						}
+						address={`${rowAdditionalDetails.Property?.Address?.addressLine1}, ${rowAdditionalDetails.Property?.Address?.addressLine2 ? rowAdditionalDetails.Property?.Address?.addressLine2 + "," : ""} ${rowAdditionalDetails.Property?.Address?.city}, ${rowAdditionalDetails.Property?.Address?.state} ${rowAdditionalDetails.Property?.Address?.zip}`}
+						sites={16}
+						unitCount={rowAdditionalDetails.Property?.unitCount || 3}
+					/>
+
+					<div className="flex items-center">
+						<Tab tab={tab} setTab={setTab} text="Property List" index={0} />
+						<Tab tab={tab} setTab={setTab} text="Attachments" index={1} />
+						<Tab tab={tab} setTab={setTab} text="Call Notes" index={2} />
+					</div>
+
+					{tab === 0 && <PropertyListTab />}
+					{tab === 1 && <AttachmentsTab />}
+					{tab === 2 && <CallNotesTab />}
+				</div>
+			</Overlay>
+		);
 }
