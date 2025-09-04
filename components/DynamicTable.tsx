@@ -35,6 +35,7 @@ interface DynamicTableProps {
 	relationDisplayFields?: Record<string, string>;
 	readOnly: boolean;
 	includeTotalRow: boolean;
+	onRowClick: (data: unknown) => void;
 }
 
 export default function DynamicTable({
@@ -42,8 +43,8 @@ export default function DynamicTable({
 	relationDisplayFields = {},
 	readOnly = false,
 	includeTotalRow = false,
+	onRowClick,
 }: DynamicTableProps) {
-	const setRecord = usePage.getState().setRecord;
 	const gridRef = useRef<AgGridReact>(null);
 
 	const { data, error, isLoading } = useSWR(`/api/db/${model}`, fetcher, {
@@ -62,7 +63,7 @@ export default function DynamicTable({
 	const stableMetadata = useMemo(() => metadata, [JSON.stringify(metadata)]);
 	const stableRelationDisplayFields = useMemo(
 		() => relationDisplayFields,
-		[JSON.stringify(relationDisplayFields)]
+		[JSON.stringify(relationDisplayFields)],
 	);
 
 	const pinnedTotalRow = useMemo(() => {
@@ -72,7 +73,7 @@ export default function DynamicTable({
 
 		const totals: Record<string, any> = { id: "Totals" };
 		const numbericFields = stableMetadata.fields.filter(
-			(f: any) => f.type == "Int" || f.type == "Decimal"
+			(f: any) => f.type == "Int" || f.type == "Decimal",
 		);
 
 		numbericFields.forEach((f: any) => {
@@ -111,21 +112,21 @@ export default function DynamicTable({
 				if (selectOptionsCache[cacheKey]) {
 					console.log(
 						`Using cached options for ${cacheKey}:`,
-						selectOptionsCache[cacheKey]
+						selectOptionsCache[cacheKey],
 					);
 					return { fieldName, options: selectOptionsCache[cacheKey] };
 				}
 
 				console.log(
-					`Fetching options for ${sourceModel}, field: ${fieldName}, displayField: ${displayField}`
+					`Fetching options for ${sourceModel}, field: ${fieldName}, displayField: ${displayField}`,
 				);
 				try {
 					const opts = await fetch(
-						`/api/relations/${sourceModel}?displayField=${displayField}`
+						`/api/relations/${sourceModel}?displayField=${displayField}`,
 					).then((res) => {
 						if (!res.ok)
 							throw new Error(
-								`Failed to fetch options for ${sourceModel}: ${res.status}`
+								`Failed to fetch options for ${sourceModel}: ${res.status}`,
 							);
 						return res.json();
 					});
@@ -138,7 +139,7 @@ export default function DynamicTable({
 										opt.value.trim() !== "" &&
 										opt?.label != null &&
 										typeof opt.label === "string" &&
-										opt.label.trim() !== ""
+										opt.label.trim() !== "",
 								)
 								.map((opt: any) => ({
 									value: opt.value,
@@ -164,13 +165,13 @@ export default function DynamicTable({
 					results
 						.filter(
 							(
-								result
+								result,
 							): result is {
 								fieldName: string;
 								options: { value: string; label: string }[];
-							} => result !== undefined
+							} => result !== undefined,
 						)
-						.map(({ fieldName, options }) => [fieldName, options])
+						.map(({ fieldName, options }) => [fieldName, options]),
 				),
 			}));
 			setIsLoadingSelectOptions(false);
@@ -188,7 +189,7 @@ export default function DynamicTable({
 			.flatMap((f: any) => f.relationFromFields || []);
 
 		const nonRelationFields = stableMetadata.fields.filter(
-			(f: any) => f.kind !== "object" && !relationFieldNames.includes(f.name)
+			(f: any) => f.kind !== "object" && !relationFieldNames.includes(f.name),
 		);
 
 		const relationColumns = stableMetadata.fields
@@ -203,9 +204,9 @@ export default function DynamicTable({
 					editable: readOnly
 						? false
 						: !isLoadingSelectOptions &&
-						  options.length > 0 &&
-						  values.length > 0 &&
-						  values.every((v: any) => typeof v === "string" && v.trim() !== ""),
+							options.length > 0 &&
+							values.length > 0 &&
+							values.every((v: any) => typeof v === "string" && v.trim() !== ""),
 					cellEditor: "agSelectCellEditor",
 					cellEditorParams: {
 						values,
@@ -227,7 +228,7 @@ export default function DynamicTable({
 						const selectedOption = options.find((o: any) => o.value === newValue);
 						if (!selectedOption) {
 							console.error(
-								`Value ${newValue} not found in options for ${field.relatedModel}`
+								`Value ${newValue} not found in options for ${field.relatedModel}`,
 							);
 							return false;
 						}
@@ -276,9 +277,9 @@ export default function DynamicTable({
 					editable: readOnly
 						? false
 						: !isLoadingSelectOptions &&
-						  options.length > 0 &&
-						  values.length > 0 &&
-						  values.every((v: any) => typeof v === "string" && v.trim() !== ""),
+							options.length > 0 &&
+							values.length > 0 &&
+							values.every((v: any) => typeof v === "string" && v.trim() !== ""),
 					cellEditor: "agSelectCellEditor",
 					cellEditorParams: {
 						values,
@@ -300,7 +301,7 @@ export default function DynamicTable({
 						const selectedOption = options.find((o: any) => o.value === newValue);
 						if (!selectedOption) {
 							console.error(
-								`Value ${newValue} not found in options for ${field.name}`
+								`Value ${newValue} not found in options for ${field.name}`,
 							);
 							return false;
 						}
@@ -378,7 +379,7 @@ export default function DynamicTable({
 					const errorData = await response.json();
 					console.error(
 						`Update failed for ${params.colDef.field}: HTTP ${response.status}`,
-						errorData
+						errorData,
 					);
 					params.data[params.colDef.field] = params.oldValue;
 					params.api.refreshCells({
@@ -397,11 +398,11 @@ export default function DynamicTable({
 				});
 			}
 		},
-		[model, stableMetadata, readOnly]
+		[model, stableMetadata, readOnly],
 	);
 
 	const onRowSelection = (params: any) => {
-		setRecord(params.data);
+		onRowClick(params.data);
 	};
 
 	const onPageChanged = (params: any) => {
