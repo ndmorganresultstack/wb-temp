@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { ComponentType, SVGProps, useState } from "react";
 import { useSession } from "@/hooks/useSession";
 import { useNav } from "@/hooks/useNav";
@@ -16,7 +15,6 @@ import {
 	DocumentCurrencyDollarIcon,
 	KeyIcon,
 	TagIcon,
-	RectangleGroupIcon,
 } from "@heroicons/react/24/outline";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 
@@ -27,27 +25,9 @@ export interface MenuItem {
 	subItems?: MenuItem[];
 }
 
-// Define the prop interface for SidebarManager
-export interface SideNavManagerProps {
-	isSidebarOpen: boolean;
-	toggleSidebar: () => void;
-	expandedItem: string | null;
-	expandedSubItem: string | null;
-	menuItem: string | null;
-	setExpandedItem: React.Dispatch<React.SetStateAction<string | null>>;
-	setExpandedSubItem: React.Dispatch<React.SetStateAction<string | null>>;
-	setMenuItem: React.Dispatch<React.SetStateAction<string | null>>;
-	sidebarMinWidth: string | null;
-	sidebarMaxWidth: string | null;
-	pageTitle: string | null;
-	setPageTitle: React.Dispatch<React.SetStateAction<string>>;
-	searchQuery: string | null;
-	setSearchQuery: React.Dispatch<React.SetStateAction<string | null>>;
-}
-
-export const SideNavManager = () => {
+export const Sidebar = () => {
 	const session = useSession((state) => state.session);
-	const isSidebarOpen = useNav((state) => state.isSidebarOpen);
+	const showSidebar = useNav((state) => state.showSidebar);
 	const toggleSidebar = useNav.getState().toggleSidebar;
 	const [expandedItem, setExpandedItem] = useState<string | null>();
 	const [expandedSubItem, setExpandedSubItem] = useState<string | null>();
@@ -138,54 +118,20 @@ export const SideNavManager = () => {
 
 	return (
 		<div
-			className={`flex flex-col fixed h-full inset-y-0 left-0 z-50 bg-white shadow-lg transition-all duration-300 ease-in-out 
-				${isSidebarOpen ? "w-[300px] translate-x-0" : "w-[66px] -translate-x-0"} 
-				lg:${isSidebarOpen ? "w-[300px]" : "w-[71px]"} static`}
+			className={`flex flex-col fixed h-[calc(100vh - 68px)] inset-y-0 left-0 bg-white shadow-lg transition-all duration-300 ease-in-out
+				${showSidebar ? "w-[300px] translate-x-0" : "w-[66px] -translate-x-0"} 
+				 static`}
+			style={{ minWidth: showSidebar ? "300px" : "66px" }}
 		>
-			<div className="flex h-14 items-center px-2 bg-[var(--wb-background-color)] border-b border-gray-200">
-				<Link
-					href={"/"}
-					className="flex items-center gap-x-4"
-					style={{
-						marginLeft: isSidebarOpen ? "15.5px" : "auto",
-						marginRight: isSidebarOpen ? "15.5px" : "auto",
-					}}
-				>
-					<div
-						className="bg-[#4E357D] size-6 rounded-full p-1 hidden"
-						style={{ display: isSidebarOpen ? "flex" : undefined }}
-					>
-						<RectangleGroupIcon className="stroke-white" />
-					</div>
-
-					<Image
-						src="/header_logo_w.png"
-						alt="Willowbridge Logo"
-						width={80}
-						height={25}
-						className="hover:opacity-80 transition-opacity hidden"
-						style={{ display: isSidebarOpen ? "flex" : undefined }}
-					/>
-					<Image
-						src="/header_logo_s.png"
-						alt="Willowbridge Logo"
-						width={25}
-						height={25}
-						className="hover:opacity-80 transition-opacity"
-						style={{ display: isSidebarOpen ? "none" : undefined }}
-					/>
-				</Link>
-			</div>
-
 			<nav className="mt-4 mx-[15.5px]">
 				<button
 					onClick={toggleSidebar}
-					className={`border p-0.5 rounded-sm flex ${isSidebarOpen ? "mx-2" : "mx-auto"}`}
+					className={`border p-0.5 rounded-sm flex ${showSidebar ? "mx-2" : "mx-auto"}`}
 				>
 					<ChevronRightIcon
 						className="size-4"
 						style={{
-							rotate: isSidebarOpen ? "180deg" : undefined,
+							rotate: showSidebar ? "180deg" : undefined,
 						}}
 					/>
 				</button>
@@ -195,14 +141,14 @@ export const SideNavManager = () => {
 						<li
 							key={key}
 							className={`relative ${
-								expandedItem === item.name && !isSidebarOpen
+								expandedItem === item.name && !showSidebar
 									? "bg-gray-100 rounded-md"
 									: ""
 							} ${item.name == "" ? "border-b-1 border-gray-200" : ""}`}
 						>
 							<button
 								onClick={() => {
-									if (!isSidebarOpen) {
+									if (!showSidebar) {
 										toggleSidebar();
 									}
 									toggleAccordion(item.name);
@@ -214,7 +160,7 @@ export const SideNavManager = () => {
 										className={`w-[16px] h-[16px] flex-shrink-0 text-gray-600`}
 									/>
 								)}
-								{isSidebarOpen && (
+								{showSidebar && (
 									<>
 										<span className="text-sm ml-2 text-gray-700">
 											{item.name}
@@ -239,7 +185,7 @@ export const SideNavManager = () => {
 									</>
 								)}
 							</button>
-							{isSidebarOpen &&
+							{showSidebar &&
 								item.subItems &&
 								item.subItems.length > 0 &&
 								expandedItem === item.name && (
@@ -308,7 +254,7 @@ export const SideNavManager = () => {
 															)}
 													</button>
 												)}
-												{isSidebarOpen &&
+												{showSidebar &&
 													subItem.subItems &&
 													subItem.subItems.length > 0 &&
 													expandedSubItem === subItem.name && (
@@ -350,11 +296,11 @@ export const SideNavManager = () => {
 				</ul>
 				<div
 					className={` ${
-						isSidebarOpen ? "border-1" : ""
+						showSidebar ? "border-1" : ""
 					} rounded p-1 my-10 flex items-center`}
 				>
 					<MagnifyingGlassIcon className="w-5 h-5 flex-shrink-0 text-gray-600 mr-2 ml-0.5" />
-					{isSidebarOpen && (
+					{showSidebar && (
 						<input
 							type="text"
 							placeholder="Global Search..."
@@ -369,7 +315,7 @@ export const SideNavManager = () => {
 				<Link
 					href={"/"}
 					className="justify-between items-center mx-[15.5px] mt-auto mb-12 hidden hover:bg-gray-100 p-2 rounded"
-					style={{ display: isSidebarOpen ? "flex" : undefined }}
+					style={{ display: showSidebar ? "flex" : undefined }}
 				>
 					<div className="flex flex-col">
 						<b className="text-sm">{session?.user.name || "User"}</b>

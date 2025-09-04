@@ -1,32 +1,17 @@
 "use client";
 
 import DynamicTable from "@/components/DynamicTable";
-import { useNav } from "@/hooks/useNav";
-import { SiteHeader } from "@/components/SiteHeader";
 
 export default function EmployeesPage() {
-	const isSidebarOpen = useNav((state) => state.isSidebarOpen);
-	const sidebarMaxWidth = useNav((state) => state.sidebarMaxWidth);
-	const sidebarMinWidth = useNav((state) => state.sidebarMinWidth);
-
 	return (
-		<>
-			<SiteHeader pageTitle="Software Costs" />
-			<main
-				className={`grid-page-container ${
-					isSidebarOpen
-						? `w-[calc(100%-${sidebarMaxWidth})]`
-						: `w-[calc(100%-${sidebarMinWidth})]`
-				}`}
-			>
-				<div className="grid-page-header">
-					<span className="grid-page-header-path"> Costs /</span>
-					<span className="grid-page-header-page"> External Labor</span>
-				</div>
-				<div className="grid-container-no-toolbar">
-					<DynamicTable model="ExternalLabor" readOnly={false} includeTotalRow={true} />
-				</div>
-			</main>
-		</>
+		<main className="grid-page-container">
+			<div className="grid-page-header">
+				<span className="grid-page-header-path"> Costs /</span>
+				<span className="grid-page-header-page"> External Labor</span>
+			</div>
+			<div className="grid-container-no-toolbar">
+				<DynamicTable model="ExternalLabor" readOnly={false} includeTotalRow={true} />
+			</div>
+		</main>
 	);
 }

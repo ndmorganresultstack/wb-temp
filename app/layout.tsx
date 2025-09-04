@@ -4,8 +4,9 @@ import type { Metadata } from "next";
 import { initializeAppInsights } from "@/lib/appInsights";
 import { Roboto_Condensed, Roboto_Mono, Roboto_Serif } from "next/font/google";
 import { SetSession } from "@/hooks/useSession";
-import { SideNavManager } from "@/components/SideNavManager";
 import { auth } from "@/lib/next-auth";
+import { Header } from "@/components/Layout/Header";
+import { Sidebar } from "@/components/Layout/Sidebar";
 
 const robotoMono = Roboto_Mono({
 	variable: "--font-roboto-mono",
@@ -37,13 +38,14 @@ export default async function RootLayout({
 	initializeAppInsights(); // Safe for server-side
 	return (
 		<html lang="en">
-			<body className={`${robotoCondensed.className}`}>
+			<body
+				className={`${robotoCondensed.variable} ${robotoMono.variable} ${robotoSerif.variable} antialiased`}
+			>
 				<SetSession session={session} />
-				<div
-					className={`${robotoCondensed.variable} ${robotoMono.variable} ${robotoSerif.variable} antialiased flex h-screen`}
-				>
-					<SideNavManager />
-					<div className={"flex flex-col w-full"}>{children}</div>
+				<Header />
+				<div className="flex">
+					<Sidebar />
+					{children}
 				</div>
 			</body>
 		</html>

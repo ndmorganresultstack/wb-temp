@@ -93,7 +93,7 @@
 
   .grid-container-toolbar {
     flex: 1; 
-    height: calc(100vh - 136px); 
+    height: calc(100vh - 150px); 
     min-height: 30vh;
     width:100%;
   }
