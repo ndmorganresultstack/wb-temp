@@ -2,21 +2,23 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import {
-	CircleStackIcon,
-	ClipboardDocumentIcon,
-	Cog8ToothIcon,
-	ComputerDesktopIcon,
-	CurrencyDollarIcon,
-	DocumentTextIcon,
-	HomeIcon,
-	ListBulletIcon,
-	MagnifyingGlassIcon,
-	UserIcon,
-} from "@heroicons/react/24/solid";
 import { ComponentType, SVGProps, useState } from "react";
 import { useSession } from "@/hooks/useSession";
 import { useNav } from "@/hooks/useNav";
+import {
+	CircleStackIcon,
+	Cog8ToothIcon,
+	HomeIcon,
+	MagnifyingGlassIcon,
+	BanknotesIcon,
+	ChatBubbleLeftRightIcon,
+	DocumentChartBarIcon,
+	DocumentCurrencyDollarIcon,
+	KeyIcon,
+	TagIcon,
+	RectangleGroupIcon,
+} from "@heroicons/react/24/outline";
+import { ChevronRightIcon } from "@heroicons/react/24/solid";
 
 export interface MenuItem {
 	name: string;
@@ -50,8 +52,6 @@ export const SideNavManager = () => {
 	const [expandedItem, setExpandedItem] = useState<string | null>();
 	const [expandedSubItem, setExpandedSubItem] = useState<string | null>();
 	const [menuItem, setMenuItem] = useState<string | null>();
-	const sidebarMinWidth = useNav((state) => state.sidebarMinWidth);
-	const sidebarMaxWidth = useNav((state) => state.sidebarMinWidth);
 
 	const toggleAccordion = (itemName: string) => {
 		setExpandedItem(expandedItem === itemName ? null : itemName);
@@ -63,27 +63,37 @@ export const SideNavManager = () => {
 
 	const menuItems: MenuItem[] = [
 		{
-			name: "Dashboard",
+			name: "",
+		},
+		{
+			name: "Home",
 			icon: HomeIcon,
-			href: "/dashboard",
+			href: "/",
 		},
 		{
 			name: "User Access",
-			icon: UserIcon,
-			href: "/user-access",
+			icon: KeyIcon,
+			subItems: [
+				{ name: "Users", href: "/users" },
+				{ name: "Roles", href: "/roles" },
+			],
+		},
+		{
+			name: "",
 		},
 		{
 			name: "Master Data",
 			icon: CircleStackIcon,
 			href: "/master-data",
 			subItems: [
-				{ name: "Locations", href: "/locations" },
 				{ name: "Chart of Accounts", href: "/chartofaccounts" },
-				{ name: "Employee Directory", href: "/employeedirectory" },
+				{ name: "Business Units", href: "/business-units" },
+				{ name: "Departments", href: "/departments" },
+				{ name: "Vendors", href: "/vendors" },
+				{ name: "Software Portfolio", href: "/software-portfolio" },
+				{ name: "Cost Managements", href: "/cost-management" },
+				{ name: "Operations Statistics", href: "/operation-statistics" },
 			],
-		},
-		{
-			name: "",
 		},
 		{
 			name: "Client Services",
@@ -91,107 +101,99 @@ export const SideNavManager = () => {
 			subItems: [
 				{ name: "Prospects", href: "/prospects" },
 				{ name: "Opportunity Pipeline", href: "/pipeline" },
-				{ name: "Client Portfolio", href: "/portfolio" },
+				{ name: "Client Portfolio", href: "/client-portfolio" },
 				{ name: "Gifting", href: "/gifting" },
 				{ name: "Events", href: "/events" },
 			],
 		},
 		{
 			name: "Cost of Services",
-			icon: ListBulletIcon,
+			icon: TagIcon,
+			subItems: [
+				{ name: "Service List", href: "/service-list" },
+				{ name: "Cost Of Service", href: "/cost-of-service" },
+				{ name: "Service Catalog", href: "/service-catalog" },
+				{ name: "Property Rate Cards", href: "/property-rate-cards" },
+				{ name: "Services Chart of Accounts", href: "/services-chart-of-accounts" },
+			],
 		},
+		{
+			name: "Budget & Forecast",
+			icon: BanknotesIcon,
+		},
+		{
+			name: "Billing",
+			icon: DocumentCurrencyDollarIcon,
+		},
+		{ name: "" },
 		{
 			name: "Reports",
-			icon: DocumentTextIcon,
+			icon: DocumentChartBarIcon,
 		},
 		{
-			name: "Property Budget",
-			icon: ClipboardDocumentIcon,
-		},
-		{
-			name: "IT Budgeting",
-			icon: ComputerDesktopIcon,
-			subItems: [
-				{
-					name: "Costs",
-					icon: CurrencyDollarIcon,
-					subItems: [
-						{ name: "Internal Labor", href: "/internal-labor" },
-						{ name: "External Labor", href: "/external-labor" },
-						{ name: "Software Costs", href: "/software-costs" },
-					],
-				},
-				{
-					name: "Employees",
-					icon: UserIcon,
-					subItems: [{ name: "Employee Roster", href: "/employees" }],
-				},
-			],
+			name: "Support",
+			icon: ChatBubbleLeftRightIcon,
 		},
 	];
 
 	return (
 		<div
-			className={`fixed inset-y-0 left-0 z-50 bg-white shadow-lg transition-all duration-300 ease-in-out 
+			className={`flex flex-col fixed h-full inset-y-0 left-0 z-50 bg-white shadow-lg transition-all duration-300 ease-in-out 
 				${isSidebarOpen ? "w-[300px] translate-x-0" : "w-[66px] -translate-x-0"} 
 				lg:${isSidebarOpen ? "w-[300px]" : "w-[71px]"} static`}
 		>
 			<div className="flex h-14 items-center px-2 bg-[var(--wb-background-color)] border-b border-gray-200">
+				<Link
+					href={"/"}
+					className="flex items-center gap-x-4"
+					style={{
+						marginLeft: isSidebarOpen ? "15.5px" : "auto",
+						marginRight: isSidebarOpen ? "15.5px" : "auto",
+					}}
+				>
+					<div
+						className="bg-[#4E357D] size-6 rounded-full p-1 hidden"
+						style={{ display: isSidebarOpen ? "flex" : undefined }}
+					>
+						<RectangleGroupIcon className="stroke-white" />
+					</div>
+
+					<Image
+						src="/header_logo_w.png"
+						alt="Willowbridge Logo"
+						width={80}
+						height={25}
+						className="hover:opacity-80 transition-opacity hidden"
+						style={{ display: isSidebarOpen ? "flex" : undefined }}
+					/>
+					<Image
+						src="/header_logo_s.png"
+						alt="Willowbridge Logo"
+						width={25}
+						height={25}
+						className="hover:opacity-80 transition-opacity"
+						style={{ display: isSidebarOpen ? "none" : undefined }}
+					/>
+				</Link>
+			</div>
+
+			<nav className="mt-4 mx-[15.5px]">
 				<button
 					onClick={toggleSidebar}
-					className={`text-white hover:text-white focus:outline-none ${
-						isSidebarOpen ? "mx-[15.5px]" : "mx-auto"
-					}`}
+					className={`border p-0.5 rounded-sm flex ${isSidebarOpen ? "mx-2" : "mx-auto"}`}
 				>
-					{isSidebarOpen ? (
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							strokeWidth="3"
-							stroke="currentColor"
-							className="size-6 border border-white p-1 rounded "
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								d="M15.75 19.5 8.25 12l7.5-7.5"
-							/>
-						</svg>
-					) : (
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							strokeWidth="3"
-							stroke="currentColor"
-							className="size-6 border border-white p-1 rounded "
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								d="m8.25 4.5 7.5 7.5-7.5 7.5"
-							/>
-						</svg>
-					)}
+					<ChevronRightIcon
+						className="size-4"
+						style={{
+							rotate: isSidebarOpen ? "180deg" : undefined,
+						}}
+					/>
 				</button>
-				{isSidebarOpen && (
-					<Link href={"/"}>
-						<Image
-							src="/header_logo_w.png"
-							alt="Willowbridge Logo"
-							width={80}
-							height={10}
-							className="hover:opacity-80 transition-opacity mx-[45px]"
-						/>
-					</Link>
-				)}
-			</div>
-			<nav className="mt-4 mx-[15.5px]">
+
 				<ul>
-					{menuItems.map((item: MenuItem) => (
+					{menuItems.map((item: MenuItem, key) => (
 						<li
-							key={item.name}
+							key={key}
 							className={`relative ${
 								expandedItem === item.name && !isSidebarOpen
 									? "bg-gray-100 rounded-md"
@@ -256,7 +258,7 @@ export const SideNavManager = () => {
 								}`}
 														onClick={() =>
 															setMenuItem(
-																subItem.href ?? subItem.name
+																subItem.href ?? subItem.name,
 															)
 														}
 													>
@@ -327,7 +329,7 @@ export const SideNavManager = () => {
 																	onClick={() =>
 																		setMenuItem(
 																			subSubItem.href ??
-																				subSubItem.name
+																				subSubItem.name,
 																		)
 																	}
 																>
@@ -361,8 +363,22 @@ export const SideNavManager = () => {
 						/>
 					)}
 				</div>
-				<div></div>
 			</nav>
+
+			{!!!session?.user.id && (
+				<Link
+					href={"/"}
+					className="justify-between items-center mx-[15.5px] mt-auto mb-12 hidden hover:bg-gray-100 p-2 rounded"
+					style={{ display: isSidebarOpen ? "flex" : undefined }}
+				>
+					<div className="flex flex-col">
+						<b className="text-sm">{session?.user.name || "User"}</b>
+						<span className="text-xs">Account Settings</span>
+					</div>
+
+					<ChevronRightIcon className="size-4" />
+				</Link>
+			)}
 		</div>
 	);
 };
