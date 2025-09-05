@@ -5,6 +5,18 @@ const getOpportunity = async (id: number) => {
 	return await db.opportunity.findUnique({
 		where: { opportunityId: id },
 		select: {
+			OpportunityContact: {
+				select: {
+					Contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+							phone: true,
+							email: true,
+						},
+					},
+				},
+			},
 			Contract: {
 				select: {
 					totalValue: true,
@@ -13,7 +25,6 @@ const getOpportunity = async (id: number) => {
 			Property: {
 				select: {
 					assetType: true,
-					unitCount: true,
 					Address: {
 						select: {
 							addressLine1: true,

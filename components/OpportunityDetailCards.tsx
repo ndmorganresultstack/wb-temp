@@ -40,7 +40,7 @@ function OpportunityDetailCard({
 }
 
 export function OpportunityDetailCards({
-	company,
+	opportunityName,
 	owner,
 	dealStage,
 	dealValue,
@@ -49,7 +49,7 @@ export function OpportunityDetailCards({
 	sites,
 	unitCount,
 }: {
-	company: string;
+	opportunityName: string;
 	owner: string;
 	dealStage: string;
 	dealValue: string;
@@ -65,8 +65,8 @@ export function OpportunityDetailCards({
 					items={[
 						{
 							Icon: Building,
-							label: "Company",
-							content: company,
+							label: "Opportunity",
+							content: opportunityName,
 						},
 					]}
 				/>
@@ -102,7 +102,7 @@ export function OpportunityDetailCards({
 				/>
 			</div>
 
-			<div className="grid grid-cols-3 gap-x-2 -mt-3">
+			<div className="grid grid-cols-3 gap-x-2">
 				<OpportunityDetailCard
 					items={[
 						{
