@@ -32,12 +32,11 @@ button {
 }
 
 .button {
-	border-radius: 0.5rem;
+	border-radius: 0.35rem;
 }
 
 .button-outline {
 	background-color: white;
-	border-radius: 0.5rem;
 	border-color: var(--wb-background-color);
 	border-width: 2px;
 	padding-left: 1.25rem;
@@ -58,7 +57,6 @@ button {
 
 .button-solid {
 	background-color: var(--wb-background-color);
-	border-radius: 0.5rem;
 	border-color: white;
 	border-width: 2px;
 	padding-left: 1.25rem;

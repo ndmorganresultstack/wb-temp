@@ -15,6 +15,7 @@ export default function EmployeesPage() {
 					model="EmployeeDirectoryView"
 					readOnly={true}
 					includeTotalRow={false}
+					onRowClick={() => {}}
 				/>
 			</div>
 		</main>

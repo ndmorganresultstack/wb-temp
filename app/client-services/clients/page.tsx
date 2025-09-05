@@ -69,7 +69,7 @@ function DetailsOverlay() {
 	const setShowOverlay = useClients.getState().setShowOverlay;
 	const row = useClients((state) => state.row);
 	const rowAdditionalDetails = useClients((state) => state.rowAdditionalDetails);
-	const [tab, setTab] = useState(1);
+	const [tab, setTab] = useState(0);
 
 	if (showOverlay && !!row && !!rowAdditionalDetails)
 		return (

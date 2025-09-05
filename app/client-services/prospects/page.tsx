@@ -73,7 +73,7 @@ function DetailsOverlay() {
 	const setShowOverlay = useProspects.getState().setShowOverlay;
 	const row = useProspects((state) => state.row);
 	const rowAdditionalDetails = useProspects((state) => state.rowAdditionalDetails);
-	const [tab, setTab] = useState(1);
+	const [tab, setTab] = useState(0);
 
 	if (showOverlay && !!row && !!rowAdditionalDetails)
 		return (

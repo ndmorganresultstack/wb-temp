@@ -111,7 +111,7 @@ function DetailsOverlay() {
 	const setShowOverlay = usePipeline.getState().setShowOverlay;
 	const row = usePipeline((state) => state.row);
 	const rowAdditionalDetails = usePipeline((state) => state.rowAdditionalDetails);
-	const [tab, setTab] = useState(1);
+	const [tab, setTab] = useState(0);
 
 	if (showOverlay && !!row && !!rowAdditionalDetails)
 		return (

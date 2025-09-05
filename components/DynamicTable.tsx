@@ -5,7 +5,6 @@ import { AgGridReact } from "ag-grid-react";
 import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 import useSWR from "swr";
 import { roundToTwoDecimals, wbTheme } from "@/lib/helper";
-import { usePage } from "@/hooks/usePage";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
