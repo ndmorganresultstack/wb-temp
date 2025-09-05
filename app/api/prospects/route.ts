@@ -5,6 +5,23 @@ const getProspect = async (id: number) => {
 	return await db.opportunity.findUnique({
 		where: { opportunityId: id },
 		select: {
+			OpportunityContact: {
+				select: {
+					Contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+							phone: true,
+							email: true,
+							Client: {
+								select: {
+									clientName: true,
+								},
+							},
+						},
+					},
+				},
+			},
 			Contract: {
 				select: {
 					totalValue: true,

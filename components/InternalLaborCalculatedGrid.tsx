@@ -4,7 +4,11 @@ import { useState, useMemo, useEffect, useRef, forwardRef, useImperativeHandle }
 import { AgGridReact } from "ag-grid-react";
 import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 import { roundToTwoDecimals, wbTheme } from "@/lib/helper";
-import { SelectOption } from "@/types/prisma";
+
+export interface SelectOption {
+	value: string;
+	label: string;
+}
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

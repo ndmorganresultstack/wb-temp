@@ -10,7 +10,6 @@ import { AttachmentsTab, CallNotesTab, PropertyListTab } from "@/components/Pipe
 import { Overlay, Tab } from "@/components/Overlay";
 import { OpportunityDetailCards } from "@/components/OpportunityDetailCards";
 import { OverlayToggleButtons } from "@/components/OverlayToggleButtons";
-import { DealStage } from "@/components/DealStage";
 import { useProspects } from "@/hooks/useProspects";
 
 export default function ProspectsPage() {
@@ -75,7 +74,29 @@ function DetailsOverlay() {
 	const rowAdditionalDetails = useProspects((state) => state.rowAdditionalDetails);
 	const [tab, setTab] = useState(0);
 
-	if (showOverlay && !!row && !!rowAdditionalDetails)
+	if (showOverlay && !!row && !!rowAdditionalDetails) {
+		const opportunityContact = rowAdditionalDetails.OpportunityContact.at(0)?.Contact;
+		const contactName = opportunityContact
+			? `${opportunityContact.firstName} ${opportunityContact.lastName}`
+			: "None";
+		const contactEmail = opportunityContact?.email;
+		const contactPhone = opportunityContact?.phone;
+		const opportunityName = row.description || "None";
+		const owner = opportunityContact?.Client?.clientName || "None";
+		const dealStage = rowAdditionalDetails.salesStage || "None";
+		const dealValue = rowAdditionalDetails?.Contract[0]
+			? `$${Number(rowAdditionalDetails?.Contract[0]?.totalValue).toLocaleString("en-US")}`
+			: "None";
+		const unitCount = rowAdditionalDetails.Property?.unitCount || 0;
+		const siteCount = 0;
+		const address = `${rowAdditionalDetails.Property?.Address?.addressLine1}, ${
+			rowAdditionalDetails.Property?.Address?.addressLine2
+				? rowAdditionalDetails.Property?.Address?.addressLine2 + ","
+				: ""
+		} ${rowAdditionalDetails.Property?.Address?.city}, ${
+			rowAdditionalDetails.Property?.Address?.state
+		} ${rowAdditionalDetails.Property?.Address?.zip}`;
+
 		return (
 			<Overlay>
 				<div className="flex flex-col gap-y-6 h-full w-full">
@@ -86,9 +107,8 @@ function DetailsOverlay() {
 
 					<div className="flex justify-between gap-x-10">
 						<div className="flex gap-x-4 items-center">
-							<h3 className="text-xl font-semibold">{row.description} Details</h3>
+							<h3 className="text-xl font-semibold">{opportunityName} Details</h3>
 							<Edit3 className="size-5 bg-gray-200 px-1 rounded-xs" />
-							{/* // ! Not sure what edit button does/looks like */}
 						</div>
 
 						<div className="flex gap-x-5 text-sm items-center">
@@ -101,36 +121,33 @@ function DetailsOverlay() {
 
 							<div className="flex gap-x-2 items-center">
 								<span>Deal Stage</span>
-								<DealStage label={rowAdditionalDetails.salesStage || "None"} />
-								{/* // ! Not sure what dropdown options are --> Enum in DB */}
+								<select defaultValue={dealStage}>
+									<option>Negotiation</option>
+									<option>Proposal</option>
+								</select>
 							</div>
 						</div>
 					</div>
 
 					<OpportunityDetailCards
-						company={row.description || "None"}
-						owner="Jones Investor"
-						dealStage={rowAdditionalDetails.salesStage || "None"}
-						dealValue={`$${Number(
-							rowAdditionalDetails?.Contract[0]?.totalValue,
-						).toLocaleString("en-US")}`}
+						opportunityName={opportunityName}
+						owner={owner}
+						dealStage={dealStage}
+						dealValue={dealValue}
 						ContactInfo={
 							<div className="flex flex-col">
-								<span>Emma Johnson</span>
-								<Link
-									className="text-blue-500"
-									href={`mailto:${"EJohnson@mail.com"}`}
-								>
-									EJohnson@mail.com
+								<span>{contactName}</span>
+								<Link className="text-blue-500" href={`mailto:${contactEmail}`}>
+									{contactEmail}
 								</Link>
-								<Link className="text-blue-500" href={`tel:${"(555) 555-5555"}`}>
-									(555) 555-5555
+								<Link className="text-blue-500" href={`tel:${contactPhone}`}>
+									{contactPhone}
 								</Link>
 							</div>
 						}
-						address={`${rowAdditionalDetails.Property?.Address?.addressLine1}, ${rowAdditionalDetails.Property?.Address?.addressLine2 ? rowAdditionalDetails.Property?.Address?.addressLine2 + "," : ""} ${rowAdditionalDetails.Property?.Address?.city}, ${rowAdditionalDetails.Property?.Address?.state} ${rowAdditionalDetails.Property?.Address?.zip}`}
-						sites={16}
-						unitCount={rowAdditionalDetails.Property?.unitCount || 3}
+						address={address}
+						sites={siteCount}
+						unitCount={unitCount}
 					/>
 
 					<div className="flex items-center">
@@ -145,4 +162,5 @@ function DetailsOverlay() {
 				</div>
 			</Overlay>
 		);
+	}
 }
